@@ -1,5 +1,5 @@
 [toolchain]
 channel = "nightly"
 components = ["cargo", "clippy", "llvm-tools-preview", "rust-src"]
-targets = [ "wasm32-unknown-unknown", "arm-unknown-linux-gnueabihf" ]
+targets = [ "wasm32-unknown-unknown", "aarch64-unknown-none-softfloat" ]
 profile = "default"

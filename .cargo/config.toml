@@ -1,2 +1,2 @@
 [build]
-target = "arm-unknown-linux-gnueabihf"
+target = "aarch64-unknown-none-softfloat"
