@@ -1,0 +1,6 @@
+make.exe --dry-run --always-make --keep-going --print-directory
+make: Entering directory 'c:/Users/jgrass23/dev/do-not-enter'
+make: Leaving directory 'c:/Users/jgrass23/dev/do-not-enter'
+ 
+make: *** No targets specified and no makefile found.  Stop.
+
