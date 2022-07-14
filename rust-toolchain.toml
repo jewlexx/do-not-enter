@@ -1,2 +1,5 @@
 [toolchain]
 channel = "nightly"
+components = ["cargo", "clippy", "llvm-tools-preview", "rust-src"]
+targets = [ "wasm32-unknown-unknown", "arm-unknown-linux-gnueabihf" ]
+profile = "default"
