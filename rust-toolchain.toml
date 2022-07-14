@@ -1,0 +1,4 @@
+[toolchain]
+channel = "nightly-2022-07-14"
+targets = [ "wasm32-unknown-unknown", "arm-unknown-linux-gnueabihf"]
+profile = "default"
