@@ -6,4 +6,8 @@ edition = "2021"
 [profile.release]
 lto = true
 
+[[bin]]
+name = "kernel"
+path = "src/main.rs"
+
 [dependencies]
