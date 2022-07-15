@@ -1,11 +1,12 @@
 //! A panic handler that infinitely waits.
 
-use crate::{cpu, println};
-use core::panic::PanicInfo;
+#[alloc_error_handler]
+fn oom(_: Layout) -> ! {
+    cpu::wait_forever()
+}
 
-//--------------------------------------------------------------------------------------------------
-// Private Code
-//--------------------------------------------------------------------------------------------------
+use crate::{cpu, println};
+use core::{alloc::Layout, panic::PanicInfo};
 
 /// Stop immediately if called a second time.
 ///

@@ -2,22 +2,21 @@
 #![feature(format_args_nl)]
 #![feature(panic_info_message)]
 #![feature(trait_alias)]
-#![feature(default_alloc_error_handler)]
+#![feature(alloc_error_handler)]
 #![no_main]
 #![no_std]
 
-extern crate alloc;
-
+mod alloc;
 mod bsp;
 mod colorize;
 mod console;
 mod cpu;
-mod panic_wait;
+mod panic;
 mod print;
 
 use colorize::Colorize;
 
-use crate::colorize::Colors;
+use crate::{alloc::init_alloc, colorize::Colors};
 
 // Panic if not building for aarch64
 const _: () = if !cfg!(target_arch = "aarch64") {
@@ -25,6 +24,8 @@ const _: () = if !cfg!(target_arch = "aarch64") {
 };
 
 unsafe fn kernel_init() -> ! {
+    init_alloc();
+
     use console::console;
 
     println!("[0] Hello from Rust!");
