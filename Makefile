@@ -83,9 +83,9 @@ RUSTFLAGS = $(RUSTC_MISC_ARGS)                   \
 
 RUSTFLAGS_PEDANTIC = $(RUSTFLAGS) \
     -D warnings                   \
-    -D missing_docs
+    # -D missing_docs
 
-FEATURES      = --features bsp_$(BSP)
+FEATURES      =
 COMPILER_ARGS = --target=$(TARGET) \
     $(FEATURES)                    \
     --release
