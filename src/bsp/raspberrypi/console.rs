@@ -15,4 +15,6 @@ impl fmt::Write for QEMUOutput {
     }
 }
 
-pub fn console() -> impl console::inter {}
+pub fn console() -> impl console::interface::Write {
+    QEMUOutput {}
+}
