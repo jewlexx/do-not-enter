@@ -47,7 +47,7 @@ fn panic(info: &PanicInfo) -> ! {
     };
 
     println!(
-        "Kernel panic!\n\n\
+        "\n\nKernel panicked!\n\n\
         Panic location:\n      File '{}', line {}, column {}\n\n\
         {}",
         location,

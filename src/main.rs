@@ -17,7 +17,13 @@ const _: () = if !cfg!(target_arch = "aarch64") {
 };
 
 unsafe fn kernel_init() -> ! {
-    println!("kernel_init() called");
+    use console::console;
 
-    panic!("Stopping here.")
+    println!("[0] Hello from Rust!");
+
+    println!("[1] Chars written: {}", console().chars_written());
+
+    println!("[2] Stopping here.");
+
+    panic!("okay goodbye...")
 }
