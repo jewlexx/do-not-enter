@@ -1,11 +1,3 @@
-// SPDX-License-Identifier: MIT OR Apache-2.0
-//
-// Copyright (c) 2021-2022 Andre Richter <andre.o.richter@gmail.com>
-
-//--------------------------------------------------------------------------------------------------
-// Definitions
-//--------------------------------------------------------------------------------------------------
-
 // Load the address of a symbol into a register, PC-relative.
 //
 // The symbol must lie within +/- 4 GiB of the Program Counter.
@@ -18,14 +10,10 @@
 	add	\register, \register, #:lo12:\symbol
 .endm
 
-//--------------------------------------------------------------------------------------------------
-// Public Code
-//--------------------------------------------------------------------------------------------------
+.global	_start
+
 .section .text._start
 
-//------------------------------------------------------------------------------
-// fn _start()
-//------------------------------------------------------------------------------
 _start:
 	// Only proceed on the boot core. Park it otherwise.
 	mrs	x1, MPIDR_EL1
@@ -62,4 +50,3 @@ _start:
 
 .size	_start, . - _start
 .type	_start, function
-.global	_start
