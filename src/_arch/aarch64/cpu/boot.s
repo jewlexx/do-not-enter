@@ -12,7 +12,7 @@
 
 .global	_start
 
-.section .text._start
+.section .text.boot
 
 _start:
 	// Only proceed on the boot core. Park it otherwise.
