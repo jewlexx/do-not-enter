@@ -19,10 +19,6 @@ global_asm!(
     CONST_CORE_ID_MASK = const 0b11
 );
 
-//--------------------------------------------------------------------------------------------------
-// Public Code
-//--------------------------------------------------------------------------------------------------
-
 /// The Rust entry of the `kernel` binary.
 ///
 /// The function is called from the assembly `_start` function.
