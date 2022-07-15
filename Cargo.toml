@@ -11,3 +11,4 @@ name = "kernel"
 path = "src/main.rs"
 
 [dependencies]
+cortex-a = "7.4.0"
