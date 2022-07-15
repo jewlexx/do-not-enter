@@ -6,6 +6,11 @@ edition = "2021"
 [profile.release]
 lto = true
 
+[features]
+default = []
+bsp_rpi3 = []
+bsp_rpi4 = []
+
 [[bin]]
 name = "kernel"
 path = "src/main.rs"
