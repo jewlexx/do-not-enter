@@ -14,5 +14,6 @@ const _: () = if !cfg!(target_arch = "aarch64") {
 };
 
 unsafe fn kernel_init() -> ! {
+    println!();
     panic!()
 }
