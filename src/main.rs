@@ -6,6 +6,11 @@ mod bsp;
 mod cpu;
 mod panic_wait;
 
+// Panic if not building for aarch64
+const _: () = if !cfg!(target_arch = "aarch64") {
+    panic!();
+};
+
 unsafe fn kernel_init() -> ! {
     panic!()
 }
