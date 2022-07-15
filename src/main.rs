@@ -5,11 +5,14 @@
 #![no_main]
 #![no_std]
 
+extern crate alloc;
+
 mod bsp;
 mod console;
 mod cpu;
 mod panic_wait;
 mod print;
+mod str;
 
 // Panic if not building for aarch64
 const _: () = if !cfg!(target_arch = "aarch64") {
@@ -23,7 +26,7 @@ unsafe fn kernel_init() -> ! {
 
     println!("[1] Chars written: {}", console().chars_written());
 
-    println!("[2] Stopping here.");
+    println!("[2] Stopping here. \u{001b}[0;32myo");
 
     cpu::wait_forever()
 }
