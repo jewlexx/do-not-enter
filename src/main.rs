@@ -25,5 +25,5 @@ unsafe fn kernel_init() -> ! {
 
     println!("[2] Stopping here.");
 
-    panic!("okay goodbye...")
+    cpu::wait_forever()
 }
