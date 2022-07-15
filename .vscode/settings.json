@@ -2,5 +2,8 @@
   "rust-analyzer.cargo.target": "aarch64-unknown-none-softfloat",
   "rust-analyzer.checkOnSave.allTargets": false,
   "rust-analyzer.checkOnSave.extraArgs": ["--bins"],
-  "C_Cpp.default.configurationProvider": "ms-vscode.makefile-tools"
+  "C_Cpp.default.configurationProvider": "ms-vscode.makefile-tools",
+  "files.associations": {
+    "io.c": "cpp"
+  }
 }
