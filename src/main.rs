@@ -12,10 +12,8 @@
 mod bsp;
 mod console;
 mod cpu;
-mod io;
 mod panic_wait;
 mod print;
-mod vga;
 
 // Panic if not building for aarch64
 const _: () = if !cfg!(target_arch = "aarch64") {
