@@ -61,3 +61,7 @@ pub trait Colorize {
         format!("{}{}{}", color, self, Colors::Reset)
     }
 }
+
+impl Colorize for String {}
+
+impl Colorize for &str {}

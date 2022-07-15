@@ -2,17 +2,22 @@
 #![feature(format_args_nl)]
 #![feature(panic_info_message)]
 #![feature(trait_alias)]
+#![feature(default_alloc_error_handler)]
 #![no_main]
 #![no_std]
 
 extern crate alloc;
 
 mod bsp;
+mod colorize;
 mod console;
 mod cpu;
 mod panic_wait;
 mod print;
-mod str;
+
+use colorize::Colorize;
+
+use crate::colorize::Colors;
 
 // Panic if not building for aarch64
 const _: () = if !cfg!(target_arch = "aarch64") {
@@ -26,7 +31,7 @@ unsafe fn kernel_init() -> ! {
 
     println!("[1] Chars written: {}", console().chars_written());
 
-    println!("[2] Stopping here. \u{001b}[0;32myo");
+    println!("[2] Stopping here. {}", "yo".colorize(Colors::Red));
 
     cpu::wait_forever()
 }
