@@ -11,7 +11,7 @@ mod bsp;
 mod colorize;
 mod console;
 mod cpu;
-mod panic;
+mod panic_wait;
 mod print;
 
 use colorize::Colorize;
