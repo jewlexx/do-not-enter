@@ -12,6 +12,7 @@
 mod bsp;
 mod console;
 mod cpu;
+mod io;
 mod panic_wait;
 mod print;
 mod vga;

@@ -17,4 +17,6 @@ fn main() {
             }
         })
         .for_each(|f| println!("cargo:rerun-if-changed={}", f.path().display()));
+
+    cc::Build::new().file("src/io/io.h").compile("iostream");
 }
