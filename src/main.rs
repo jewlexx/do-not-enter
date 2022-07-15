@@ -12,6 +12,7 @@
 mod bsp;
 mod console;
 mod cpu;
+mod driver;
 mod panic_wait;
 mod print;
 

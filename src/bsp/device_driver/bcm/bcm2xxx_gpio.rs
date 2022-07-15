@@ -210,7 +210,7 @@ impl GPIO {
 
     /// Concurrency safe version of `GPIOInner.map_pl011_uart()`
     pub fn map_pl011_uart(&self) {
-        let inner = self.inner.lock();
+        let mut inner = self.inner.lock();
         inner.map_pl011_uart();
     }
 }
