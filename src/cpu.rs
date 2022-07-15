@@ -10,4 +10,4 @@ mod arch_cpu;
 
 mod boot;
 
-pub use arch_cpu::wait_forever;
+pub use arch_cpu::{nop, spin_for_cycles, wait_forever};

@@ -6,6 +6,8 @@
 
 pub mod console;
 pub mod cpu;
+pub mod driver;
+pub mod memory;
 
 /// Board identification.
 pub const fn board_name() -> &'static str {
