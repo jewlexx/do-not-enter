@@ -20,6 +20,10 @@ const _: () = if !cfg!(target_arch = "aarch64") {
     panic!();
 };
 
+const _: () = if !cfg!(any(feature = "bsp_rpi3", feature = "bsp_rpi4")) {
+    panic!();
+};
+
 unsafe fn kernel_init() -> ! {
     use console::console;
 
