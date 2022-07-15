@@ -3,6 +3,7 @@
 #![no_std]
 
 mod bsp;
+mod console;
 mod cpu;
 mod panic_wait;
 
