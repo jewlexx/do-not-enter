@@ -1,6 +1,7 @@
 #![feature(asm_const)]
 #![feature(format_args_nl)]
 #![feature(panic_info_message)]
+#![feature(trait_alias)]
 #![no_main]
 #![no_std]
 
