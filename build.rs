@@ -17,4 +17,8 @@ fn main() {
             }
         })
         .for_each(|f| println!("cargo:rerun-if-changed={}", f.path().display()));
+
+    cc::Build::new()
+        .file("framebuffer/fb.c")
+        .compile("framebuffer");
 }

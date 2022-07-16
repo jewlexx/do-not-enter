@@ -77,8 +77,6 @@ fn kernel_main() -> ! {
     println!("[3] Chars written: {}", console().chars_written());
     println!("[4] Echoing input now");
 
-    println!("[5] Testing Framebuffer crate {}", framebuffer::add(5, 10));
-
     // Discard any spurious received characters before going into echo mode.
     console().clear_rx();
     loop {

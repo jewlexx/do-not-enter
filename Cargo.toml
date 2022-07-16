@@ -3,9 +3,6 @@ name = "do-not-enter"
 version = "0.1.0"
 edition = "2021"
 
-[workspace]
-members = ["framebuffer"]
-
 [profile.release]
 lto = true
 
@@ -22,6 +19,8 @@ path = "src/main.rs"
 # alloc-cortex-m = "0.4.2"
 # seq-macro = "0.3.0"
 cortex-a = "7.4.0"
-framebuffer = { version = "0.1.0", path = "framebuffer" }
 spin = "0.9.4"
 tock-registers = "0.7.0"
+
+[build-dependencies]
+cc = "1.0.73"
