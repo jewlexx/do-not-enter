@@ -22,9 +22,14 @@ name = "do-not-enter"
 version = "0.1.0"
 dependencies = [
  "cortex-a",
+ "framebuffer",
  "spin",
  "tock-registers",
 ]
+
+[[package]]
+name = "framebuffer"
+version = "0.1.0"
 
 [[package]]
 name = "lock_api"
