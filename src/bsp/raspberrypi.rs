@@ -11,13 +11,11 @@ pub mod memory;
 
 /// Board identification.
 pub const fn board_name() -> &'static str {
-    #[cfg(feature = "bsp_rpi3")]
-    {
+    if cfg!(feature = "bsp_rpi3") {
         "Raspberry Pi 3"
-    }
-
-    #[cfg(feature = "bsp_rpi4")]
-    {
+    } else if cfg!(feature = "bsp_rpi4") {
         "Raspberry Pi 4"
+    } else {
+        "Unknown"
     }
 }

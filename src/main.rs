@@ -1,3 +1,4 @@
+#![warn(missing_docs)]
 #![feature(asm_const)]
 #![feature(format_args_nl)]
 #![feature(panic_info_message)]
@@ -5,6 +6,8 @@
 #![feature(alloc_error_handler)]
 #![no_main]
 #![no_std]
+
+//! Basic Kernel for Raspberry Pi 3/4
 
 // mod alloc;
 // mod colorize;

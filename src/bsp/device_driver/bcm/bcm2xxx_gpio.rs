@@ -114,6 +114,7 @@ struct GPIOInner {
 // Public Definitions
 //--------------------------------------------------------------------------------------------------
 
+#[allow(clippy::upper_case_acronyms)]
 /// Representation of the GPIO HW.
 pub struct GPIO {
     inner: Mutex<GPIOInner>,
