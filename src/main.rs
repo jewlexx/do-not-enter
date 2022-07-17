@@ -53,10 +53,6 @@ unsafe fn kernel_init() -> ! {
     kernel_main()
 }
 
-extern "C" {
-    fn fb_main();
-}
-
 /// The main function running after the early init.
 fn kernel_main() -> ! {
     use console::console;
@@ -80,10 +76,6 @@ fn kernel_main() -> ! {
 
     println!("[3] Chars written: {}", console().chars_written());
     println!("[4] Echoing input now");
-
-    unsafe {
-        fb_main();
-    }
 
     // Discard any spurious received characters before going into echo mode.
     console().clear_rx();
