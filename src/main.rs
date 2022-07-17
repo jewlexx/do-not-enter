@@ -12,6 +12,8 @@
 // mod alloc;
 // mod colorize;
 
+use crate::console::enter_echo;
+
 mod bsp;
 mod console;
 mod cpu;
@@ -55,8 +57,9 @@ unsafe fn kernel_init() -> ! {
 
 /// The main function running after the early init.
 fn kernel_main() -> ! {
-    use console::console;
     use driver::interface::DriverManager;
+
+    let console = console::console();
 
     println!(
         "[0] {} version {}",
@@ -74,13 +77,8 @@ fn kernel_main() -> ! {
         println!("      {}. {}", i + 1, driver.compatible());
     }
 
-    println!("[3] Chars written: {}", console().chars_written());
+    println!("[3] Chars written: {}", console.chars_written());
     println!("[4] Echoing input now");
 
-    // Discard any spurious received characters before going into echo mode.
-    console().clear_rx();
-    loop {
-        let c = console().read_char();
-        console().write_char(c);
-    }
+    enter_echo()
 }

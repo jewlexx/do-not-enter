@@ -52,3 +52,13 @@ pub mod interface {
 pub fn console() -> &'static dyn interface::All {
     bsp::console::console()
 }
+
+pub fn enter_echo() -> ! {
+    // Discard any spurious received characters before going into echo mode.
+    console().clear_rx();
+
+    loop {
+        let c = console().read_char();
+        console().write_char(c);
+    }
+}
