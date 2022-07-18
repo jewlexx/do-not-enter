@@ -73,13 +73,13 @@ fn kernel_main() -> ! {
     println!("{TITLE_TEXT}");
 
     println!(
-        "[0] {} version {}",
+        "[DNE] {} version {}",
         env!("CARGO_PKG_NAME"),
         env!("CARGO_PKG_VERSION")
     );
-    println!("[1] Booting on: {}", bsp::board_name());
+    println!("[DNE] Booting on: {}", bsp::board_name());
 
-    println!("[2] Drivers loaded:");
+    println!("[DNE] Drivers loaded:");
     for (i, driver) in bsp::driver::driver_manager()
         .all_device_drivers()
         .iter()
@@ -88,8 +88,8 @@ fn kernel_main() -> ! {
         println!("      {}. {}", i + 1, driver.compatible());
     }
 
-    println!("[3] Chars written: {}", console.chars_written());
-    println!("[4] Echoing input now");
+    println!("[DNE] Chars written: {}", console.chars_written());
+    println!("[DNE] Echoing input now");
 
     enter_echo()
 }
