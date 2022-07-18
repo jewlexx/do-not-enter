@@ -34,6 +34,16 @@ const _: () = if !cfg!(any(feature = "bsp_rpi3", feature = "bsp_rpi4")) {
     panic!("Must build for either rpi3 or rpi4");
 };
 
+const BINLOAD_TEXT: &str = r#"
+  ____  _       _                     _
+ |  _ \(_)     | |                   | |
+ | |_) |_ _ __ | |     ___   __ _  __| |
+ |  _ <| | '_ \| |    / _ \ / _` |/ _` |
+ | |_) | | | | | |___| (_) | (_| | (_| |
+ |____/|_|_| |_|______\___/ \__,_|\__,_|
+
+"#;
+
 /// Early init code.
 ///
 /// # Safety
