@@ -70,6 +70,8 @@ fn kernel_main() -> ! {
 
     let console = console::console();
 
+    println!("{TITLE_TEXT}");
+
     println!(
         "[0] {} version {}",
         env!("CARGO_PKG_NAME"),
