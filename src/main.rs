@@ -9,7 +9,7 @@
 
 //! Basic Kernel for Raspberry Pi 3/4
 
-mod alloc;
+// mod alloc;
 // mod colorize;
 
 use crate::console::enter_echo;
