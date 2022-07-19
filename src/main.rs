@@ -18,6 +18,7 @@ mod bsp;
 mod console;
 mod cpu;
 mod driver;
+mod mail;
 mod panic_wait;
 mod print;
 
