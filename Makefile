@@ -31,30 +31,21 @@ BSP ?= rpi3
 ##--------------------------------------------------------------------------------------------------
 QEMU_MISSING_STRING = "This board is not yet supported for QEMU."
 
+TARGET            = aarch64-unknown-none-softfloat
+KERNEL_BIN        = kernel8.img
+QEMU_BINARY       = qemu-system-aarch64
+QEMU_RELEASE_ARGS = -serial stdio -display none
+GEMU_RELEASE_ARGS = -serial stdio
+OBJDUMP_BINARY    = aarch64-none-elf-objdump
+NM_BINARY         = aarch64-none-elf-nm
+READELF_BINARY    = aarch64-none-elf-readelf
+LD_SCRIPT_PATH    = $(shell pwd)/src/bsp/raspberrypi
+RUSTC_MISC_ARGS   = -C target-cpu=cortex-a53
+
 ifeq ($(BSP),rpi3)
-    TARGET            = aarch64-unknown-none-softfloat
-    KERNEL_BIN        = kernel8.img
-    QEMU_BINARY       = qemu-system-aarch64
     QEMU_MACHINE_TYPE = raspi3
-    QEMU_RELEASE_ARGS = -serial stdio -display none
-    GEMU_RELEASE_ARGS = -serial stdio
-    OBJDUMP_BINARY    = aarch64-none-elf-objdump
-    NM_BINARY         = aarch64-none-elf-nm
-    READELF_BINARY    = aarch64-none-elf-readelf
-    LD_SCRIPT_PATH    = $(shell pwd)/src/bsp/raspberrypi
-    RUSTC_MISC_ARGS   = -C target-cpu=cortex-a53
 else ifeq ($(BSP),rpi4)
-    TARGET            = aarch64-unknown-none-softfloat
-    KERNEL_BIN        = kernel8.img
-    QEMU_BINARY       = qemu-system-aarch64
     QEMU_MACHINE_TYPE =
-    QEMU_RELEASE_ARGS = -serial stdio -display none
-    GEMU_RELEASE_ARGS = -serial stdio
-    OBJDUMP_BINARY    = aarch64-none-elf-objdump
-    NM_BINARY         = aarch64-none-elf-nm
-    READELF_BINARY    = aarch64-none-elf-readelf
-    LD_SCRIPT_PATH    = $(shell pwd)/src/bsp/raspberrypi
-    RUSTC_MISC_ARGS   = -C target-cpu=cortex-a72
 endif
 
 # Export for build.rs.
