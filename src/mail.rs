@@ -10,6 +10,10 @@ unsafe fn mmio_write(src: usize, dest: *mut usize) {
     write_volatile(dest, src);
 }
 
+unsafe fn mbox_call(val: char) {
+    while (mmio_read(MBOX_STATUS) & MBOX_FULL) {}
+}
+
 const PERIPHERAL_BASE: usize = 0xFE000000;
 const VIDEOCORE_MBOX: usize = PERIPHERAL_BASE + 0x0000B880;
 const MBOX_READ: usize = VIDEOCORE_MBOX;
