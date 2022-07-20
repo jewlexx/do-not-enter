@@ -17,6 +17,5 @@ unsafe fn mmio_write(src: usize, dest: *mut usize) {
 }
 
 unsafe fn mbox_call(val: char) {
-    let stat_ptr: *const usize = &MBOX_STATUS;
-    while mmio_read(stat_ptr) & MBOX_FULL != 0 {}
+    while mmio_read(&MBOX_STATUS) & MBOX_FULL != 0 {}
 }
