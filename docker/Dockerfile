@@ -30,14 +30,19 @@ RUN pacman -Syyu --noconfirm \
     $tempPkgs                                 \
     # persistent packages
     ca-certificates                           \
-    gdb-multiarch                             \
     pixman                           \
     glib2 \
     libusb                          \
     python3                                   \
     ruby                                      \
-    ruby-dev                                  \
     ;                                             \
+    mkdir /tmp/multi \
+    chmod 777 /tmp/multi \
+    git clone https://aur.archlinux.org/gdb-multiarch.git /tmp/multi \
+    export OLD_WD=$PWD \
+    cd /tmp/multi \
+    makepkg -si --noconfirm \
+    cd $OLD_WD \
     # GCC AArch64 tools
     if [ "$(uname -m)" = "aarch64" ]; then wget ${GCC_AARCH64}; else wget ${GCC_X86_64}; fi; \
     tar -xf gcc-arm-10*;                                                                     \
