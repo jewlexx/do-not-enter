@@ -2,7 +2,7 @@
 ##
 ## Copyright (c) 2018-2022 Andre Richter <andre.o.richter@gmail.com>
 
-DOCKER_IMAGE := rustembedded/osdev-utils:2021.12
+DOCKER_IMAGE := jewelexx/do-not-enter-builder:latest
 
 define color_header
     @tput setaf 6 2> /dev/null || true
