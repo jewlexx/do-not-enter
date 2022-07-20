@@ -16,8 +16,7 @@ LABEL maintainer="Juliette Cordor"
 # Ruby gems
 COPY Gemfile .
 
-RUN set -ex;                                      \
-    tempPkgs='                                    \
+RUN pacman -Syyu --noconfirm \
     automake                                  \
     bison                                     \
     flex                                      \
@@ -25,9 +24,6 @@ RUN set -ex;                                      \
     ninja                          \
     pkg-config                                \
     wget                                      \
-    ';
-RUN pacman -Syyu --noconfirm \
-    $tempPkgs                                 \
     # persistent packages
     ca-certificates                           \
     pixman                           \
