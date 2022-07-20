@@ -1,6 +1,6 @@
 /// The board's physical memory map.
 #[rustfmt::skip]
-pub(super) mod map {
+pub mod map {
 
     pub const GPIO_OFFSET:         usize = 0x0020_0000;
     pub const UART_OFFSET:         usize = 0x0020_1000;

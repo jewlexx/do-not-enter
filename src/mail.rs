@@ -1,5 +1,7 @@
 use aligned::{Aligned, A16};
 
+use crate::bsp::memory::map::mmio::*;
+
 pub static mut MBOX: Aligned<A16, [u32; 36]> = Aligned([0_u32; 36]);
 
 unsafe fn mmio_read(src: *const usize) -> usize {
@@ -15,5 +17,6 @@ unsafe fn mmio_write(src: usize, dest: *mut usize) {
 }
 
 unsafe fn mbox_call(val: char) {
-    while (mmio_read(MBOX_STATUS) & MBOX_FULL != 0) {}
+    let stat_ptr: *const usize = &MBOX_STATUS;
+    while mmio_read(stat_ptr) & MBOX_FULL != 0 {}
 }
