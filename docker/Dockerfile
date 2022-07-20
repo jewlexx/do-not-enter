@@ -18,38 +18,38 @@ COPY Gemfile .
 
 RUN set -ex;                                      \
     tempPkgs='                                    \
-        automake                                  \
-        bison                                     \
-        build-essential                           \
-        flex                                      \
-        git                                       \
-        libtool                                   \
-        ninja-build                               \
-        pkg-config                                \
-        wget                                      \
+    automake                                  \
+    bison                                     \
+    build-essential                           \
+    flex                                      \
+    git                                       \
+    libtool                                   \
+    ninja-build                               \
+    pkg-config                                \
+    wget                                      \
     ';                                            \
     apt-get update;                               \
     apt-get install -q -y --no-install-recommends \
-        $tempPkgs                                 \
-        # persistent packages
-        ca-certificates                           \
-        gdb-multiarch                             \
-        libpixman-1-dev                           \
-        libglib2.0-dev                            \
-        libusb-1.0.0-dev                          \
-        locales                                   \
-        python3                                   \
-        ruby                                      \
-        ruby-dev                                  \
+    $tempPkgs                                 \
+    # persistent packages
+    ca-certificates                           \
+    gdb-multiarch                             \
+    libpixman-1-dev                           \
+    libglib2.0-dev                            \
+    libusb-1.0.0-dev                          \
+    locales                                   \
+    python3                                   \
+    ruby                                      \
+    ruby-dev                                  \
     ;                                             \
     # GCC AArch64 tools
     if [ "$(uname -m)" = "aarch64" ]; then wget ${GCC_AARCH64}; else wget ${GCC_X86_64}; fi; \
     tar -xf gcc-arm-10*;                                                                     \
     cp                                                                                       \
-        gcc-arm-10*/bin/aarch64-none-elf-objdump                                             \
-        gcc-arm-10*/bin/aarch64-none-elf-readelf                                             \
-        gcc-arm-10*/bin/aarch64-none-elf-nm                                                  \
-        /usr/local/bin/;                                                                     \
+    gcc-arm-10*/bin/aarch64-none-elf-objdump                                             \
+    gcc-arm-10*/bin/aarch64-none-elf-readelf                                             \
+    gcc-arm-10*/bin/aarch64-none-elf-nm                                                  \
+    /usr/local/bin/;                                                                     \
     rm -rf gcc-arm-10*;                                                                      \
     # Ruby dependencies
     gem install bundler;                             \
@@ -60,8 +60,8 @@ RUN set -ex;                                      \
     cd qemu;                                                   \
     git checkout tags/v6.1.0;                                  \
     ./configure --target-list=aarch64-softmmu --enable-modules \
-        --enable-tcg-interpreter --enable-debug-tcg            \
-        --python=/usr/bin/python3;                             \
+    --enable-tcg-interpreter --enable-debug-tcg            \
+    --python=/usr/bin/python3;                             \
     make -j10;                                                 \
     make install;                                              \
     cd ..;                                                     \
