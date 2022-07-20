@@ -2,16 +2,16 @@
 ##
 ## Copyright (c) 2017-2022 Andre Richter <andre.o.richter@gmail.com>
 ## Copyright (c) 2019-2022 Nao Taco <naotaco@gmail.com>
-FROM ubuntu:20.04
+FROM archlinux:base-devel
 
 ARG VCS_REF
 ARG GCC_AARCH64=https://developer.arm.com/-/media/Files/downloads/gnu-a/10.3-2021.07/binrel/gcc-arm-10.3-2021.07-aarch64-aarch64-none-elf.tar.xz
 ARG GCC_X86_64=https://developer.arm.com/-/media/Files/downloads/gnu-a/10.3-2021.07/binrel/gcc-arm-10.3-2021.07-x86_64-aarch64-none-elf.tar.xz
 
 LABEL org.label-schema.vcs-ref=$VCS_REF \
-    org.label-schema.vcs-url="https://github.com/rust-embedded/rust-raspberrypi-OS-tutorials"
+    org.label-schema.vcs-url="https://github.com/jewlexx/do-not-enter"
 
-LABEL maintainer="The resources team <resources@teams.rust-embedded.org>, Andre Richter <andre.o.richter@gmail.com>"
+LABEL maintainer="Juliette Cordor"
 
 # Ruby gems
 COPY Gemfile .
@@ -20,24 +20,21 @@ RUN set -ex;                                      \
     tempPkgs='                                    \
     automake                                  \
     bison                                     \
-    build-essential                           \
     flex                                      \
-    git                                       \
     libtool                                   \
-    ninja-build                               \
+    ninja                          \
     pkg-config                                \
     wget                                      \
     ';                                            \
     apt-get update;                               \
-    apt-get install -q -y --no-install-recommends \
+    RUN pacman -Syyu --noconfirm \
     $tempPkgs                                 \
     # persistent packages
     ca-certificates                           \
     gdb-multiarch                             \
-    libpixman-1-dev                           \
-    libglib2.0-dev                            \
-    libusb-1.0.0-dev                          \
-    locales                                   \
+    pixman                           \
+    glib2 \
+    libusb                          \
     python3                                   \
     ruby                                      \
     ruby-dev                                  \
@@ -56,16 +53,7 @@ RUN set -ex;                                      \
     bundle config set --local without 'development'; \
     bundle install --retry 3;                        \
     # QEMU
-    git clone https://gitlab.com/qemu-project/qemu.git;        \
-    cd qemu;                                                   \
-    git checkout tags/v6.1.0;                                  \
-    ./configure --target-list=aarch64-softmmu --enable-modules \
-    --enable-tcg-interpreter --enable-debug-tcg            \
-    --python=/usr/bin/python3;                             \
-    make -j10;                                                 \
-    make install;                                              \
-    cd ..;                                                     \
-    rm -rf qemu;                                               \
+    pacman -S qemu-full --noconfirm                                           \
     # Openocd
     git clone --depth 1 https://git.code.sf.net/p/openocd/code openocd; \
     cd openocd;                                                         \
@@ -74,12 +62,7 @@ RUN set -ex;                                      \
     make -j10;                                                          \
     make install;                                                       \
     # GDB
-    wget -P ~ git.io/.gdbinit; \
-    # Cleanup
-    apt-get purge -y --auto-remove $tempPkgs; \
-    apt-get autoremove -q -y;                 \
-    apt-get clean -q -y;                      \
-    rm -rf /var/lib/apt/lists/*
+    wget -P ~ git.io/.gdbinit;
 
 # Locales
 RUN locale-gen en_US.UTF-8
