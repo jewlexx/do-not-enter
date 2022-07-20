@@ -38,18 +38,12 @@ RUN mkdir /tmp/multi; \
     export OLD_WD=$PWD; \
     cd /tmp/multi; \
     makepkg -si --noconfirm; \
+    rm -rf *; \
+    git clone https://aur.archlinux.org/aarch64-none-elf-toolchain.git; \
+    makepkg -si --noconfirm; \
     cd $OLD_WD;
-# GCC AArch64 tools
-RUN if [ "$(uname -m)" = "aarch64" ]; then wget ${GCC_AARCH64}; else wget ${GCC_X86_64}; fi; \
-    tar -xf gcc-arm-10*;                                                                     \
-    cp                                                                                       \
-    gcc-arm-10*/bin/aarch64-none-elf-objdump                                             \
-    gcc-arm-10*/bin/aarch64-none-elf-readelf                                             \
-    gcc-arm-10*/bin/aarch64-none-elf-nm                                                  \
-    /usr/local/bin/;                                                                     \
-    rm -rf gcc-arm-10*;                                                                      \
-    # Ruby dependencies
-    gem install bundler;                             \
+# Ruby dependencies
+RUN gem install bundler;                             \
     bundle config set --local without 'development'; \
     bundle install --retry 3;                        \
     # QEMU
