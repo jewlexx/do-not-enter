@@ -35,8 +35,8 @@ RUN pacman -Syyu --noconfirm \
     libusb                          \
     python3                                   \
     ruby                                      \
-    ;                                             \
-    mkdir /tmp/multi \
+    ;
+RUN mkdir /tmp/multi \
     chmod 777 /tmp/multi \
     git clone https://aur.archlinux.org/gdb-multiarch.git /tmp/multi \
     export OLD_WD=$PWD \
