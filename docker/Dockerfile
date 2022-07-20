@@ -25,9 +25,8 @@ RUN set -ex;                                      \
     ninja                          \
     pkg-config                                \
     wget                                      \
-    ';                                            \
-    apt-get update;                               \
-    RUN pacman -Syyu --noconfirm \
+    ';                                            
+RUN pacman -Syyu --noconfirm \
     $tempPkgs                                 \
     # persistent packages
     ca-certificates                           \
