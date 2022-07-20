@@ -25,7 +25,7 @@ RUN set -ex;                                      \
     ninja                          \
     pkg-config                                \
     wget                                      \
-    ';                                            
+    ';
 RUN pacman -Syyu --noconfirm \
     $tempPkgs                                 \
     # persistent packages
