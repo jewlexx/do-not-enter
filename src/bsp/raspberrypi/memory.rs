@@ -1,3 +1,7 @@
+use aligned::{Aligned, A16};
+
+pub const MMIO: Aligned<A16, [u32; 36]> = Aligned([0_u32; 36]);
+
 /// The board's physical memory map.
 #[rustfmt::skip]
 pub(super) mod map {
