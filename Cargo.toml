@@ -16,6 +16,7 @@ name = "kernel"
 path = "src/kernel.rs"
 
 [dependencies]
+aligned = "0.4.1"
 # alloc-cortex-m = "0.4.2"
 # seq-macro = "0.3.0"
 cortex-a = "7.4.0"
