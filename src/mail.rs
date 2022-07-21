@@ -19,7 +19,7 @@ unsafe fn mmio_write(src: usize, dest: *mut usize) {
 type MboxPtr = *const Aligned<A16, [u32; 36]>;
 
 unsafe fn mbox_call(val: char) {
-    let mbox_ref = (&MBOX as MboxPtr as usize) & !0xF;
+    let mbox_ref = (&MBOX as MboxPtr as usize) & !0xF | (val as usize) & 0xF;
 
     while mmio_read(&MBOX_STATUS) & MBOX_FULL != 0 {}
 }
