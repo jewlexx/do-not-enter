@@ -36,6 +36,7 @@ NM_BINARY         = aarch64-none-elf-nm
 READELF_BINARY    = aarch64-none-elf-readelf
 LD_SCRIPT_PATH    = $(shell pwd)/src/bsp/raspberrypi
 RUSTC_MISC_ARGS   = -C target-cpu=cortex-a53
+CHAINBOOT_PAYLOAD = kernel8.img
 
 ifeq ($(BSP),rpi3)
     QEMU_MACHINE_TYPE = raspi3
@@ -176,7 +177,7 @@ endif
 ## Push the kernel to the real HW target
 ##------------------------------------------------------------------------------
 chainboot: $(KERNEL_BIN)
-	@$(DOCKER_CHAINBOOT) $(EXEC_MINIPUSH) $(DEV_SERIAL) $(CHAINBOOT_DEMO_PAYLOAD)
+	@$(DOCKER_CHAINBOOT) $(EXEC_MINIPUSH) $(DEV_SERIAL) $(CHAINBOOT_PAYLOAD)
 
 ##------------------------------------------------------------------------------
 ## Run clippy
