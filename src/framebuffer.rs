@@ -68,7 +68,7 @@ impl FrameBuffer {
         MBOX[34] = MBOX_TAG_LAST;
 
         println!("Calling mbox");
-        if mbox_call(MBOX_CH_PROP as u8 as char) && MBOX[20] == 32 && MBOX[28] != 0 {
+        if mbox_call(MBOX_CH_PROP) && MBOX[20] == 32 && MBOX[28] != 0 {
             println!("Called mbox");
             MBOX[28] &= 0x3FFFFFFF; // Convert GPU address to ARM address
 
