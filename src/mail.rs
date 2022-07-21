@@ -49,7 +49,7 @@ type MboxPtr = *const Aligned<A16, [usize; 36]>;
 
 pub unsafe fn mbox_call(val: char) -> bool {
     // 28-bit address (MSB) and 4-bit value (LSB)
-    let mut mbox_ref = (&MBOX as MboxPtr as usize) & !0xF | (val as usize) & 0xF;
+    let mbox_ref = (&MBOX as MboxPtr as usize) & !0xF | (val as usize) & 0xF;
 
     // Wait until we can write
     while mmio_read(&MBOX_STATUS) & MBOX_FULL != 0 {
