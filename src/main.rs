@@ -9,8 +9,6 @@
 
 //! Basic Kernel for Raspberry Pi 3/4
 
-// mod alloc;
-// mod colorize;
 extern crate alloc;
 
 use alloc::string::String;
@@ -18,6 +16,7 @@ use alloc::string::String;
 use crate::{console::enter_echo, framebuffer::FrameBuffer, memory::alloc::init_heap};
 
 mod bsp;
+mod colorize;
 mod console;
 mod cpu;
 mod driver;
