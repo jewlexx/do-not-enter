@@ -12,21 +12,21 @@
 
 //! Basic Kernel for Raspberry Pi 3/4
 
-// extern crate alloc;
+extern crate alloc;
 
 use crate::console::enter_echo;
 
 mod bsp;
-// mod colorize;
+mod colorize;
 mod console;
 mod cpu;
 mod driver;
-mod sync;
-// mod framebuffer;
-// mod mail;
-// mod memory;
+mod framebuffer;
+mod mail;
+mod memory;
 mod panic_wait;
 mod print;
+mod sync;
 
 cfg_if::cfg_if! {
     // Panic if not building for aarch64
@@ -57,7 +57,7 @@ unsafe fn kernel_init() -> ! {
     // println! is usable from here on.
 
     // Can now use String, Vec, Box, etc.
-    // memory::alloc::init_heap();
+    memory::alloc::kernel_init_heap_allocator();
 
     // Transition from unsafe to safe.
     kernel_main()
