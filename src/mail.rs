@@ -2,6 +2,8 @@ use aligned::{Aligned, A16};
 
 use crate::{bsp::memory::map::mmio::*, println};
 
+// All const definitions so unused is fine
+#[allow(unused)]
 pub mod mmio {
     pub mod tags {
         pub const MBOX_TAG_SETPOWER: usize = 0x28001;
