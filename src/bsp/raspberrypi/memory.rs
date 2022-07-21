@@ -1,5 +1,5 @@
 // All const definitions so unused is fine
-#[allow(unused)]
+#[allow(unused_variables)]
 /// The board's physical memory map.
 pub mod map {
     pub const GPIO_OFFSET: usize = 0x0020_0000;
