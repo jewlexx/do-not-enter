@@ -85,4 +85,22 @@ impl FrameBuffer {
 
         unsafe { *offs_ptr = VGAPAL[attr as usize * 0x0F_usize] }
     }
+
+    pub fn draw_rect(&self, x1: usize, y1: usize, x2: usize, y2: usize, attr: char, fill: bool) {
+        let mut y = y1;
+
+        while y < y2 {
+            let mut x = x1;
+
+            while x < x2 {
+                if (x == x1 || x == x2) || (y == y1 || y == y2) {
+                    self.draw_pixel(x, y, attr);
+                } else if fill {
+                    self.draw_pixel(x, y, ((attr as usize & 0xf0) >> 4) as u8 as char)
+                }
+                x += 1;
+            }
+            y += 1;
+        }
+    }
 }
