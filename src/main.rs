@@ -12,11 +12,7 @@
 
 extern crate alloc;
 
-use crate::{
-    colorize::{Color, Colorize},
-    console::enter_echo,
-    memory::alloc::init_heap,
-};
+use crate::{console::enter_echo, memory::alloc::init_heap};
 
 mod bsp;
 mod colorize;
