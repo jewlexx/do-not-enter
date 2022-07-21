@@ -63,7 +63,7 @@ pub unsafe fn mbox_call(val: usize) -> bool {
 
     loop {
         // Is there a reply?
-        while mmio_read(MBOX_STATUS as *const usize) & MBOX_EMPTY != 0 {
+        while (mmio_read(MBOX_STATUS as *const usize) & MBOX_EMPTY) != 0 {
             debug!("No reply");
         }
 

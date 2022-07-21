@@ -77,7 +77,7 @@ impl FrameBuffer {
                 height: MBOX[11], // Actual physical height
                 pitch: MBOX[33],  // Number of bytes per line
                 isrgb: MBOX[24] != 0,
-                fb: MBOX[28], // Pixel order
+                fb: &MBOX[28] as *const usize as usize, // Pixel order
             })
         } else {
             None
