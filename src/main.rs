@@ -85,5 +85,7 @@ fn kernel_main() -> ! {
 
     fb.draw_rect(150, 150, 400, 400, 0x03 as char, false);
 
-    loop {}
+    println!("[4] Echoing input now");
+
+    enter_echo();
 }
