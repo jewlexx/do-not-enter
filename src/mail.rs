@@ -57,13 +57,15 @@ pub unsafe fn mbox_call(val: char) -> bool {
     }
 
     // Write the address of our buffer to the mailbox with the channel appended
-    mmio_write(MBOX_WRITE, &mut mbox_ref);
+    mmio_write(mbox_ref, MBOX_WRITE as *mut usize);
 
     loop {
         // Is there a reply?
         while mmio_read(&MBOX_STATUS) & MBOX_EMPTY != 0 {
             println!("No reply");
         }
+
+        println!("{}\n{}", mbox_ref, mmio_read(&MBOX_READ));
 
         // Is it a reply to our message?
         if mbox_ref == mmio_read(&MBOX_READ) {
