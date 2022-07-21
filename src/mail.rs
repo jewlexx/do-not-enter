@@ -1,6 +1,6 @@
 use aligned::{Aligned, A16};
 
-use crate::bsp::memory::map::mmio::*;
+use crate::{bsp::memory::map::mmio::*, println};
 
 pub mod mmio {
     pub mod tags {
@@ -52,14 +52,18 @@ pub unsafe fn mbox_call(val: char) -> bool {
     let mut mbox_ref = (&MBOX as MboxPtr as usize) & !0xF | (val as usize) & 0xF;
 
     // Wait until we can write
-    while mmio_read(&MBOX_STATUS) & MBOX_FULL != 0 {}
+    while mmio_read(&MBOX_STATUS) & MBOX_FULL != 0 {
+        println!("Unable to write");
+    }
 
     // Write the address of our buffer to the mailbox with the channel appended
     mmio_write(MBOX_WRITE, &mut mbox_ref);
 
     loop {
         // Is there a reply?
-        while mmio_read(&MBOX_STATUS) & MBOX_EMPTY != 0 {}
+        while mmio_read(&MBOX_STATUS) & MBOX_EMPTY != 0 {
+            println!("No reply");
+        }
 
         // Is it a reply to our message?
         if mbox_ref == mmio_read(&MBOX_READ) {
