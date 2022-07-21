@@ -13,7 +13,12 @@ extern crate alloc;
 
 use alloc::string::String;
 
-use crate::{console::enter_echo, framebuffer::FrameBuffer, memory::alloc::init_heap};
+use crate::{
+    colorize::{Colorize, Colors},
+    console::enter_echo,
+    framebuffer::FrameBuffer,
+    memory::alloc::init_heap,
+};
 
 mod bsp;
 mod colorize;
@@ -59,9 +64,7 @@ unsafe fn kernel_init() -> ! {
     // Can now use String, Vec, Box, etc.
     init_heap();
 
-    let mut string = String::new();
-
-    string.push_str("ALLOCATION WORKS LETS FUCKING GO");
+    let string = "ALLOCATION WORKS LETS FUCKING GO".colorize(Colors::Blue);
 
     println!("{}", string);
 
