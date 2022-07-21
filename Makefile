@@ -18,6 +18,9 @@ endef
 # Default to the RPi3.
 BSP ?= rpi3
 
+# Default to a serial device name that is common in Linux.
+DEV_SERIAL ?= /dev/ttyUSB0
+
 ##--------------------------------------------------------------------------------------------------
 ## BSP-specific configuration values
 ##--------------------------------------------------------------------------------------------------
