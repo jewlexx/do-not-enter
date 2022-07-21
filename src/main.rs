@@ -12,7 +12,7 @@
 // mod alloc;
 // mod colorize;
 
-use crate::{console::enter_echo, framebuffer::FrameBuffer};
+use crate::{console::enter_echo, framebuffer::FrameBuffer, memory::alloc::init_heap};
 
 mod bsp;
 mod console;
@@ -20,6 +20,7 @@ mod cpu;
 mod driver;
 mod framebuffer;
 mod mail;
+mod memory;
 mod panic_wait;
 mod print;
 
@@ -52,6 +53,9 @@ unsafe fn kernel_init() -> ! {
     }
     bsp::driver::driver_manager().post_device_driver_init();
     // println! is usable from here on.
+
+    // Can now use String, Vec, Box, etc.
+    init_heap();
 
     // Transition from unsafe to safe.
     kernel_main()
