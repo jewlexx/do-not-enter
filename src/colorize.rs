@@ -26,7 +26,7 @@ pub enum Color {
     Reset,
 }
 
-#[allow(missing_docs)]
+#[allow(missing_docs, dead_code)]
 impl Color {
     pub fn to_fg_str(&self) -> Cow<'static, str> {
         match *self {
