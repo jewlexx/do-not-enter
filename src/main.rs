@@ -12,18 +12,18 @@
 
 //! Basic Kernel for Raspberry Pi 3/4
 
-extern crate alloc;
+// extern crate alloc;
 
 use crate::console::enter_echo;
 
 mod bsp;
-mod colorize;
+// mod colorize;
 mod console;
 mod cpu;
 mod driver;
-mod framebuffer;
-mod mail;
-mod memory;
+// mod framebuffer;
+// mod mail;
+// mod memory;
 mod panic_wait;
 mod print;
 
@@ -56,7 +56,7 @@ unsafe fn kernel_init() -> ! {
     // println! is usable from here on.
 
     // Can now use String, Vec, Box, etc.
-    memory::alloc::init_heap();
+    // memory::alloc::init_heap();
 
     // Transition from unsafe to safe.
     kernel_main()
@@ -75,12 +75,10 @@ _____          _   _       _     ______       _
 fn kernel_main() -> ! {
     use driver::interface::DriverManager;
 
-    let console = console::console();
-
     println!("{TITLE_TEXT}");
 
     println!(
-        "[DNE] {} version {}",
+        "[0] {} version {}",
         env!("CARGO_PKG_NAME"),
         env!("CARGO_PKG_VERSION")
     );
@@ -95,7 +93,10 @@ fn kernel_main() -> ! {
         println!("      {}. {}", i + 1, driver.compatible());
     }
 
-    println!("[DNE] Chars written: {}", console.chars_written());
+    println!(
+        "[DNE] Chars written: {}",
+        console::console().chars_written()
+    );
     println!("[DNE] Echoing input now");
 
     enter_echo();
