@@ -51,7 +51,7 @@ pub unsafe fn mbox_call(val: usize) -> bool {
     let mbox_ref = (&MBOX as MboxPtr as usize) & !0xF | val & 0xF;
 
     // Wait until we can write
-    while mmio_read(&MBOX_STATUS) & MBOX_FULL != 0 {
+    while mmio_read(MBOX_STATUS as *const usize) & MBOX_FULL != 0 {
         debug!("Unable to write");
     }
     debug!("About to write");
@@ -63,14 +63,13 @@ pub unsafe fn mbox_call(val: usize) -> bool {
 
     loop {
         // Is there a reply?
-        while mmio_read(&MBOX_STATUS) & MBOX_EMPTY != 0 {
+        while mmio_read(MBOX_STATUS as *const usize) & MBOX_EMPTY != 0 {
             debug!("No reply");
         }
 
-        debug!("{}\n{}", mbox_ref, mmio_read(&MBOX_READ));
-
         // Is it a reply to our message?
-        if mbox_ref == mmio_read(&MBOX_READ) {
+        if mbox_ref == mmio_read(MBOX_READ as *const usize) {
+            debug!("Got reply");
             return MBOX[1] == MBOX_RESPONSE;
         }
     }
