@@ -24,7 +24,7 @@ macro_rules! println {
 #[macro_export]
 #[cfg(not(release))]
 macro_rules! debug {
-    ($($arg:tt)*) => ($crate::print::_print(format_args_nl!("[Debug] {}{}{}", $crate::colorize::Colors::Blue, format_args!($($arg)*),$crate::colorize::Colors::Reset)));
+    ($($arg:tt)*) => ($crate::print::_print(format_args_nl!("[Debug] {}{}{}", $crate::colorize::Color::Blue, format_args!($($arg)*),$crate::colorize::Color::Reset)));
 }
 
 /// Prints to stdout with a newline, debug prefix, but will not print on release

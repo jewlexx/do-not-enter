@@ -13,7 +13,7 @@
 extern crate alloc;
 
 use crate::{
-    colorize::{Colorize, Colors},
+    colorize::{Color, Colorize},
     console::enter_echo,
     memory::alloc::init_heap,
 };
@@ -83,12 +83,14 @@ fn kernel_main() -> ! {
 
     println!("{TITLE_TEXT}");
 
+    let prefix = "[DNE] ".colorize(Color::BrightWhite);
+
     println!(
-        "[DNE] {} version {}",
+        "{prefix} {} version {}",
         env!("CARGO_PKG_NAME"),
         env!("CARGO_PKG_VERSION")
     );
-    println!("[DNE] Booting on: {}", bsp::board_name());
+    println!("{prefix} Booting on: {}", bsp::board_name());
 
     println!("[DNE] Drivers loaded:");
     for (i, driver) in bsp::driver::driver_manager()
