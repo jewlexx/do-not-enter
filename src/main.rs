@@ -12,7 +12,7 @@
 // mod alloc;
 // mod colorize;
 
-use crate::console::enter_echo;
+use crate::{console::enter_echo, framebuffer::FrameBuffer};
 
 mod bsp;
 mod console;
@@ -80,7 +80,6 @@ fn kernel_main() -> ! {
     }
 
     println!("[3] Chars written: {}", console.chars_written());
-    println!("[4] Echoing input now");
 
-    enter_echo()
+    let fb = unsafe { FrameBuffer::new() }.unwrap();
 }

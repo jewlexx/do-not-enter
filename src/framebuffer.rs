@@ -9,7 +9,7 @@ static VGAPAL: [u32; 16] = [
     0x5555FF, 0x55FF55, 0x55FFFF, 0xFF5555, 0xFF55FF, 0xFFFF55, 0xFFFFFF,
 ];
 
-struct FrameBuffer {
+pub struct FrameBuffer {
     pitch: usize,
     width: usize,
     height: usize,
