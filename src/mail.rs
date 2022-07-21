@@ -41,7 +41,6 @@ unsafe fn mmio_read(src: *const usize) -> usize {
 
 unsafe fn mmio_write(src: usize, dest: *mut usize) {
     println!("Setting {:?} to {}", dest, src);
-    println!("Used to be {}", *dest);
     *dest = src;
 }
 
