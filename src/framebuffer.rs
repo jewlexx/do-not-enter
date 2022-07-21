@@ -78,7 +78,11 @@ impl FrameBuffer {
         }
     }
 
-    pub fn drawPixel(&self, x: usize, y: usize, attr: char) {
+    pub fn draw_pixel(&self, x: usize, y: usize, attr: char) {
         let offs = (y * self.pitch) + (x * 4);
+
+        let offs_ptr = (self.fb + offs) as *mut u32;
+
+        unsafe { *offs_ptr = VGAPAL[attr as usize * 0x0F_usize] }
     }
 }
