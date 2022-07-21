@@ -11,6 +11,9 @@
 
 // mod alloc;
 // mod colorize;
+extern crate alloc;
+
+use alloc::string::String;
 
 use crate::{console::enter_echo, framebuffer::FrameBuffer, memory::alloc::init_heap};
 
@@ -56,6 +59,12 @@ unsafe fn kernel_init() -> ! {
 
     // Can now use String, Vec, Box, etc.
     init_heap();
+
+    let mut string = String::new();
+
+    string.push_str("ALLOCATION WORKS LETS FUCKING GO");
+
+    println!("{}", string);
 
     // Transition from unsafe to safe.
     kernel_main()
