@@ -34,15 +34,12 @@ pub mod mmio {
 pub static mut MBOX: Aligned<A16, [usize; 36]> = Aligned([0usize; 36]);
 
 unsafe fn mmio_read(src: *const usize) -> usize {
-    use core::ptr::read_volatile;
-
-    read_volatile(src)
+    *src
 }
 
 unsafe fn mmio_write(src: usize, dest: *mut usize) {
-    use core::ptr::write_volatile;
-
-    write_volatile(dest, src);
+    println!("Setting {:?} to {}", dest, src);
+    *dest = src;
 }
 
 type MboxPtr = *const Aligned<A16, [usize; 36]>;
@@ -55,9 +52,12 @@ pub unsafe fn mbox_call(val: usize) -> bool {
     while mmio_read(&MBOX_STATUS) & MBOX_FULL != 0 {
         println!("Unable to write");
     }
+    println!("Writing1");
 
     // Write the address of our buffer to the mailbox with the channel appended
     mmio_write(mbox_ref, MBOX_WRITE as *mut usize);
+
+    println!("Writing");
 
     loop {
         // Is there a reply?
