@@ -1,6 +1,6 @@
 use aligned::{Aligned, A16};
 
-use crate::{bsp::memory::map::mmio::*, println};
+use crate::{bsp::memory::map::mmio::*, debug, println};
 
 // All const definitions so unused is fine
 #[allow(unused)]
@@ -40,7 +40,7 @@ unsafe fn mmio_read(src: *const usize) -> usize {
 }
 
 unsafe fn mmio_write(src: usize, dest: *mut usize) {
-    println!("Setting {:?} to {}", dest, src);
+    debug!("Setting {:?} to {}", dest, src);
     *dest = src;
 }
 
