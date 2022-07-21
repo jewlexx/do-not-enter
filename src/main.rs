@@ -82,4 +82,8 @@ fn kernel_main() -> ! {
     println!("[3] Chars written: {}", console.chars_written());
 
     let fb = unsafe { FrameBuffer::new() }.unwrap();
+
+    fb.draw_rect(150, 150, 400, 400, 0x03 as char, false);
+
+    loop {}
 }
