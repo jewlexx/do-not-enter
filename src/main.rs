@@ -83,14 +83,12 @@ fn kernel_main() -> ! {
 
     println!("{TITLE_TEXT}");
 
-    let prefix = "[DNE] ".colorize(Color::BrightWhite);
-
     println!(
-        "{prefix} {} version {}",
+        "[DNE] {} version {}",
         env!("CARGO_PKG_NAME"),
         env!("CARGO_PKG_VERSION")
     );
-    println!("{prefix} Booting on: {}", bsp::board_name());
+    println!("[DNE] Booting on: {}", bsp::board_name());
 
     println!("[DNE] Drivers loaded:");
     for (i, driver) in bsp::driver::driver_manager()
