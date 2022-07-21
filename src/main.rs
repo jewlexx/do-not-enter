@@ -99,9 +99,5 @@ fn kernel_main() -> ! {
     println!("[DNE] Chars written: {}", console.chars_written());
     println!("[DNE] Echoing input now");
 
-    let fb = unsafe { framebuffer::FrameBuffer::new() }.unwrap();
-
-    fb.draw_rect(150, 150, 400, 400, 0x03 as char, false);
-
     enter_echo();
 }
