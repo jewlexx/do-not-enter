@@ -5,7 +5,6 @@ use crate::{
         mmio::{ch::*, tags::*, MBOX_REQUEST},
         MBOX,
     },
-    println,
 };
 
 static VGAPAL: [u32; 16] = [

@@ -1,6 +1,6 @@
 use aligned::{Aligned, A16};
 
-use crate::{bsp::memory::map::mmio::*, debug, println};
+use crate::{bsp::memory::map::mmio::*, debug};
 
 // All const definitions so unused is fine
 #[allow(unused)]
