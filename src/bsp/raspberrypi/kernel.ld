@@ -3,11 +3,15 @@
  * Copyright (c) 2018-2022 Andre Richter <andre.o.richter@gmail.com>
  */
 
+__kernel_virt_addr_space_size = 1024 * 1024 * 1024;
+
 __rpi_phys_dram_start_addr = 0;
 
 /* The physical address at which the the kernel binary will be loaded by the Raspberry's firmware */
 __rpi_phys_binary_load_addr = 0x80000;
 
+PAGE_SIZE = 64K;
+PAGE_MASK = PAGE_SIZE - 1;
 
 ENTRY(__rpi_phys_binary_load_addr)
 
@@ -24,6 +28,7 @@ PHDRS
     segment_boot_core_stack PT_LOAD FLAGS(6);
     segment_code            PT_LOAD FLAGS(5);
     segment_data            PT_LOAD FLAGS(6);
+    segment_heap            PT_LOAD FLAGS(6);
 }
 
 SECTIONS
@@ -58,6 +63,7 @@ SECTIONS
     /***********************************************************************************************
     * Data + BSS
     ***********************************************************************************************/
+     __data_start = .;
     .data : { *(.data*) } :segment_data
 
     /* Section is zeroed in pairs of u64. Align start and end to 16 bytes */
@@ -68,6 +74,30 @@ SECTIONS
         . = ALIGN(16);
         __bss_end_exclusive = .;
     } :segment_data
+
+    . = ALIGN(PAGE_SIZE);
+    __data_end_exclusive = .;
+
+    /***********************************************************************************************
+    * Heap
+    ***********************************************************************************************/
+    __heap_start = .;
+    .heap (NOLOAD) :
+    {
+        . += 16 * 1024 * 1024;
+    } :segment_heap
+    __heap_end_exclusive = .;
+
+    ASSERT((. & PAGE_MASK) == 0, "Heap is not page aligned")
+
+    /***********************************************************************************************
+    * MMIO Remap Reserved
+    ***********************************************************************************************/
+    __mmio_remap_start = .;
+    . += 8 * 1024 * 1024;
+    __mmio_remap_end_exclusive = .;
+
+    ASSERT((. & PAGE_MASK) == 0, "MMIO remap reservation is not page aligned")
 
     /***********************************************************************************************
     * Misc

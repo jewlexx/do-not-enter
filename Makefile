@@ -1,3 +1,4 @@
+# DOCKER_IMAGE := jewelexx/do-not-enter-builder:latest
 DOCKER_IMAGE := rustembedded/osdev-utils:2021.12
 
 define color_header
@@ -17,40 +18,26 @@ endef
 # Default to the RPi3.
 BSP ?= rpi3
 
-# Default to a serial device name that is common in Linux.
-DEV_SERIAL ?= /dev/ttyUSB0
-
-
-
 ##--------------------------------------------------------------------------------------------------
 ## BSP-specific configuration values
 ##--------------------------------------------------------------------------------------------------
 QEMU_MISSING_STRING = "This board is not yet supported for QEMU."
 
+TARGET            = aarch64-unknown-none-softfloat
+KERNEL_BIN        = kernel8.img
+QEMU_BINARY       = qemu-system-aarch64
+QEMU_RELEASE_ARGS = -serial stdio -display none
+GEMU_RELEASE_ARGS = -serial stdio
+OBJDUMP_BINARY    = aarch64-none-elf-objdump
+NM_BINARY         = aarch64-none-elf-nm
+READELF_BINARY    = aarch64-none-elf-readelf
+LD_SCRIPT_PATH    = $(shell pwd)/src/bsp/raspberrypi
+RUSTC_MISC_ARGS   = -C target-cpu=cortex-a53
+
 ifeq ($(BSP),rpi3)
-    TARGET                 = aarch64-unknown-none-softfloat
-    KERNEL_BIN             = kernel8.img
-    QEMU_BINARY            = qemu-system-aarch64
-    QEMU_MACHINE_TYPE      = raspi3
-    QEMU_RELEASE_ARGS      = -serial stdio -display none
-    OBJDUMP_BINARY         = aarch64-none-elf-objdump
-    NM_BINARY              = aarch64-none-elf-nm
-    READELF_BINARY         = aarch64-none-elf-readelf
-    LD_SCRIPT_PATH         = $(shell pwd)/src/bsp/raspberrypi
-    RUSTC_MISC_ARGS        = -C target-cpu=cortex-a53
-    CHAINBOOT_DEMO_PAYLOAD = demo_payload_rpi3.img
+    QEMU_MACHINE_TYPE = raspi3
 else ifeq ($(BSP),rpi4)
-    TARGET                 = aarch64-unknown-none-softfloat
-    KERNEL_BIN             = kernel8.img
-    QEMU_BINARY            = qemu-system-aarch64
-    QEMU_MACHINE_TYPE      =
-    QEMU_RELEASE_ARGS      = -serial stdio -display none
-    OBJDUMP_BINARY         = aarch64-none-elf-objdump
-    NM_BINARY              = aarch64-none-elf-nm
-    READELF_BINARY         = aarch64-none-elf-readelf
-    LD_SCRIPT_PATH         = $(shell pwd)/src/bsp/raspberrypi
-    RUSTC_MISC_ARGS        = -C target-cpu=cortex-a72
-    CHAINBOOT_DEMO_PAYLOAD = demo_payload_rpi4.img
+    QEMU_MACHINE_TYPE =
 endif
 
 # Export for build.rs.
@@ -79,9 +66,10 @@ RUSTFLAGS = $(RUSTC_MISC_ARGS)                   \
     -C link-arg=--library-path=$(LD_SCRIPT_PATH) \
     -C link-arg=--script=$(KERNEL_LINKER_SCRIPT)
 
-RUSTFLAGS_PEDANTIC = $(RUSTFLAGS) \
-    -D warnings                   \
-    -D missing_docs
+# Disabled
+RUSTFLAGS_PEDANTIC = $(RUSTFLAGS) # \
+    # -D warnings                   \
+    # -D missing_docs
 
 FEATURES      = --features bsp_$(BSP)
 COMPILER_ARGS = --target=$(TARGET) \
@@ -175,9 +163,9 @@ qemu: $(KERNEL_BIN)
 	$(call color_header, "Launching QEMU")
 	@$(DOCKER_QEMU) $(EXEC_QEMU) $(QEMU_RELEASE_ARGS) -kernel $(KERNEL_BIN)
 
-qemuasm: $(KERNEL_BIN)
-	$(call color_header, "Launching QEMU with ASM output")
-	@$(DOCKER_QEMU) $(EXEC_QEMU) $(QEMU_RELEASE_ARGS) -kernel $(KERNEL_BIN) -d in_asm
+gqemu: $(KERNEL_BIN)
+	$(call color_header, "Launching QEMU")
+	qemu-system-aarch64 -M raspi3b $(GEMU_RELEASE_ARGS) -kernel $(KERNEL_BIN)
 
 endif
 

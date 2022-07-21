@@ -41,7 +41,7 @@ _start:
 	mov	sp, x0
 
 	// Jump to Rust code.
-	b	_start_rust
+	b	_device_boot
 
 	// Infinitely wait for events (aka "park the core").
 .L_parking_loop:

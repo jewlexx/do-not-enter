@@ -1,6 +1,6 @@
 use core::fmt::Display;
 
-use crate::alloc::core_alloc::{format, string::String};
+use alloc::{format, string::String};
 
 #[allow(dead_code)]
 pub enum Colors {

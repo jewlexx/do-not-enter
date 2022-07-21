@@ -9,15 +9,22 @@
 
 //! Basic Kernel for Raspberry Pi 3/4
 
-// mod alloc;
-// mod colorize;
+extern crate alloc;
 
-use crate::console::enter_echo;
+use crate::{
+    colorize::{Colorize, Colors},
+    console::enter_echo,
+    memory::alloc::init_heap,
+};
 
 mod bsp;
+mod colorize;
 mod console;
 mod cpu;
 mod driver;
+mod framebuffer;
+mod mail;
+mod memory;
 mod panic_wait;
 mod print;
 
@@ -60,6 +67,13 @@ unsafe fn kernel_init() -> ! {
     bsp::driver::driver_manager().post_device_driver_init();
     // println! is usable from here on.
 
+    // Can now use String, Vec, Box, etc.
+    init_heap();
+
+    let string = "ALLOCATION WORKS LETS FUCKING GO".colorize(Colors::Blue);
+
+    println!("{}", string);
+
     // Transition from unsafe to safe.
     kernel_main()
 }
@@ -91,5 +105,5 @@ fn kernel_main() -> ! {
     println!("[DNE] Chars written: {}", console.chars_written());
     println!("[DNE] Echoing input now");
 
-    enter_echo()
+    enter_echo();
 }

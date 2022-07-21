@@ -1,0 +1,68 @@
+FROM archlinux:base-devel
+
+ARG VCS_REF
+
+LABEL org.label-schema.vcs-ref=$VCS_REF \
+    org.label-schema.vcs-url="https://github.com/jewlexx/do-not-enter"
+
+LABEL maintainer="Juliette Cordor"
+
+# Ruby gems
+COPY Gemfile .
+
+RUN pacman -Syyu --noconfirm \
+    automake                                  \
+    bison                                     \
+    flex                                      \
+    libtool                                   \
+    ninja                          \
+    pkg-config                                \
+    wget                                      \
+    # persistent packages
+    ca-certificates                           \
+    pixman                           \
+    glib2 \
+    libusb                          \
+    python3                                   \
+    ruby                                      \
+    ;
+RUN mkdir /tmp/multi; \
+    chmod 777 /tmp/multi; \
+    git clone https://aur.archlinux.org/gdb-multiarch.git /tmp/multi; \
+    export OLD_WD=$PWD; \
+    cd /tmp/multi; \
+    makepkg -si --noconfirm; \
+    rm -rf *; \
+    git clone https://aur.archlinux.org/aarch64-none-elf-toolchain.git; \
+    makepkg -si --noconfirm; \
+    cd $OLD_WD;
+# Ruby dependencies
+RUN gem install bundler;                             \
+    bundle config set --local without 'development'; \
+    bundle install --retry 3;                        \
+    # QEMU
+    pacman -S qemu-full --noconfirm;                                     \
+    # Openocd
+    git clone --depth 1 https://git.code.sf.net/p/openocd/code openocd; \
+    cd openocd;                                                         \
+    ./bootstrap;                                                        \
+    ./configure --enable-ftdi;                                          \
+    make -j10;                                                          \
+    make install;                                                       \
+    # GDB
+    wget -P ~ git.io/.gdbinit;
+
+# Locales
+RUN locale-gen en_US.UTF-8
+
+ENV LANG=en_US.UTF-8   \
+    LANGUAGE=en_US:en  \
+    LC_ALL=en_US.UTF-8 \
+    RUBYOPT=-W0
+
+# Openocd
+COPY rpi3.cfg /openocd/
+COPY rpi4.cfg /openocd/
+
+# GDB
+COPY auto /root/.gdbinit.d/auto
