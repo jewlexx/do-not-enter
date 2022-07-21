@@ -42,15 +42,6 @@ const _: () = if !cfg!(any(feature = "bsp_rpi3", feature = "bsp_rpi4")) {
     panic!("Must build for either rpi3 or rpi4");
 };
 
-const TITLE_TEXT: &str = r#"
-_____          _   _       _     ______       _
-|  __ \        | \ | |     | |   |  ____|     | |
-| |  | | ___   |  \| | ___ | |_  | |__   _ __ | |_ ___ _ __
-| |  | |/ _ \  | . ` |/ _ \| __| |  __| | '_ \| __/ _ \ '__|
-| |__| | (_) | | |\  | (_) | |_  | |____| | | | ||  __/ |
-|_____/ \___/  |_| \_|\___/ \__| |______|_| |_|\__\___|_|
-"#;
-
 /// Early init code.
 ///
 /// # Safety
@@ -78,6 +69,15 @@ unsafe fn kernel_init() -> ! {
     // Transition from unsafe to safe.
     kernel_main()
 }
+
+const TITLE_TEXT: &str = r#"
+_____          _   _       _     ______       _
+|  __ \        | \ | |     | |   |  ____|     | |
+| |  | | ___   |  \| | ___ | |_  | |__   _ __ | |_ ___ _ __
+| |  | |/ _ \  | . ` |/ _ \| __| |  __| | '_ \| __/ _ \ '__|
+| |__| | (_) | | |\  | (_) | |_  | |____| | | | ||  __/ |
+|_____/ \___/  |_| \_|\___/ \__| |______|_| |_|\__\___|_|
+"#;
 
 /// The main function running after the early init.
 fn kernel_main() -> ! {
