@@ -62,10 +62,6 @@ unsafe fn kernel_init() -> ! {
     // Can now use String, Vec, Box, etc.
     init_heap();
 
-    let string = "ALLOCATION WORKS LETS FUCKING GO".colorize(Colors::Blue);
-
-    println!("{}", string);
-
     // Transition from unsafe to safe.
     kernel_main()
 }
