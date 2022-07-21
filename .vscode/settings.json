@@ -2,7 +2,7 @@
   "rust-analyzer.cargo.target": "aarch64-unknown-none-softfloat",
   "rust-analyzer.checkOnSave.allTargets": false,
   "rust-analyzer.checkOnSave.extraArgs": ["--bins"],
-  "rust-analyzer.cargo.features": ["bsp_rpi3"],
+  "rust-analyzer.cargo.features": ["bsp_rpi4"],
   "C_Cpp.default.configurationProvider": "ms-vscode.makefile-tools",
   "files.associations": {
     "io.c": "cpp"

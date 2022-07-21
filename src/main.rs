@@ -6,6 +6,7 @@
 #![feature(panic_info_message)]
 #![feature(trait_alias)]
 #![feature(alloc_error_handler)]
+#![feature(stmt_expr_attributes)]
 #![no_main]
 #![no_std]
 
@@ -26,18 +27,16 @@ mod memory;
 mod panic_wait;
 mod print;
 
-// Panic if not building for aarch64
-const _: () = if !cfg!(target_arch = "aarch64") {
-    compile_error!("Must build for aarch64");
-};
-
-const _: () = if cfg!(feature = "bsp_rpi3") && cfg!(feature = "bsp_rpi4") {
-    compile_error!("Cannot build for multiple targets");
-};
-
-const _: () = if !cfg!(any(feature = "bsp_rpi3", feature = "bsp_rpi4")) {
-    compile_error!("Must build for either rpi3 or rpi4");
-};
+cfg_if::cfg_if! {
+    // Panic if not building for aarch64
+    if #[cfg(not(target_arch = "aarch64"))] {
+        compile_error!("Must build for aarch64");
+    } else if #[cfg(all(feature = "bsp_rpi3", feature = "bsp_rpi4"))] {
+        compile_error!("Cannot build for multiple targets");
+    } else if #[cfg(not(any(feature = "bsp_rpi3", feature = "bsp_rpi4")))] {
+        compile_error!("Must build for Raspberry Pi 3 or 4");
+    }
+}
 
 /// Early init code.
 ///
