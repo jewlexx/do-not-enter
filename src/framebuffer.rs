@@ -1,7 +1,10 @@
-use crate::mail::{
-    mbox_call,
-    mmio::{ch::*, tags::*, MBOX_REQUEST},
-    MBOX,
+use crate::{
+    mail::{
+        mbox_call,
+        mmio::{ch::*, tags::*, MBOX_REQUEST},
+        MBOX,
+    },
+    println,
 };
 
 static VGAPAL: [u32; 16] = [
@@ -19,6 +22,7 @@ pub struct FrameBuffer {
 
 impl FrameBuffer {
     pub unsafe fn new() -> Option<Self> {
+        println!("Initializing framebuffer");
         MBOX[0] = 35 * 4; // Length of message in bytes
         MBOX[1] = MBOX_REQUEST;
 
@@ -63,7 +67,9 @@ impl FrameBuffer {
 
         MBOX[34] = MBOX_TAG_LAST;
 
+        println!("Calling mbox");
         if mbox_call(MBOX_CH_PROP as u8 as char) && MBOX[20] == 32 && MBOX[28] != 0 {
+            println!("Called mbox");
             MBOX[28] &= 0x3FFFFFFF; // Convert GPU address to ARM address
 
             Some(Self {
@@ -87,6 +93,7 @@ impl FrameBuffer {
     }
 
     pub fn draw_rect(&self, x1: usize, y1: usize, x2: usize, y2: usize, attr: char, fill: bool) {
+        println!("Drawing");
         let mut y = y1;
 
         while y < y2 {
