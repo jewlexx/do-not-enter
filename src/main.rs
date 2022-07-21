@@ -28,15 +28,15 @@ mod print;
 
 // Panic if not building for aarch64
 const _: () = if !cfg!(target_arch = "aarch64") {
-    panic!("Must build for aarch64");
+    compile_error!("Must build for aarch64");
 };
 
 const _: () = if cfg!(feature = "bsp_rpi3") && cfg!(feature = "bsp_rpi4") {
-    panic!("Cannot build for multiple targets");
+    compile_error!("Cannot build for multiple targets");
 };
 
 const _: () = if !cfg!(any(feature = "bsp_rpi3", feature = "bsp_rpi4")) {
-    panic!("Must build for either rpi3 or rpi4");
+    compile_error!("Must build for either rpi3 or rpi4");
 };
 
 /// Early init code.
