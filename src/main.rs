@@ -21,6 +21,7 @@ mod bsp;
 mod console;
 mod cpu;
 mod driver;
+mod sync;
 // mod framebuffer;
 // mod mail;
 // mod memory;

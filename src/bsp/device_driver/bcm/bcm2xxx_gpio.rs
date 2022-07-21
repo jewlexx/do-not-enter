@@ -4,8 +4,7 @@
 
 //! GPIO Driver.
 
-use crate::{bsp::device_driver::common::MMIODerefWrapper, driver};
-use spin::Mutex;
+use crate::{bsp::device_driver::common::MMIODerefWrapper, driver, sync, sync::NullLock};
 use tock_registers::{
     interfaces::{ReadWriteable, Writeable},
     register_bitfields, register_structs,
@@ -116,7 +115,7 @@ struct GPIOInner {
 
 /// Representation of the GPIO HW.
 pub struct GPIO {
-    inner: Mutex<GPIOInner>,
+    inner: NullLock<GPIOInner>,
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -204,20 +203,20 @@ impl GPIO {
     /// - The user must ensure to provide a correct MMIO start address.
     pub const unsafe fn new(mmio_start_addr: usize) -> Self {
         Self {
-            inner: Mutex::new(GPIOInner::new(mmio_start_addr)),
+            inner: NullLock::new(GPIOInner::new(mmio_start_addr)),
         }
     }
 
     /// Concurrency safe version of `GPIOInner.map_pl011_uart()`
     pub fn map_pl011_uart(&self) {
-        let mut inner = self.inner.lock();
-        inner.map_pl011_uart();
+        self.inner.lock(|inner| inner.map_pl011_uart())
     }
 }
 
 //------------------------------------------------------------------------------
 // OS Interface Code
 //------------------------------------------------------------------------------
+use sync::interface::Mutex;
 
 impl driver::interface::DeviceDriver for GPIO {
     fn compatible(&self) -> &'static str {
