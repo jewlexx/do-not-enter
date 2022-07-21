@@ -13,7 +13,7 @@
 
 extern crate alloc;
 
-use crate::{console::enter_echo, memory::alloc::init_heap};
+use crate::console::enter_echo;
 
 mod bsp;
 mod colorize;
@@ -57,7 +57,7 @@ unsafe fn kernel_init() -> ! {
     // println! is usable from here on.
 
     // Can now use String, Vec, Box, etc.
-    init_heap();
+    memory::alloc::init_heap();
 
     // Transition from unsafe to safe.
     kernel_main()
