@@ -41,7 +41,7 @@ RUN gem install bundler;                             \
     bundle config set --local without 'development'; \
     bundle install --retry 3;                        \
     # QEMU
-    pacman -S qemu-full --noconfirm                                           \
+    pacman -S qemu-full --noconfirm;                                     \
     # Openocd
     git clone --depth 1 https://git.code.sf.net/p/openocd/code openocd; \
     cd openocd;                                                         \
