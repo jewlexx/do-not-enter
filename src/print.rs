@@ -20,12 +20,14 @@ macro_rules! println {
     ($($arg:tt)*) => ($crate::print::_print(format_args_nl!($($arg)*)));
 }
 
+/// Prints to stdout with a newline, debug prefix, but will not print on release
 #[macro_export]
 #[cfg(not(release))]
 macro_rules! debug {
     ($($arg:tt)*) => ($crate::print::_print(format_args_nl!("[Debug] {}", format_args_nl!($($arg)*))));
 }
 
+/// Prints to stdout with a newline, debug prefix, but will not print on release
 #[macro_export]
 #[cfg(release)]
 macro_rules! debug {

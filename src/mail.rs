@@ -52,22 +52,22 @@ pub unsafe fn mbox_call(val: usize) -> bool {
 
     // Wait until we can write
     while mmio_read(&MBOX_STATUS) & MBOX_FULL != 0 {
-        println!("Unable to write");
+        debug!("Unable to write");
     }
-    println!("Writing1");
+    debug!("About to write");
 
     // Write the address of our buffer to the mailbox with the channel appended
     mmio_write(mbox_ref, MBOX_WRITE as *mut usize);
 
-    println!("Writing");
+    debug!("Wrote");
 
     loop {
         // Is there a reply?
         while mmio_read(&MBOX_STATUS) & MBOX_EMPTY != 0 {
-            println!("No reply");
+            debug!("No reply");
         }
 
-        println!("{}\n{}", mbox_ref, mmio_read(&MBOX_READ));
+        debug!("{}\n{}", mbox_ref, mmio_read(&MBOX_READ));
 
         // Is it a reply to our message?
         if mbox_ref == mmio_read(&MBOX_READ) {

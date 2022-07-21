@@ -1,4 +1,5 @@
 use crate::{
+    debug,
     mail::{
         mbox_call,
         mmio::{ch::*, tags::*, MBOX_REQUEST},
@@ -22,7 +23,7 @@ pub struct FrameBuffer {
 
 impl FrameBuffer {
     pub unsafe fn new() -> Option<Self> {
-        println!("Initializing framebuffer");
+        debug!("Initializing framebuffer");
         MBOX[0] = 35 * 4; // Length of message in bytes
         MBOX[1] = MBOX_REQUEST;
 
@@ -67,9 +68,9 @@ impl FrameBuffer {
 
         MBOX[34] = MBOX_TAG_LAST;
 
-        println!("Calling mbox");
+        debug!("Calling mbox");
         if mbox_call(MBOX_CH_PROP) && MBOX[20] == 32 && MBOX[28] != 0 {
-            println!("Called mbox");
+            debug!("Called mbox");
             MBOX[28] &= 0x3FFFFFFF; // Convert GPU address to ARM address
 
             Some(Self {
@@ -93,7 +94,7 @@ impl FrameBuffer {
     }
 
     pub fn draw_rect(&self, x1: usize, y1: usize, x2: usize, y2: usize, attr: char, fill: bool) {
-        println!("Drawing");
+        debug!("Drawing");
         let mut y = y1;
 
         while y < y2 {
