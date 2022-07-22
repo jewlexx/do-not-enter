@@ -5,7 +5,9 @@ use core::fmt;
 
 #[doc(hidden)]
 pub fn _print(args: fmt::Arguments) {
-    console::console().write_fmt(args).unwrap();
+    console::console()
+        .write_fmt(format_args!("{}{}", args, crate::colorize::Color::Reset))
+        .unwrap();
 }
 
 /// Prints without a newline.
@@ -64,9 +66,10 @@ macro_rules! warn {
         let timestamp = $crate::time::time_manager().uptime();
 
         $crate::print::_print(format_args_nl!(
-            concat!("[W {:>3}.{:06}] ", $string),
+            concat!("[W {:>3}.{:06}] {}", $string),
             timestamp.as_secs(),
             timestamp.subsec_micros(),
+            $crate::colorize::Color::Yellow
         ));
     });
     ($format_string:expr, $($arg:tt)*) => ({
@@ -75,9 +78,10 @@ macro_rules! warn {
         let timestamp = $crate::time::time_manager().uptime();
 
         $crate::print::_print(format_args_nl!(
-            concat!("[W {:>3}.{:06}] ", $format_string),
+            concat!("[W {:>3}.{:06}] {}", $format_string),
             timestamp.as_secs(),
             timestamp.subsec_micros(),
+            $crate::colorize::Color::Yellow,
             $($arg)*
         ));
     })

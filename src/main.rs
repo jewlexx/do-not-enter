@@ -6,6 +6,7 @@
 #![feature(trait_alias)]
 #![feature(alloc_error_handler)]
 #![feature(stmt_expr_attributes)]
+#![feature(default_alloc_error_handler)]
 #![no_main]
 #![no_std]
 
@@ -74,33 +75,38 @@ _____          _   _       _     ______       _
 
 /// The main function running after the early init.
 fn kernel_main() -> ! {
+    use core::time::Duration;
     use driver::interface::DriverManager;
+    use time::interface::TimeManager;
 
-    panic!("FUCKY WUCKY");
+    info!("{}", TITLE_TEXT);
 
-    println!("{TITLE_TEXT}");
-
-    println!(
-        "[0] {} version {}",
+    info!(
+        "{} version {}",
         env!("CARGO_PKG_NAME"),
         env!("CARGO_PKG_VERSION")
     );
-    println!("[DNE] Booting on: {}", bsp::board_name());
+    info!("Booting on: {}", bsp::board_name());
 
-    println!("[DNE] Drivers loaded:");
+    info!(
+        "Architectural timer resolution: {} ns",
+        time::time_manager().resolution().as_nanos()
+    );
+
+    info!("Drivers loaded:");
     for (i, driver) in bsp::driver::driver_manager()
         .all_device_drivers()
         .iter()
         .enumerate()
     {
-        println!("      {}. {}", i + 1, driver.compatible());
+        info!("      {}. {}", i + 1, driver.compatible());
     }
 
-    println!(
-        "[DNE] Chars written: {}",
-        console::console().chars_written()
-    );
-    println!("[DNE] Echoing input now");
+    // Test a failing timer case.
+    time::time_manager().spin_for(Duration::from_nanos(1));
+
+    info!("Spinning for 1 second");
+    time::time_manager().spin_for(Duration::from_secs(1));
 
     let fb = unsafe { framebuffer::FrameBuffer::new(1920, 1080) }.unwrap();
 
