@@ -77,6 +77,7 @@ const TITLE_TEXT: &str = r#"
 | |  | |/ _ \  | . ` |/ _ \| __| |  __| | '_ \| __/ _ \ '__|
 | |__| | (_) | | |\  | (_) | |_  | |____| | | | ||  __/ |
 |_____/ \___/  |_| \_|\___/ \__| |______|_| |_|\__\___|_|
+
 "#;
 
 /// The main function running after the early init.
@@ -85,7 +86,9 @@ fn kernel_main() -> ! {
     use driver::interface::DriverManager;
     use time::interface::TimeManager;
 
-    info!("{}", TITLE_TEXT);
+    for line in TITLE_TEXT.lines() {
+        info!("{}", line);
+    }
 
     info!(
         "{} version {}",
