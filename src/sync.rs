@@ -27,6 +27,9 @@ pub mod interface {
 
         /// Locks the mutex and grants the closure temporary mutable access to the wrapped data.
         fn lock<'a, R>(&'a self, f: impl FnOnce(&'a mut Self::Data) -> R) -> R;
+
+        /// Locks the mutex and returns an immutable reference to the wrapped data.
+        fn read(&self) -> &Self::Data;
     }
 }
 
@@ -73,5 +76,9 @@ impl<T> interface::Mutex for NullLock<T> {
         let data = unsafe { &mut *self.data.get() };
 
         f(data)
+    }
+
+    fn read(&self) -> &Self::Data {
+        unsafe { &*self.data.get() }
     }
 }
