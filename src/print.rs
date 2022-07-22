@@ -91,7 +91,12 @@ macro_rules! warn {
 #[macro_export]
 #[cfg(not(release))]
 macro_rules! debug {
-    ($($arg:tt)*) => ($crate::print::_print(format_args_nl!("[Debug] {}{}{}", $crate::colorize::Color::Blue, format_args!($($arg)*),$crate::colorize::Color::Reset)));
+    ($($arg:tt)*) => ({
+        use $crate::time::interface::TimeManager;
+
+        let timestamp = $crate::time::time_manager().uptime();
+
+        $crate::print::_print(format_args_nl!("[D {:>3}.{:06}] {}{}", timestamp.as_secs(), timestamp.subsec_micros(), $crate::colorize::Color::Blue, format_args!($($arg)*)))});
 }
 
 /// Prints to stdout with a newline, debug prefix, but will not print on release
