@@ -26,6 +26,7 @@ mod memory;
 mod panic_wait;
 mod print;
 mod sync;
+mod time;
 
 cfg_if::cfg_if! {
     // Panic if not building for aarch64
