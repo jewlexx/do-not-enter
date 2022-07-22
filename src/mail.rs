@@ -1,6 +1,10 @@
 use aligned::{Aligned, A16};
 
-use crate::{bsp::memory::map::mmio::*, debug};
+use crate::{
+    bsp::memory::map::mmio::*,
+    debug,
+    sync::{interface::Mutex, NullLock},
+};
 
 // All const definitions so unused is fine
 #[allow(dead_code)]
@@ -33,7 +37,7 @@ pub mod mmio {
     pub const MBOX_REQUEST: usize = 0x0;
 }
 
-pub static mut MBOX: Aligned<A16, [usize; 36]> = Aligned([0usize; 36]);
+pub static mut MBOX: NullLock<Aligned<A16, [usize; 36]>> = NullLock::new(Aligned([0usize; 36]));
 
 unsafe fn mmio_read(src: *const usize) -> usize {
     *src
@@ -48,7 +52,7 @@ type MboxPtr = *const Aligned<A16, [usize; 36]>;
 
 pub unsafe fn mbox_call(val: usize) -> bool {
     // 28-bit address (MSB) and 4-bit value (LSB)
-    let mbox_ref = (&MBOX as MboxPtr as usize) & !0xF | val & 0xF;
+    let mbox_ref = ((MBOX.lock(|inner| inner)) as MboxPtr as usize) & !0xF | val & 0xF;
 
     // Wait until we can write
     while mmio_read(MBOX_STATUS as *const usize) & MBOX_FULL != 0 {
@@ -70,7 +74,7 @@ pub unsafe fn mbox_call(val: usize) -> bool {
         // Is it a reply to our message?
         if mbox_ref == mmio_read(MBOX_READ as *const usize) {
             debug!("Got reply");
-            return MBOX[1] == MBOX_RESPONSE;
+            return MBOX.lock(|inner| inner[1]) == MBOX_RESPONSE;
         }
     }
 }

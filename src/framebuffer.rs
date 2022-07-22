@@ -5,6 +5,7 @@ use crate::{
         mmio::{ch::*, tags::*, MBOX_REQUEST},
         MBOX,
     },
+    sync::interface::Mutex,
 };
 
 static VGAPAL: [u32; 16] = [
@@ -23,62 +24,72 @@ pub struct FrameBuffer {
 impl FrameBuffer {
     pub unsafe fn new(width: usize, height: usize) -> Option<Self> {
         debug!("Initializing framebuffer");
-        MBOX[0] = 35 * 4; // Length of message in bytes
-        MBOX[1] = MBOX_REQUEST;
+        MBOX.lock(|inner| {
+            inner[0] = 35 * 4; // Length of message in bytes
+            inner[1] = MBOX_REQUEST;
 
-        MBOX[2] = MBOX_TAG_SETPHYWH; // Tag identifier
-        MBOX[3] = 8; // Value size in bytes
-        MBOX[4] = 0;
-        MBOX[5] = 1920; // Value(width)
-        MBOX[6] = 1080; // Value(height)
+            inner[2] = MBOX_TAG_SETPHYWH; // Tag identifier
+            inner[3] = 8; // Value size in bytes
+            inner[4] = 0;
+            inner[5] = 1920; // Value(width)
+            inner[6] = 1080; // Value(height)
 
-        MBOX[7] = MBOX_TAG_SETVIRTWH;
-        MBOX[8] = 8;
-        MBOX[9] = 8;
-        MBOX[10] = width;
-        MBOX[11] = height;
+            inner[7] = MBOX_TAG_SETVIRTWH;
+            inner[8] = 8;
+            inner[9] = 8;
+            inner[10] = width;
+            inner[11] = height;
 
-        MBOX[12] = MBOX_TAG_SETVIRTOFF;
-        MBOX[13] = 8;
-        MBOX[14] = 8;
-        MBOX[15] = 0; // Value(x)
-        MBOX[16] = 0; // Value(y)
+            inner[12] = MBOX_TAG_SETVIRTOFF;
+            inner[13] = 8;
+            inner[14] = 8;
+            inner[15] = 0; // Value(x)
+            inner[16] = 0; // Value(y)
 
-        MBOX[17] = MBOX_TAG_SETDEPTH;
-        MBOX[18] = 4;
-        MBOX[19] = 4;
-        MBOX[20] = 32; // Bits per pixel
+            inner[17] = MBOX_TAG_SETDEPTH;
+            inner[18] = 4;
+            inner[19] = 4;
+            inner[20] = 32; // Bits per pixel
 
-        MBOX[21] = MBOX_TAG_SETPXLORDR;
-        MBOX[22] = 4;
-        MBOX[23] = 4;
-        MBOX[24] = 1; // RGB
+            inner[21] = MBOX_TAG_SETPXLORDR;
+            inner[22] = 4;
+            inner[23] = 4;
+            inner[24] = 1; // RGB
 
-        MBOX[25] = MBOX_TAG_GETFB;
-        MBOX[26] = 8;
-        MBOX[27] = 8;
-        MBOX[28] = 4096; // FrameBufferInfo.pointer
-        MBOX[29] = 0; // FrameBufferInfo.size
+            inner[25] = MBOX_TAG_GETFB;
+            inner[26] = 8;
+            inner[27] = 8;
+            inner[28] = 4096; // FrameBufferInfo.pointer
+            inner[29] = 0; // FrameBufferInfo.size
 
-        MBOX[30] = MBOX_TAG_GETPITCH;
-        MBOX[31] = 4;
-        MBOX[32] = 4;
-        MBOX[33] = 0; // Bytes per line
+            inner[30] = MBOX_TAG_GETPITCH;
+            inner[31] = 4;
+            inner[32] = 4;
+            inner[33] = 0; // Bytes per line
 
-        MBOX[34] = MBOX_TAG_LAST;
+            inner[34] = MBOX_TAG_LAST;
+        });
 
         debug!("Calling mbox");
-        if mbox_call(MBOX_CH_PROP) && MBOX[20] == 32 && MBOX[28] != 0 {
-            debug!("Called mbox");
-            MBOX[28] &= 0x3FFFFFFF; // Convert GPU address to ARM address
+        let fbinfo_ptr = MBOX.lock(|inner| inner[28]);
+        let bbl = MBOX.lock(|inner| inner[20]);
 
-            Some(Self {
-                width: MBOX[10],  // Actual physical width
-                height: MBOX[11], // Actual physical height
-                pitch: MBOX[33],  // Number of bytes per line
-                isrgb: MBOX[24] != 0,
-                fb: &MBOX[28] as *const usize as usize, // Pixel order
-            })
+        if mbox_call(MBOX_CH_PROP) && bbl == 32 && fbinfo_ptr != 0 {
+            debug!("Called mbox");
+
+            let self_res = MBOX.lock(|inner| {
+                inner[28] &= 0x3FFFFFFF; // Convert GPU address to ARM address
+
+                Self {
+                    width: inner[10],  // Actual physical width
+                    height: inner[11], // Actual physical height
+                    pitch: inner[33],  // Number of bytes per line
+                    isrgb: inner[24] != 0,
+                    fb: inner[28] as *const usize as usize, // Pixel order
+                }
+            });
+
+            Some(self_res)
         } else {
             None
         }
