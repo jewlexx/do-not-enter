@@ -105,8 +105,7 @@ fn kernel_main() -> ! {
     info!("Spinning for 5 seconds before initializing framebuffer");
     time::time_manager().spin_for(Duration::from_secs(5));
 
-    let fb = framebuffer::FrameBuffer::new(1920, 1080)
-        .unwrap_or_else(|| panic!("Failed to initialize framebuffer"));
+    let fb = framebuffer::FrameBuffer::new(1920, 1080).expect("failed to initialize framebuffer");
 
     fb.draw_rect(150, 150, 400, 400, 0x03 as char, false);
 
