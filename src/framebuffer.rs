@@ -21,7 +21,7 @@ pub struct FrameBuffer {
 }
 
 impl FrameBuffer {
-    pub unsafe fn new() -> Option<Self> {
+    pub unsafe fn new(width: usize, height: usize) -> Option<Self> {
         debug!("Initializing framebuffer");
         MBOX[0] = 35 * 4; // Length of message in bytes
         MBOX[1] = MBOX_REQUEST;
@@ -35,8 +35,8 @@ impl FrameBuffer {
         MBOX[7] = MBOX_TAG_SETVIRTWH;
         MBOX[8] = 8;
         MBOX[9] = 8;
-        MBOX[10] = 1920;
-        MBOX[11] = 1080;
+        MBOX[10] = width;
+        MBOX[11] = height;
 
         MBOX[12] = MBOX_TAG_SETVIRTOFF;
         MBOX[13] = 8;

@@ -99,7 +99,7 @@ fn kernel_main() -> ! {
     );
     println!("[DNE] Echoing input now");
 
-    let fb = unsafe { framebuffer::FrameBuffer::new() }.unwrap();
+    let fb = unsafe { framebuffer::FrameBuffer::new(1920, 1080) }.unwrap();
 
     fb.draw_rect(150, 150, 400, 400, 0x03 as char, false);
 
