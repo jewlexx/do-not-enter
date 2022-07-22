@@ -14,7 +14,8 @@
 
 extern crate alloc;
 
-use crate::console::enter_echo;
+use console::enter_echo;
+use sync::NullLock;
 
 mod bsp;
 mod colorize;
@@ -40,6 +41,9 @@ cfg_if::cfg_if! {
     }
 }
 
+/// States whether or not we can allocate memory
+pub static CAN_ALLOC: NullLock<bool> = NullLock::new(false);
+
 /// Early init code.
 ///
 /// # Safety
@@ -48,6 +52,7 @@ cfg_if::cfg_if! {
 /// - The init calls in this function must appear in the correct order.
 unsafe fn kernel_init() -> ! {
     use driver::interface::DriverManager;
+    use sync::interface::Mutex;
 
     for i in bsp::driver::driver_manager().all_device_drivers().iter() {
         if let Err(x) = i.init() {
@@ -59,6 +64,7 @@ unsafe fn kernel_init() -> ! {
 
     // Can now use String, Vec, Box, etc.
     memory::alloc::kernel_init_heap_allocator();
+    CAN_ALLOC.lock(|inner| *inner = true);
 
     // Transition from unsafe to safe.
     kernel_main()
