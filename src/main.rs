@@ -78,6 +78,7 @@ const TITLE_TEXT: &str = r#"
 | |__| | (_) | | |\  | (_) | |_  | |____| | | | ||  __/ |
 |_____/ \___/  |_| \_|\___/ \__| |______|_| |_|\__\___|_|
 
+
 "#;
 
 /// The main function running after the early init.
