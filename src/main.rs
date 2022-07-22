@@ -76,6 +76,8 @@ _____          _   _       _     ______       _
 fn kernel_main() -> ! {
     use driver::interface::DriverManager;
 
+    panic!("FUCKY WUCKY");
+
     println!("{TITLE_TEXT}");
 
     println!(
