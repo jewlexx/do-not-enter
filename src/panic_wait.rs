@@ -1,12 +1,11 @@
 //! A panic handler that infinitely waits.
 
-#[alloc_error_handler]
-fn oom(_: Layout) -> ! {
-    cpu::wait_forever()
-}
-
 use crate::{cpu, println};
-use core::{alloc::Layout, panic::PanicInfo};
+use core::panic::PanicInfo;
+
+//--------------------------------------------------------------------------------------------------
+// Private Code
+//--------------------------------------------------------------------------------------------------
 
 /// Stop immediately if called a second time.
 ///
@@ -39,21 +38,23 @@ fn panic_prevent_reenter() {
 
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
+    use crate::time::interface::TimeManager;
+
     // Protect against panic infinite loops if any of the following code panics itself.
     panic_prevent_reenter();
 
+    let timestamp = crate::time::time_manager().uptime();
     let (location, line, column) = match info.location() {
         Some(loc) => (loc.file(), loc.line(), loc.column()),
         _ => ("???", 0, 0),
     };
 
     println!(
-        "\n\nKernel panicked!\n\n\
-        Panic location:\n      File '{}', line {}, column {}\n\n\
+        "\n\n[  {:>3}.{:06}] Kernel panic!\n\n
+        Panic location:\n      File '{location}', line {line}, column {column}\n\n
         {}",
-        location,
-        line,
-        column,
+        timestamp.as_secs(),
+        timestamp.subsec_micros(),
         info.message().unwrap_or(&format_args!("")),
     );
 
