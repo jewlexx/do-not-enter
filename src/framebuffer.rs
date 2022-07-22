@@ -22,7 +22,7 @@ pub struct FrameBuffer {
 }
 
 impl FrameBuffer {
-    pub unsafe fn new(width: usize, height: usize) -> Option<Self> {
+    pub fn new(width: usize, height: usize) -> Option<Self> {
         debug!("Initializing framebuffer");
         MBOX.lock(|inner| {
             inner[0] = 35 * 4; // Length of message in bytes
@@ -74,7 +74,7 @@ impl FrameBuffer {
         let fbinfo_ptr = MBOX.lock(|inner| inner[28]);
         let bbl = MBOX.lock(|inner| inner[20]);
 
-        if mbox_call(MBOX_CH_PROP) && bbl == 32 && fbinfo_ptr != 0 {
+        if unsafe { mbox_call(MBOX_CH_PROP) } && bbl == 32 && fbinfo_ptr != 0 {
             debug!("Called mbox");
 
             let self_res = MBOX.lock(|inner| {

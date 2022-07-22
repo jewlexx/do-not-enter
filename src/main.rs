@@ -102,13 +102,10 @@ fn kernel_main() -> ! {
         info!("      {}. {}", i + 1, driver.compatible());
     }
 
-    // Test a failing timer case.
-    time::time_manager().spin_for(Duration::from_nanos(1));
+    info!("Spinning for 5 seconds before initializing framebuffer");
+    time::time_manager().spin_for(Duration::from_secs(5));
 
-    info!("Spinning for 1 second");
-    time::time_manager().spin_for(Duration::from_secs(1));
-
-    let fb = unsafe { framebuffer::FrameBuffer::new(1920, 1080) }.unwrap();
+    let fb = framebuffer::FrameBuffer::new(1920, 1080).unwrap();
 
     fb.draw_rect(150, 150, 400, 400, 0x03 as char, false);
 

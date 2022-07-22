@@ -37,7 +37,7 @@ pub mod mmio {
     pub const MBOX_REQUEST: usize = 0x0;
 }
 
-pub static mut MBOX: NullLock<Aligned<A16, [usize; 36]>> = NullLock::new(Aligned([0usize; 36]));
+pub static MBOX: NullLock<Aligned<A16, [usize; 36]>> = NullLock::new(Aligned([0usize; 36]));
 
 unsafe fn mmio_read(src: *const usize) -> usize {
     *src
