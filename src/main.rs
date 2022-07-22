@@ -1,5 +1,4 @@
 #![warn(missing_docs)]
-#![forbid(unused_imports)]
 #![allow(clippy::upper_case_acronyms)]
 #![feature(asm_const)]
 #![feature(format_args_nl)]
