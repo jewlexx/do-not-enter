@@ -87,8 +87,7 @@ checksum = "0c520e05135d6e763148b6426a837e239041653ba7becd2e538c076c738025fc"
 [[package]]
 name = "ruspiro-arch-aarch64"
 version = "0.1.7"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "60ebe116b71a6c9c1253b2fce62e1337d714ce7dc3a5e78da87fc3e69e4c9407"
+source = "git+https://github.com/RusPiRo/ruspiro-arch-aarch64.git?branch=development#3d9d1797962b4f7c87b44a8c9736f02b066a0173"
 dependencies = [
  "ruspiro-register",
 ]
