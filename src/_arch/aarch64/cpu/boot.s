@@ -18,6 +18,9 @@
 	add	\register, \register, #:lo12:\symbol
 .endm
 
+.equ _EL2, 0x8
+.equ _core_id_mask, 0b11
+
 .section .text._start
 
 _start:
