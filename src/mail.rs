@@ -18,10 +18,8 @@ pub fn init() -> Result<FBInfo, ()> {
 
     let gpu_channel = Channel::new(0).unwrap();
 
-    unsafe {
-        let fbi_ptr = &fb_info as *const FBInfo;
-        gpu_channel.write(fbi_ptr as u32 + 0x40000000)
-    }
+    let fbi_ptr = &fb_info as *const FBInfo;
+    gpu_channel.write(fbi_ptr as u32 + 0x40000000);
 
     if gpu_channel.read() == 0 {
         Ok(fb_info)

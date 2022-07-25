@@ -112,9 +112,9 @@ unsafe fn maintain_dcache(operation: CacheOperation, level: CacheLevel) {
         let x11 = x11 | x6;
         // invalidate data cache by set/way
         match operation {
-          CacheOperation::Invalidate => asm!("dc isw, $0", "r{}", "volatile", in(reg) x11),
-          CacheOperation::Clean => asm!("dc csw, $0", "r{}", "volatile", in(reg) x11),
-          CacheOperation::Flush => asm!("dc cisw, $0", "r{}", "volatile", in(reg) x11),
+          CacheOperation::Invalidate => asm!("dc isw, r{}", in(reg) x11),
+          CacheOperation::Clean => asm!("dc csw, r{}", in(reg) x11),
+          CacheOperation::Flush => asm!("dc cisw, r{}", in(reg) x11),
         }
       }
     }
@@ -124,12 +124,12 @@ unsafe fn maintain_dcache(operation: CacheOperation, level: CacheLevel) {
 pub unsafe fn flush_dcache_range(from: usize, size: usize) {
   dsb();
   let dcls = dcache_line_size();
-  let end = from + size;
+  let end = from + size;`
   let start = from & !(dcls - 1);
   let mut current = start;
   while current < end {
     // clean & invalidate D line / unified line
-    asm!("dc civac, $0", "r{}", "volatile", in(reg) current);
+    asm!("dc civac, r{}", in(reg) current);
     current += dcls;
   }
   dsb();
