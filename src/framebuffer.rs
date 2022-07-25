@@ -14,10 +14,10 @@ static VGAPAL: [u32; 16] = [
 ];
 
 pub struct FrameBuffer {
+    pub width: usize,
+    pub height: usize,
+    pub is_rgb: bool,
     pitch: usize,
-    width: usize,
-    height: usize,
-    isrgb: bool,
     fb: usize,
 }
 
@@ -84,7 +84,7 @@ impl FrameBuffer {
                     width: inner[10],  // Actual physical width
                     height: inner[11], // Actual physical height
                     pitch: inner[33],  // Number of bytes per line
-                    isrgb: inner[24] != 0,
+                    is_rgb: inner[24] != 0,
                     fb: inner[28] as *const usize as usize, // Pixel order
                 }
             });
