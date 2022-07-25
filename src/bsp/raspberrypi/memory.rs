@@ -12,8 +12,10 @@ pub mod map {
         cfg_if::cfg_if! {
             if #[cfg(feature = "bsp_rpi3")] {
                 pub const START: usize = 0x3F00_0000;
+                pub const END_INCLUSIVE: usize = 0x4000_FFFF;
             } else if #[cfg(feature = "bsp_rpi4")] {
                 pub const START: usize = 0xFE00_0000;
+                pub const END_INCLUSIVE: usize = 0xFF84_FFFF;
             }
         }
 
@@ -31,4 +33,33 @@ pub mod map {
         pub const MBOX_FULL: usize = 0x80000000;
         pub const MBOX_EMPTY: usize = 0x40000000;
     }
+}
+
+pub mod mmu;
+
+use core::cell::UnsafeCell;
+
+// Symbols from the linker script.
+extern "Rust" {
+    static __code_start: UnsafeCell<()>;
+    static __code_end_exclusive: UnsafeCell<()>;
+}
+
+/// Start page address of the code segment.
+///
+/// # Safety
+///
+/// - Value is provided by the linker script and must be trusted as-is.
+#[inline(always)]
+fn code_start() -> usize {
+    unsafe { __code_start.get() as usize }
+}
+
+/// Exclusive end page address of the code segment.
+/// # Safety
+///
+/// - Value is provided by the linker script and must be trusted as-is.
+#[inline(always)]
+fn code_end_exclusive() -> usize {
+    unsafe { __code_end_exclusive.get() as usize }
 }
