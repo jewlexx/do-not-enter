@@ -17,8 +17,6 @@ extern crate alloc;
 use console::enter_echo;
 use sync::NullLock;
 
-use crate::colorize::{Color, Colorize};
-
 mod bsp;
 mod colorize;
 mod console;
