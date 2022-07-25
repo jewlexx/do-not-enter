@@ -166,6 +166,10 @@ qemu: $(KERNEL_BIN)
 	$(call color_header, "Launching QEMU")
 	@$(DOCKER_QEMU) $(EXEC_QEMU) $(QEMU_RELEASE_ARGS) -kernel $(KERNEL_BIN)
 
+gqemu: $(KERNEL_BIN)
+	$(call color_header, "Launching QEMU")
+	@$(EXEC_QEMU) $(GEMU_RELEASE_ARGS) -kernel $(KERNEL_BIN)
+
 qemuasm: $(KERNEL_BIN)
 	$(call color_header, "Launching QEMU with ASM output")
 	@$(DOCKER_QEMU) $(EXEC_QEMU) $(QEMU_RELEASE_ARGS) -kernel $(KERNEL_BIN) -d in_asm
