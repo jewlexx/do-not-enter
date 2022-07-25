@@ -124,12 +124,12 @@ unsafe fn maintain_dcache(operation: CacheOperation, level: CacheLevel) {
 pub unsafe fn flush_dcache_range(from: usize, size: usize) {
   dsb();
   let dcls = dcache_line_size();
-  let end = from + size;`
+  let end = from + size;
   let start = from & !(dcls - 1);
   let mut current = start;
   while current < end {
     // clean & invalidate D line / unified line
-    asm!("dc civac, r{}", in(reg) current);
+    asm!("dc civac, {}", in(reg) current);
     current += dcls;
   }
   dsb();
