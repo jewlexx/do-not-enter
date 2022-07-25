@@ -237,7 +237,7 @@ else # QEMU is supported.
 ##------------------------------------------------------------------------------
 test_boot: $(KERNEL_BIN)
 	$(call color_header, "Boot test - $(BSP)")
-	@$(DOCKER_TEST) $(EXEC_TEST_MINIPUSH) $(EXEC_QEMU) $(QEMU_RELEASE_ARGS) \
+	@$(QEMU_BINARY) -M $(QEMU_MACHINE_TYPE) $(EXEC_TEST_MINIPUSH) $(EXEC_QEMU) $(QEMU_RELEASE_ARGS) \
 		-kernel $(KERNEL_BIN) $(CHAINBOOT_DEMO_PAYLOAD)
 
 test: test_boot
