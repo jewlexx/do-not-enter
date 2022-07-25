@@ -3,12 +3,15 @@ name = "do-not-enter"
 version = "0.1.0"
 edition = "2021"
 
+[workspace]
+members = ["ruspiro-mailbox"]
+
 [profile.release]
 lto = true
 
 [features]
 default = []
-bsp_rpi3 = []
+bsp_rpi3 = ["ruspiro-mailbox/ruspiro_pi3"]
 bsp_rpi4 = []
 
 [[bin]]
@@ -21,4 +24,10 @@ cfg-if = "1.0.0"
 # seq-macro = "0.3.0"
 cortex-a = "7.4.0"
 linked_list_allocator = "0.10.1"
+ruspiro-mailbox = { version = "0.4.1", path = "ruspiro-mailbox" }
 tock-registers = "0.7.0"
+
+[patch.crates-io]
+ruspiro-mmio-register = { git = "https://github.com/RusPiRo/ruspiro-mmio-register.git", branch = "development" }
+ruspiro-cache = { git = "https://github.com/RusPiRo/ruspiro-cache.git", branch = "development" }
+ruspiro-error = { git = "https://github.com/RusPiRo/ruspiro-error.git", branch = "development" }

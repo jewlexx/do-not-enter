@@ -27,6 +27,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d468802bab17cbc0cc575e9b053f41e72aa36bfa6b7f55e3529ffa43161b97fa"
 
 [[package]]
+name = "cc"
+version = "1.0.73"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2fff2a6927b3bb87f9595d67196a70493f627687a71d87a0d692242c33f58c11"
+
+[[package]]
 name = "cfg-if"
 version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -49,6 +55,7 @@ dependencies = [
  "cfg-if",
  "cortex-a",
  "linked_list_allocator",
+ "ruspiro-mailbox",
  "tock-registers",
 ]
 
@@ -70,6 +77,59 @@ dependencies = [
  "autocfg",
  "scopeguard",
 ]
+
+[[package]]
+name = "paste"
+version = "1.0.7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0c520e05135d6e763148b6426a837e239041653ba7becd2e538c076c738025fc"
+
+[[package]]
+name = "ruspiro-arch-aarch64"
+version = "0.1.7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "60ebe116b71a6c9c1253b2fce62e1337d714ce7dc3a5e78da87fc3e69e4c9407"
+dependencies = [
+ "ruspiro-register",
+]
+
+[[package]]
+name = "ruspiro-cache"
+version = "0.4.1"
+source = "git+https://github.com/RusPiRo/ruspiro-cache.git?branch=development#d950d9b259af78029167fc0341c4afa82eff8ca7"
+dependencies = [
+ "cc",
+ "ruspiro-arch-aarch64",
+]
+
+[[package]]
+name = "ruspiro-error"
+version = "0.1.1"
+source = "git+https://github.com/RusPiRo/ruspiro-error.git?branch=development#5c193f42bd1f06b800ec70a17656be577dd49ccc"
+
+[[package]]
+name = "ruspiro-mailbox"
+version = "0.4.1"
+dependencies = [
+ "paste",
+ "ruspiro-cache",
+ "ruspiro-error",
+ "ruspiro-mmio-register",
+]
+
+[[package]]
+name = "ruspiro-mmio-register"
+version = "0.1.4"
+source = "git+https://github.com/RusPiRo/ruspiro-mmio-register.git?branch=development#7b6b1fc9211f68cf35b48bf752b85285985dee74"
+dependencies = [
+ "ruspiro-register",
+]
+
+[[package]]
+name = "ruspiro-register"
+version = "0.5.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6c398a7ffbb98aa0c91a4118eeb28fed510e58b02014e9020e269808e870fcf6"
 
 [[package]]
 name = "scopeguard"
