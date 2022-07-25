@@ -24,3 +24,15 @@ pub mod interface {
         fn spin_for(&self, duration: Duration);
     }
 }
+
+#[macro_export]
+/// Spins for specified number of seconds, or one if left blank
+macro_rules! spin_for_secs {
+    ($time:tt) => {
+        $crate::time::time_manager().spin_for(core::time::Duration::from_secs($time))
+    };
+
+    () => {
+        spin_for_secs!(1)
+    };
+}

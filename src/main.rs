@@ -115,7 +115,7 @@ fn kernel_main() -> ! {
     }
 
     info!("Spinning for 5 seconds before initializing framebuffer");
-    time::time_manager().spin_for(Duration::from_secs(5));
+    spin_for_secs!(5);
 
     let fb = framebuffer::FrameBuffer::new(1920, 1080).expect("failed to initialize framebuffer");
 
