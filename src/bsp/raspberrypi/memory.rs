@@ -5,19 +5,21 @@ pub mod map {
     pub const GPIO_OFFSET: usize = 0x0020_0000;
     pub const UART_OFFSET: usize = 0x0020_1000;
 
-    cfg_if::cfg_if! {
-        if #[cfg(feature = "bsp_rpi3")] {
-            pub const START: usize = 0x3F00_0000;
-            pub const END_INCLUSIVE: usize = 0x4000_FFFF;
-        } else if #[cfg(feature = "bsp_rpi4")] {
-            pub const START: usize = 0xFE00_0000;
-            pub const END_INCLUSIVE: usize = 0xFF84_FFFF;
-        }
-    }
+    pub const END_INCLUSIVE: usize = 0xFFFF_FFFF;
 
     /// Physical devices.
     pub mod mmio {
         use super::*;
+
+        cfg_if::cfg_if! {
+            if #[cfg(feature = "bsp_rpi3")] {
+                pub const START: usize = 0x3F00_0000;
+                pub const END_INCLUSIVE: usize = 0x4000_FFFF;
+            } else if #[cfg(feature = "bsp_rpi4")] {
+                pub const START: usize = 0xFE00_0000;
+                pub const END_INCLUSIVE: usize = 0xFF84_FFFF;
+            }
+        }
 
         pub const GPIO_START: usize = START + GPIO_OFFSET;
         pub const PL011_UART_START: usize = START + UART_OFFSET;

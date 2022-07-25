@@ -33,7 +33,7 @@ pub static LAYOUT: KernelVirtualLayout<NUM_MEM_RANGES> = KernelVirtualLayout::ne
         TranslationDescriptor {
             name: "Remapped Device MMIO",
             virtual_range: remapped_mmio_range_inclusive,
-            physical_range_translation: Translation::Offset(memory_map::START + 0x20_0000),
+            physical_range_translation: Translation::Offset(memory_map::mmio::START + 0x20_0000),
             attribute_fields: AttributeFields {
                 mem_attributes: MemAttributes::Device,
                 acc_perms: AccessPermissions::ReadWrite,
@@ -69,7 +69,7 @@ fn remapped_mmio_range_inclusive() -> RangeInclusive<usize> {
 }
 
 fn mmio_range_inclusive() -> RangeInclusive<usize> {
-    RangeInclusive::new(memory_map::START, memory_map::END_INCLUSIVE)
+    RangeInclusive::new(memory_map::mmio::START, memory_map::END_INCLUSIVE)
 }
 
 //--------------------------------------------------------------------------------------------------
