@@ -1,7 +1,3 @@
-## SPDX-License-Identifier: MIT OR Apache-2.0
-##
-## Copyright (c) 2017-2022 Andre Richter <andre.o.richter@gmail.com>
-## Copyright (c) 2019-2022 Nao Taco <naotaco@gmail.com>
 FROM ubuntu:20.04
 
 ARG VCS_REF
