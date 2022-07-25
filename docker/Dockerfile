@@ -17,7 +17,8 @@ LABEL maintainer="Juliette Cordor"
 COPY Gemfile .
 
 RUN set -ex;                                      \
-    tempPkgs='                                    \
+    apt-get update;                               \
+    apt-get install -q -y --no-install-recommends \
     automake                                  \
     bison                                     \
     build-essential                           \
@@ -27,10 +28,6 @@ RUN set -ex;                                      \
     ninja-build                               \
     pkg-config                                \
     wget                                      \
-    ';                                            \
-    apt-get update;                               \
-    apt-get install -q -y --no-install-recommends \
-    $tempPkgs                                 \
     # persistent packages
     ca-certificates                           \
     gdb-multiarch                             \
@@ -41,7 +38,7 @@ RUN set -ex;                                      \
     python3                                   \
     ruby                                      \
     ruby-dev                                  \
-    ;                                             \
+    ;                                         \
     # GCC AArch64 tools
     if [ "$(uname -m)" = "aarch64" ]; then wget ${GCC_AARCH64}; else wget ${GCC_X86_64}; fi; \
     tar -xf gcc-arm-10*;                                                                     \
