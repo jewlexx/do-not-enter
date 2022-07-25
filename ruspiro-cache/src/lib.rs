@@ -6,7 +6,6 @@
  **********************************************************************************************************************/
 #![doc(html_root_url = "https://docs.rs/ruspiro-cache/||VERSION||")]
 #![cfg_attr(not(any(test, doctest)), no_std)]
-#![feature(llvm_asm)]
 #![feature(core_intrinsics)]
 // this crate does only compile to something usefull if targeted on Aarch64
 #![cfg(target_arch = "aarch64")]

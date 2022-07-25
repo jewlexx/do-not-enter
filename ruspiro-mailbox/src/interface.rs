@@ -14,12 +14,15 @@ use crate::{
     MailboxBatch, MailboxChannel, MailboxMessage, MailboxResult, MessageState, PropertyTag,
 };
 use ruspiro_cache as cache;
-use ruspiro_error::{BoxError, GenericError};
+use ruspiro_error::GenericError;
 use ruspiro_mmio_register::define_mmio_register;
 
 // MMIO base address for peripherals
 #[cfg(feature = "ruspiro_pi3")]
 const PERIPHERAL_BASE: usize = 0x3F00_0000;
+
+#[cfg(feature = "ruspiro_pi4")]
+const PERIPHERAL_BASE: usize = 0xFE00_0000;
 
 // Mailbox MMIO base address
 const MAILBOX_BASE: usize = PERIPHERAL_BASE + 0x0000_B880;

@@ -8,6 +8,8 @@
 //! # Data Cache Operations
 //!
 
+use core::arch::asm;
+
 use ruspiro_arch_aarch64::register::{
   el0::ctr_el0, el1::ccsidr_el1, el1::clidr_el1, el1::csselr_el1,
 };
@@ -110,9 +112,9 @@ unsafe fn maintain_dcache(operation: CacheOperation, level: CacheLevel) {
         let x11 = x11 | x6;
         // invalidate data cache by set/way
         match operation {
-          CacheOperation::Invalidate => llvm_asm!("dc isw, $0"::"r"(x11)::"volatile"),
-          CacheOperation::Clean => llvm_asm!("dc csw, $0"::"r"(x11)::"volatile"),
-          CacheOperation::Flush => llvm_asm!("dc cisw, $0"::"r"(x11)::"volatile"),
+          CacheOperation::Invalidate => asm!("dc isw, $0", "r{}", "volatile", in(reg) x11),
+          CacheOperation::Clean => asm!("dc csw, $0", "r{}", "volatile", in(reg) x11),
+          CacheOperation::Flush => asm!("dc cisw, $0", "r{}", "volatile", in(reg) x11),
         }
       }
     }
@@ -127,7 +129,7 @@ pub unsafe fn flush_dcache_range(from: usize, size: usize) {
   let mut current = start;
   while current < end {
     // clean & invalidate D line / unified line
-    llvm_asm!("dc civac, $0"::"r"(current)::"volatile");
+    asm!("dc civac, $0", "r{}", "volatile", in(reg) current);
     current += dcls;
   }
   dsb();
