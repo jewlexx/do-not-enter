@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [workspace]
-members = ["ruspiro-mailbox"]
+members = ["ruspiro-mailbox", "ruspiro-cache"]
 
 [profile.release]
 lto = true
@@ -29,5 +29,5 @@ tock-registers = "0.7.0"
 
 [patch.crates-io]
 ruspiro-mmio-register = { git = "https://github.com/RusPiRo/ruspiro-mmio-register.git", branch = "development" }
-ruspiro-cache = { git = "https://github.com/RusPiRo/ruspiro-cache.git", branch = "development" }
 ruspiro-error = { git = "https://github.com/RusPiRo/ruspiro-error.git", branch = "development" }
+ruspiro-cache = { path = "ruspiro-cache" }

@@ -96,7 +96,6 @@ dependencies = [
 [[package]]
 name = "ruspiro-cache"
 version = "0.4.1"
-source = "git+https://github.com/RusPiRo/ruspiro-cache.git?branch=development#d950d9b259af78029167fc0341c4afa82eff8ca7"
 dependencies = [
  "cc",
  "ruspiro-arch-aarch64",
