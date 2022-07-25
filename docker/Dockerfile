@@ -1,8 +1,6 @@
 FROM alpine:3.15.5
 
 ARG VCS_REF
-ARG GCC_AARCH64=https://developer.arm.com/-/media/Files/downloads/gnu-a/10.3-2021.07/binrel/gcc-arm-10.3-2021.07-aarch64-aarch64-none-elf.tar.xz
-ARG GCC_X86_64=https://developer.arm.com/-/media/Files/downloads/gnu-a/10.3-2021.07/binrel/gcc-arm-10.3-2021.07-x86_64-aarch64-none-elf.tar.xz
 
 LABEL org.label-schema.vcs-ref=$VCS_REF \
     org.label-schema.vcs-url="https://github.com/jewlexx/do-not-enter"
