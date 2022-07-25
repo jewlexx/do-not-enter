@@ -37,6 +37,7 @@ pub mod map {
     }
 }
 
+pub mod mmio;
 pub mod mmu;
 
 use core::cell::UnsafeCell;

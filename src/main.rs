@@ -25,7 +25,6 @@ mod console;
 mod cpu;
 mod driver;
 mod exception;
-mod framebuffer;
 mod mail;
 mod memory;
 mod panic_wait;
@@ -139,9 +138,11 @@ fn kernel_main() -> ! {
     info!("Spinning for 5 seconds before initializing framebuffer");
     spin_for_secs!(5);
 
-    let fb = framebuffer::FrameBuffer::new(1920, 1080).expect("failed to initialize framebuffer");
+    info!("Initializing framebuffer");
+    let fb = mail::init().unwrap();
 
-    fb.draw_rect(150, 150, 400, 400, 0x03 as char, false);
+    info!("Drawing to framebuffer");
+    fb.draw();
 
     enter_echo();
 }
