@@ -40,12 +40,12 @@ pub mod mmio {
 pub static MBOX: NullLock<Aligned<A16, [usize; 36]>> = NullLock::new(Aligned([0usize; 36]));
 
 unsafe fn mmio_read(src: *const usize) -> usize {
-    *src
+    core::ptr::read_volatile(src)
 }
 
-unsafe fn mmio_write(src: usize, dest: *mut usize) {
-    debug!("Setting {:?} to {}", dest, src);
-    *dest = src;
+unsafe fn mmio_write<T: core::fmt::Debug>(src: T, dest: *mut T) {
+    debug!("Setting {:?} to {:?}", dest, src);
+    core::ptr::write_volatile(dest, src);
 }
 
 type MboxPtr = *const Aligned<A16, [usize; 36]>;
