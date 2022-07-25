@@ -19,6 +19,8 @@ pub mod map {
     pub mod mmio {
         use super::*;
 
+        pub use super::{END_INCLUSIVE, START};
+
         pub const GPIO_START: usize = START + GPIO_OFFSET;
         pub const PL011_UART_START: usize = START + UART_OFFSET;
 
