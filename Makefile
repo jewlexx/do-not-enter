@@ -168,7 +168,7 @@ qemu: $(KERNEL_BIN)
 
 gqemu: $(KERNEL_BIN)
 	$(call color_header, "Launching QEMU")
-	@$(EXEC_QEMU) $(GEMU_RELEASE_ARGS) -kernel $(KERNEL_BIN)
+	@$(QEMU_BINARY) -M raspi3b -kernel $(KERNEL_BIN)
 
 qemuasm: $(KERNEL_BIN)
 	$(call color_header, "Launching QEMU with ASM output")
@@ -237,7 +237,7 @@ else # QEMU is supported.
 ##------------------------------------------------------------------------------
 test_boot: $(KERNEL_BIN)
 	$(call color_header, "Boot test - $(BSP)")
-	@$(QEMU_BINARY) -M $(QEMU_MACHINE_TYPE) $(EXEC_TEST_MINIPUSH) $(EXEC_QEMU) $(QEMU_RELEASE_ARGS) \
+	@$(DOCKER_TEST) $(EXEC_TEST_MINIPUSH) $(EXEC_QEMU) $(QEMU_RELEASE_ARGS) \
 		-kernel $(KERNEL_BIN) $(CHAINBOOT_DEMO_PAYLOAD)
 
 test: test_boot
