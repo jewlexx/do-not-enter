@@ -85,7 +85,6 @@ const TITLE_TEXT: &str = r#"
 
 /// The main function running after the early init.
 fn kernel_main() -> ! {
-    use core::time::Duration;
     use driver::interface::DriverManager;
     use time::interface::TimeManager;
 
