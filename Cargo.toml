@@ -3,6 +3,9 @@ name = "do-not-enter"
 version = "0.1.0"
 edition = "2021"
 
+[workspace]
+members = ["proc-macros"]
+
 [profile.release]
 lto = true
 

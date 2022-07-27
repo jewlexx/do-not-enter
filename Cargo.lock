@@ -111,6 +111,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "proc-macros"
+version = "0.1.0"
+dependencies = [
+ "enum-array",
+ "heck",
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
 name = "quote"
 version = "1.0.20"
 source = "registry+https://github.com/rust-lang/crates.io-index"
