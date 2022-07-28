@@ -25,7 +25,7 @@ pub fn derive_impl_colours(input: proc_macro::TokenStream) -> proc_macro::TokenS
         _ => return macro_error("Can only be derived on an enum"),
     };
 
-    let (array_arms, array_len) = {
+    let (arms, array_len) = {
         use heck::ToSnakeCase;
         let mut arms = Vec::<TokenStream>::new();
 
@@ -62,9 +62,26 @@ pub fn derive_impl_colours(input: proc_macro::TokenStream) -> proc_macro::TokenS
                 }
             };
 
+            let field_braces = match field_type {
+                FieldType::Unit => ("", ""),
+                FieldType::Named => ("{", "}"),
+                FieldType::Unnamed => ("(", ")"),
+            };
+
+            let decl_args = quote!(#(#decl),*).to_string();
+
+            let function_body = format_ident!(
+                "{}::{}{l}{}{r}",
+                name,
+                var_name,
+                decl_args,
+                l = field_braces.0,
+                r = field_braces.1
+            );
+
             let arm = quote! {
-               pub fn #var_name_str(#(#fn_args),*) {
-                    #name::#var_name
+               pub fn #var_name_str(&self, #(#fn_args),*) {
+                    #function_body.to_fg_string()
                }
             };
 
@@ -75,57 +92,9 @@ pub fn derive_impl_colours(input: proc_macro::TokenStream) -> proc_macro::TokenS
         (arms, arms_len)
     };
 
-    let str_vec = {
-        let mut arms = Vec::<String>::new();
-
-        for var in vars.iter() {
-            let var_name = &var.ident;
-
-            match var.fields {
-                Fields::Unit => (),
-                _ => return macro_error("Enum cannot have arguments"),
-            };
-
-            arms.push(var_name.to_string());
-        }
-
-        arms
-    };
-
-    let str_array = {
-        str_vec
-            .iter()
-            .map(|x| {
-                quote! { #x }
-            })
-            .collect::<Vec<_>>()
-    };
-
-    let str_snake_array = {
-        use heck::ToSnakeCase;
-        str_vec
-            .iter()
-            .map(|x| {
-                let snake = x.to_snake_case();
-
-                quote! { #snake }
-            })
-            .collect::<Vec<_>>()
-    };
-
     let v = quote! {
-        impl #name {
-            pub const fn to_array() -> [#name; #array_len] {
-                [#(#array_arms),*]
-            }
-
-            pub const fn to_str_array() -> [&'static str; #array_len] {
-                [#(#str_array),*]
-            }
-
-            pub const fn to_snake_array() -> [&'static str; #array_len] {
-                [#(#str_snake_array),*]
-            }
+        pub trait ColorizeString {
+            #(#arms)*
         }
     };
 
