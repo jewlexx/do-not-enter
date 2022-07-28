@@ -79,6 +79,7 @@ COMPILER_ARGS = --target=$(TARGET) \
     --release
 
 RUSTC_CMD   = cargo rustc $(COMPILER_ARGS)
+CHECK_CMD 	= cargo check $(COMPILER_ARGS)
 DOC_CMD     = cargo doc $(COMPILER_ARGS)
 CLIPPY_CMD  = cargo clippy $(COMPILER_ARGS)
 OBJCOPY_CMD = rust-objcopy \
@@ -117,6 +118,15 @@ endif
 .PHONY: build doc qemu chainboot clippy clean readelf objdump nm check
 
 build: clean $(KERNEL_BIN)
+
+check:
+	$(call color_header, "Checking for cargo-clippy warnings")
+	$(call color_progress_prefix, "cargo clippy")
+	@$(CLIPPY_CMD)
+	$(call color_progress_prefix, "cargo check")
+	@$(CHECK_CMD)
+	$(call color_progress_prefix, "cargo doc")
+	@$(DOC_CMD)
 
 ##------------------------------------------------------------------------------
 ## Save the configuration as a file, so make understands if it changed.
