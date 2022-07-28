@@ -2,8 +2,11 @@ use core::{fmt::Display, str::FromStr};
 
 use alloc::{borrow::Cow, format, string::String};
 
+use dne_macros::ImplColorus;
+
 // A lot of code from this file is borrowed from https://github.com/mackwic/colored/blob/master/src/color.rs
 
+#[derive(ImplColorus)]
 #[allow(dead_code)]
 pub enum Color {
     Black,
