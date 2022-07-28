@@ -1,5 +1,4 @@
 DOCKER_IMAGE := jewelexx/do-not-enter-builder:latest
-# DOCKER_IMAGE := rustembedded/osdev-utils:2021.12
 
 define color_header
     @tput setaf 6 2> /dev/null || true
@@ -70,9 +69,9 @@ RUSTFLAGS = $(RUSTC_MISC_ARGS)                   \
     -C link-arg=--script=$(KERNEL_LINKER_SCRIPT)
 
 # Disabled
-RUSTFLAGS_PEDANTIC = $(RUSTFLAGS) # \
-    # -D warnings                   \
-    # -D missing_docs
+RUSTFLAGS_PEDANTIC = $(RUSTFLAGS) \
+    -D warnings                   \
+    -D missing_docs
 
 FEATURES      = --features bsp_$(BSP)
 COMPILER_ARGS = --target=$(TARGET) \
@@ -115,9 +114,9 @@ endif
 ##--------------------------------------------------------------------------------------------------
 ## Targets
 ##--------------------------------------------------------------------------------------------------
-.PHONY: all doc qemu chainboot clippy clean readelf objdump nm check
+.PHONY: build doc qemu chainboot clippy clean readelf objdump nm check
 
-all: $(KERNEL_BIN)
+build: clean $(KERNEL_BIN)
 
 ##------------------------------------------------------------------------------
 ## Save the configuration as a file, so make understands if it changed.
