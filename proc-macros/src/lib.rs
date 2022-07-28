@@ -63,7 +63,7 @@ pub fn derive_impl_colours(input: proc_macro::TokenStream) -> proc_macro::TokenS
             };
 
             let arm = quote! {
-               pub fn #var_name_str(#(fn_args),*) {
+               pub fn #var_name_str(#(#fn_args),*) {
                     #name::#var_name
                }
             };
