@@ -20,11 +20,13 @@ pub fn derive_impl_colours(input: proc_macro::TokenStream) -> proc_macro::TokenS
     };
 
     let (array_arms, array_len) = {
+        use heck::ToSnakeCase;
         let mut arms = Vec::<TokenStream>::new();
-        let mut fn_args = Vec::<TokenStream>::new();
 
         for var in vars.iter() {
+            let mut fn_args = Vec::<TokenStream>::new();
             let var_name = &var.ident;
+            let var_name_str = var_name.to_string();
 
             match var.fields {
                 Fields::Unit => (),
