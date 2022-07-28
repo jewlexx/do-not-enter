@@ -29,92 +29,47 @@ macro_rules! println {
     })
 }
 
+/// Prints with extra information
+#[doc(hidden)]
+#[macro_export]
+macro_rules! print_extra {
+    ($prefix:expr, $color:expr, $string:expr) => ({
+        use $crate::time::interface::TimeManager;
+
+        let timestamp = $crate::time::time_manager().uptime();
+
+        $crate::print::_print(format_args_nl!(
+            "[{} {:>3}.{:06}] {}{}",
+            $prefix,
+            timestamp.as_secs(),
+            timestamp.subsec_micros(),
+            $color,
+            $string,
+        ));
+    });
+    ($prefix:expr, $color:expr, $format_string:expr, $($arg:tt)*) => ({
+        $crate::print_extra!($prefix, $color, format_args!($format_string, $($arg)*));
+    })}
+
 /// Prints an info, with a newline.
 #[macro_export]
 macro_rules! info {
-    ($string:expr) => ({
-        use $crate::time::interface::TimeManager;
-
-        let timestamp = $crate::time::time_manager().uptime();
-
-        $crate::print::_print(format_args_nl!(
-            concat!("[  {:>3}.{:06}] ", $string),
-            timestamp.as_secs(),
-            timestamp.subsec_micros(),
-        ));
-    });
-    ($format_string:expr, $($arg:tt)*) => ({
-        use $crate::time::interface::TimeManager;
-
-        let timestamp = $crate::time::time_manager().uptime();
-
-        $crate::print::_print(format_args_nl!(
-            concat!("[  {:>3}.{:06}] ", $format_string),
-            timestamp.as_secs(),
-            timestamp.subsec_micros(),
-            $($arg)*
-        ));
-    })
+    ($string:expr) => ($crate::print_extra!(" ", $crate::colorize::Color::Reset, $string));
+    ($format_string:expr, $($arg:tt)*) => ($crate::print_extra!(" ", $crate::colorize::Color::Reset, $format_string, $($arg)*));
 }
 
 /// Prints a warning, with a newline.
 #[macro_export]
 macro_rules! warn {
-    ($string:expr) => ({
-        use $crate::time::interface::TimeManager;
-
-        let timestamp = $crate::time::time_manager().uptime();
-
-        $crate::print::_print(format_args_nl!(
-            concat!("[W {:>3}.{:06}] {}", $string),
-            timestamp.as_secs(),
-            timestamp.subsec_micros(),
-            $crate::colorize::Color::Yellow
-        ));
-    });
-    ($format_string:expr, $($arg:tt)*) => ({
-        use $crate::time::interface::TimeManager;
-
-        let timestamp = $crate::time::time_manager().uptime();
-
-        $crate::print::_print(format_args_nl!(
-            concat!("[W {:>3}.{:06}] {}", $format_string),
-            timestamp.as_secs(),
-            timestamp.subsec_micros(),
-            $crate::colorize::Color::Yellow,
-            $($arg)*
-        ));
-    })
+    ($string:expr) => ($crate::print_extra!("W", $crate::colorize::Color::Yellow, $string));
+    ($format_string:expr, $($arg:tt)*) => ($crate::print_extra!(" ", $crate::colorize::Color::Yellow, $format_string, $($arg)*));
 }
 
 /// Prints a debug message, with a newline
 #[macro_export]
 macro_rules! debug {
-    ($string:expr) => ({
-        use $crate::time::interface::TimeManager;
-
-        let timestamp = $crate::time::time_manager().uptime();
-
-        $crate::print::_print(format_args_nl!(
-            concat!("[D {:>3}.{:06}] {}", $string),
-            timestamp.as_secs(),
-            timestamp.subsec_micros(),
-            $crate::colorize::Color::TrueColor { r: 128, g: 128, b: 128 }
-        ));
-    });
-    ($format_string:expr, $($arg:tt)*) => ({
-        use $crate::time::interface::TimeManager;
-
-        let timestamp = $crate::time::time_manager().uptime();
-
-        $crate::print::_print(format_args_nl!(
-            concat!("[D {:>3}.{:06}] {}", $format_string),
-            timestamp.as_secs(),
-            timestamp.subsec_micros(),
-            $crate::colorize::Color::TrueColor { r: 128, g: 128, b: 128 },
-            $($arg)*
-        ));
-    })
+    ($string:expr) => ($crate::print_extra!("D", $crate::colorize::Color::TrueColor { r: 128, g: 128, b: 128 }, $string));
+    ($format_string:expr, $($arg:tt)*) => ($crate::print_extra!("D", $crate::colorize::Color::TrueColor { r: 128, g: 128, b: 128 }, $format_string, $($arg)*));
 }
 
 /// Prints to stdout with a newline, debug prefix, but will not print on release
