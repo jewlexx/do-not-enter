@@ -1,5 +1,5 @@
 use proc_macro2::TokenStream;
-use quote::quote;
+use quote::{format_ident, quote};
 use syn::{parse_macro_input, Data, DeriveInput, Fields};
 
 fn macro_error(msg: &str) -> proc_macro::TokenStream {
@@ -38,8 +38,9 @@ pub fn derive_impl_colours(input: proc_macro::TokenStream) -> proc_macro::TokenS
                 Fields::Unnamed(ref fields) => {
                     fields.unnamed.iter().enumerate().for_each(|(i, f)| {
                         let field_type = &f.ty;
+                        let field_name = format_ident!("a{}", i);
                         fn_args.push(quote! {
-                            a~i: #field_type,
+                            #field_name: #field_type,
                         });
                     })
                 }
