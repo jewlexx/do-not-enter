@@ -9,6 +9,12 @@ fn macro_error(msg: &str) -> proc_macro::TokenStream {
     .into()
 }
 
+enum FieldType {
+    Unit,
+    Named,
+    Unnamed,
+}
+
 #[proc_macro_derive(ImplColorus)]
 pub fn derive_impl_colours(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
     let ast = parse_macro_input!(input as DeriveInput);
@@ -25,30 +31,42 @@ pub fn derive_impl_colours(input: proc_macro::TokenStream) -> proc_macro::TokenS
 
         for var in vars.iter() {
             let mut fn_args = Vec::<TokenStream>::new();
+            let mut decl: Vec<TokenStream> = Vec::new();
             let var_name = &var.ident;
-            let var_name_str = var_name.to_string();
+            let var_name_str = var_name.to_string().to_snake_case();
+            let field_type;
 
             match var.fields {
-                Fields::Unit => (),
-                Fields::Named(ref fields) => fields.named.iter().for_each(|f| {
-                    let field_name = &f.ident;
-                    let field_type = &f.ty;
-                    fn_args.push(quote! {
-                        #field_name: #field_type,
+                Fields::Unit => field_type = FieldType::Unit,
+                Fields::Named(ref fields) => {
+                    field_type = FieldType::Named;
+                    fields.named.iter().for_each(|f| {
+                        let field_name = &f.ident;
+                        let field_type = &f.ty;
+                        fn_args.push(quote! {
+                            #field_name: #field_type
+                        });
+                        decl.push(quote!(#field_name));
                     });
-                }),
+                }
                 Fields::Unnamed(ref fields) => {
+                    field_type = FieldType::Unnamed;
                     fields.unnamed.iter().enumerate().for_each(|(i, f)| {
                         let field_type = &f.ty;
                         let field_name = format_ident!("a{}", i);
                         fn_args.push(quote! {
-                            #field_name: #field_type,
+                            #field_name: #field_type
                         });
+                        decl.push(quote!(#field_name));
                     })
                 }
             };
 
-            let arm = quote! { #name::#var_name };
+            let arm = quote! {
+               pub fn #var_name_str(#(fn_args),*) {
+                    #name::#var_name
+               }
+            };
 
             arms.push(arm);
         }

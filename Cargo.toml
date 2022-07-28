@@ -25,4 +25,5 @@ cfg-if = "1.0.0"
 cortex-a = "7.4.0"
 enum-array = { git = "https://github.com/jewlexx/enum-array.git", version = "0.1.0" }
 linked_list_allocator = "0.10.1"
+proc-macros = { version = "0.1.0", path = "proc-macros" }
 tock-registers = "0.7.0"

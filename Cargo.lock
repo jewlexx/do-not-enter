@@ -61,6 +61,7 @@ dependencies = [
  "cortex-a",
  "enum-array",
  "linked_list_allocator",
+ "proc-macros",
  "tock-registers",
 ]
 
