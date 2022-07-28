@@ -44,7 +44,7 @@ dependencies = [
 [[package]]
 name = "dne-macros"
 version = "0.1.0"
-source = "git+https://github.com/jewlexx/dne-macros.git#6f527b9dd51d4268e180e888d391b5f1d2a3ac23"
+source = "git+https://github.com/jewlexx/dne-macros.git#5111efd43d2f66b225fc0340bcd85aad7ad75074"
 dependencies = [
  "heck",
  "proc-macro2",

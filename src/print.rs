@@ -87,20 +87,34 @@ macro_rules! warn {
     })
 }
 
-/// Prints to stdout with a newline, debug prefix, but will not print on release
+/// Prints a debug message, with a newline
 #[macro_export]
-#[cfg(not(release))]
 macro_rules! debug {
-    ($($arg:tt)*) => ({
+    ($string:expr) => ({
         use $crate::time::interface::TimeManager;
 
         let timestamp = $crate::time::time_manager().uptime();
 
-        $crate::print::_print(format_args_nl!("[D {:>3}.{:06}] {}{}", timestamp.as_secs(), timestamp.subsec_micros(), $crate::colorize::Color::TrueColor {
-            r: 128,
-            g: 128,
-            b: 128
-        }, format_args!($($arg)*)))});
+        $crate::print::_print(format_args_nl!(
+            concat!("[D {:>3}.{:06}] {}", $string),
+            timestamp.as_secs(),
+            timestamp.subsec_micros(),
+            $crate::colorize::Color::TrueColor { r: 128, g: 128, b: 128 }
+        ));
+    });
+    ($format_string:expr, $($arg:tt)*) => ({
+        use $crate::time::interface::TimeManager;
+
+        let timestamp = $crate::time::time_manager().uptime();
+
+        $crate::print::_print(format_args_nl!(
+            concat!("[D {:>3}.{:06}] {}", $format_string),
+            timestamp.as_secs(),
+            timestamp.subsec_micros(),
+            $crate::colorize::Color::TrueColor { r: 128, g: 128, b: 128 },
+            $($arg)*
+        ));
+    })
 }
 
 /// Prints to stdout with a newline, debug prefix, but will not print on release
