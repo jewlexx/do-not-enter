@@ -4,8 +4,7 @@ use core::{
 };
 
 use linked_list_allocator::Heap as LinkedListHeap;
-
-use crate::sync::{interface::Mutex, NullLock};
+use spin::Mutex;
 
 // Symbols from the linker script.
 extern "Rust" {
@@ -15,7 +14,7 @@ extern "Rust" {
 
 /// A heap allocator that can be lazyily initialized.
 pub struct HeapAllocator {
-    inner: NullLock<LinkedListHeap>,
+    inner: Mutex<LinkedListHeap>,
 }
 
 #[global_allocator]
@@ -25,7 +24,7 @@ impl HeapAllocator {
     /// Create an instance.
     pub const fn new() -> Self {
         Self {
-            inner: NullLock::new(LinkedListHeap::empty()),
+            inner: Mutex::new(LinkedListHeap::empty()),
         }
     }
 }
@@ -34,7 +33,9 @@ unsafe impl GlobalAlloc for HeapAllocator {
     unsafe fn alloc(&self, layout: Layout) -> *mut u8 {
         let result = KERNEL_HEAP_ALLOCATOR
             .inner
-            .lock(|inner| inner.allocate_first_fit(layout).ok());
+            .lock()
+            .allocate_first_fit(layout)
+            .ok();
 
         match result {
             None => core::ptr::null_mut(),
@@ -45,7 +46,8 @@ unsafe impl GlobalAlloc for HeapAllocator {
     unsafe fn dealloc(&self, ptr: *mut u8, layout: Layout) {
         KERNEL_HEAP_ALLOCATOR
             .inner
-            .lock(|inner| inner.deallocate(core::ptr::NonNull::new_unchecked(ptr), layout));
+            .lock()
+            .deallocate(core::ptr::NonNull::new_unchecked(ptr), layout);
     }
 }
 
@@ -57,5 +59,6 @@ pub unsafe fn kernel_init_heap_allocator() {
 
     KERNEL_HEAP_ALLOCATOR
         .inner
-        .lock(|inner| inner.init(heap_start, heap_size));
+        .lock()
+        .init(heap_start, heap_size);
 }

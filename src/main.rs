@@ -17,7 +17,7 @@
 extern crate alloc;
 
 use console::enter_echo;
-use sync::NullLock;
+use spin::Mutex;
 
 mod bsp;
 mod colorize;
@@ -30,7 +30,6 @@ mod mail;
 mod memory;
 mod panic_wait;
 mod print;
-mod sync;
 mod time;
 
 cfg_if::cfg_if! {
@@ -45,7 +44,7 @@ cfg_if::cfg_if! {
 }
 
 /// States whether or not we can allocate memory
-pub static CAN_ALLOC: NullLock<bool> = NullLock::new(false);
+pub static CAN_ALLOC: Mutex<bool> = Mutex::new(false);
 
 /// Early init code.
 ///
@@ -56,7 +55,6 @@ pub static CAN_ALLOC: NullLock<bool> = NullLock::new(false);
 unsafe fn kernel_init() -> ! {
     use driver::interface::DriverManager;
     use memory::mmu::interface::MMU;
-    use sync::interface::Mutex;
 
     exception::handling_init();
 
@@ -74,7 +72,7 @@ unsafe fn kernel_init() -> ! {
 
     // Can now use String, Vec, Box, etc.
     memory::alloc::kernel_init_heap_allocator();
-    CAN_ALLOC.lock(|inner| *inner = true);
+    *CAN_ALLOC.lock() = true;
 
     // Transition from unsafe to safe.
     kernel_main()

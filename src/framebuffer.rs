@@ -5,7 +5,6 @@ use crate::{
         mmio::{ch::*, tags::*, MBOX_REQUEST},
         MBOX,
     },
-    sync::interface::Mutex,
 };
 
 static VGAPAL: [u32; 16] = [
@@ -24,7 +23,8 @@ pub struct FrameBuffer {
 impl FrameBuffer {
     pub fn new(width: usize, height: usize) -> Option<Self> {
         debug!("Initializing framebuffer");
-        MBOX.lock(|inner| {
+        {
+            let mut inner = MBOX.lock();
             inner[0] = 35 * 4; // Length of message in bytes
             inner[1] = MBOX_REQUEST;
 
@@ -68,28 +68,25 @@ impl FrameBuffer {
             inner[33] = 0; // Bytes per line
 
             inner[34] = MBOX_TAG_LAST;
-        });
+        };
 
         debug!("Calling mbox");
-        let fbinfo_ptr = MBOX.lock(|inner| inner[28]);
-        let bbl = MBOX.lock(|inner| inner[20]);
+        let fbinfo_ptr = MBOX.lock()[28];
+        let bbl = MBOX.lock()[20];
 
         if unsafe { mbox_call(MBOX_CH_PROP) } && bbl == 32 && fbinfo_ptr != 0 {
             debug!("Called mbox");
 
-            let self_res = MBOX.lock(|inner| {
-                inner[28] &= 0x3FFFFFFF; // Convert GPU address to ARM address
+            let mut inner = MBOX.lock();
+            inner[28] &= 0x3FFFFFFF; // Convert GPU address to ARM address
 
-                Self {
-                    width: inner[10],  // Actual physical width
-                    height: inner[11], // Actual physical height
-                    pitch: inner[33],  // Number of bytes per line
-                    is_rgb: inner[24] != 0,
-                    fb: inner[28] as *const usize as usize, // Pixel order
-                }
-            });
-
-            Some(self_res)
+            Some(Self {
+                width: inner[10],  // Actual physical width
+                height: inner[11], // Actual physical height
+                pitch: inner[33],  // Number of bytes per line
+                is_rgb: inner[24] != 0,
+                fb: inner[28] as *const usize as usize, // Pixel order
+            })
         } else {
             None
         }
