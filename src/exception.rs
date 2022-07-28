@@ -9,7 +9,7 @@ pub mod asynchronous;
 //--------------------------------------------------------------------------------------------------
 // Architectural Public Reexports
 //--------------------------------------------------------------------------------------------------
-pub use arch_exception::current_privilege_level;
+pub use arch_exception::{current_privilege_level, handling_init};
 
 //--------------------------------------------------------------------------------------------------
 // Public Definitions

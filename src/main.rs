@@ -58,6 +58,8 @@ unsafe fn kernel_init() -> ! {
     use memory::mmu::interface::MMU;
     use sync::interface::Mutex;
 
+    exception::handling_init();
+
     if let Err(string) = memory::mmu::mmu().enable_mmu_and_caching() {
         panic!("MMU: {}", string);
     }
@@ -91,7 +93,6 @@ const TITLE_TEXT: &str = r#"
 
 /// The main function running after the early init.
 fn kernel_main() -> ! {
-    use console::interface::Write;
     use driver::interface::DriverManager;
     use time::interface::TimeManager;
 
@@ -129,12 +130,26 @@ fn kernel_main() -> ! {
         info!("      {}. {}", i + 1, driver.compatible());
     }
 
-    let remapped_uart = unsafe { bsp::device_driver::PL011Uart::new(0x1FFF_1000) };
-    writeln!(
-        remapped_uart,
-        "[     !!!    ] Writing through the remapped UART at 0x1FFF_1000"
-    )
-    .unwrap();
+    // Cause an exception by accessing a virtual address for which no translation was set up. This
+    // code accesses the address 8 GiB, which is outside the mapped address space.
+    //
+    // For demo purposes, the exception handler will catch the faulting 8 GiB address and allow
+    // execution to continue.
+    info!("");
+    info!("Trying to read from address 8 GiB...");
+    let mut big_addr: u64 = 8 * 1024 * 1024 * 1024;
+    unsafe { core::ptr::read_volatile(big_addr as *mut u64) };
+
+    info!("************************************************");
+    info!("Whoa! We recovered from a synchronous exception!");
+    info!("************************************************");
+    info!("");
+    info!("Let's try again");
+
+    // Now use address 9 GiB. The exception handler won't forgive us this time.
+    info!("Trying to read from address 9 GiB...");
+    big_addr = 9 * 1024 * 1024 * 1024;
+    unsafe { core::ptr::read_volatile(big_addr as *mut u64) };
 
     info!("Spinning for 5 seconds before initializing framebuffer");
     spin_for_secs!(5);
