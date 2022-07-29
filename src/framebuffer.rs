@@ -52,6 +52,17 @@ impl FrameBuffer {
         })
     }
 
+    /// Test that it works
+    pub fn draw_demo(&self) {
+        for x in 100..200 {
+            for y in 100..200 {
+                unsafe {
+                    core::ptr::write_volatile(self.fb.offset(x + y * self.pitch / 16), 0xff);
+                }
+            }
+        }
+    }
+
     /// Draw a pixel to the framebuffer
     pub fn draw_pixel(&self, x: isize, y: isize, attr: char) {
         let offs = (y * self.pitch) + (x * 4);
