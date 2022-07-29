@@ -27,6 +27,7 @@ pub mod console;
 pub mod cpu;
 pub mod driver;
 pub mod exception;
+pub mod font;
 pub mod framebuffer;
 pub mod mail;
 pub mod memory;
