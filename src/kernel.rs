@@ -71,7 +71,6 @@ const TITLE_TEXT: &str = r#"
 /// The main function running after the early init.
 fn kernel_main() -> ! {
     use driver::interface::DriverManager;
-    use time::interface::TimeManager;
 
     for line in TITLE_TEXT.lines() {
         info!("{}", line);
@@ -106,9 +105,6 @@ fn kernel_main() -> ! {
     {
         info!("      {}. {}", i + 1, driver.compatible());
     }
-
-    info!("Spinning for 5 seconds before initializing framebuffer");
-    spin_for_secs!(5);
 
     info!("Initializing framebuffer");
 
