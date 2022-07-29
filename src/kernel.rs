@@ -106,8 +106,6 @@ fn kernel_main() -> ! {
         info!("      {}. {}", i + 1, driver.compatible());
     }
 
-    info!("Initializing framebuffer");
-
     let fb = FrameBuffer::new(128, 64).expect("failed to initialize framebuffer");
 
     fb.draw_demo();
