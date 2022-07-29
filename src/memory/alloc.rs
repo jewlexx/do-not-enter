@@ -51,6 +51,11 @@ unsafe impl GlobalAlloc for HeapAllocator {
     }
 }
 
+#[alloc_error_handler]
+fn alloc_error(layout: core::alloc::Layout) -> ! {
+    panic!("allocation error: {:?}", layout);
+}
+
 /// Query the BSP for the heap region and initialize the kernel's heap allocator with it.
 ///
 /// # Safety

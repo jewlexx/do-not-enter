@@ -7,6 +7,7 @@
 #![feature(format_args_nl)]
 #![feature(asm_const)]
 #![feature(linkage)]
+#![feature(alloc_error_handler)]
 #![feature(panic_info_message)]
 #![feature(trait_alias)]
 #![no_std]
