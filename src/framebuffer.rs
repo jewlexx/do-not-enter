@@ -56,16 +56,18 @@ impl FrameBuffer {
     pub fn draw_demo(&self) {
         for x in 100..200 {
             for y in 100..200 {
-                self.draw_pixel(x, y, 16);
+                self.draw_pixel(x, y, 1);
             }
         }
     }
 
     /// Draw a pixel to the framebuffer
     pub fn draw_pixel(&self, x: isize, y: isize, attr: usize) {
-        let offs = (y * self.pitch) + x;
+        let offs = (y * self.pitch / 16) + x;
 
-        unsafe { core::ptr::write_volatile(self.fb.offset(offs), VGAPAL[attr]) };
+        let col = VGAPAL[attr];
+        debug!("Color is {:x}", col);
+        unsafe { core::ptr::write_volatile(self.fb.offset(offs), col) };
     }
 
     /// Draw a rectangle to the framebuffer
