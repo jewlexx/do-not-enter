@@ -81,7 +81,7 @@ fn kernel_main() -> ! {
         env!("CARGO_PKG_NAME"),
         env!("CARGO_PKG_VERSION")
     );
-    info!("Booting on: {}", bsp::board_name());
+    debug!("Booting on: {}", bsp::board_name());
 
     info!("MMU online. Special regions:");
     bsp::memory::mmu::virt_mem_layout().print_layout();
@@ -97,13 +97,13 @@ fn kernel_main() -> ! {
         time::time_manager().resolution().as_nanos()
     );
 
-    info!("Drivers loaded:");
+    debug!("Drivers loaded:");
     for (i, driver) in bsp::driver::driver_manager()
         .all_device_drivers()
         .iter()
         .enumerate()
     {
-        info!("      {}. {}", i + 1, driver.compatible());
+        debug!("      {}. {}", i + 1, driver.compatible());
     }
 
     let fb = FrameBuffer::new(128, 64).expect("failed to initialize framebuffer");
