@@ -1,5 +1,6 @@
 #![allow(clippy::upper_case_acronyms)]
 #![allow(incomplete_features)]
+#![warn(missing_docs)]
 #![feature(core_intrinsics)]
 #![feature(format_args_nl)]
 #![feature(asm_const)]
