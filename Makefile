@@ -177,7 +177,7 @@ qemu: $(KERNEL_BIN)
 
 gqemu: $(KERNEL_BIN)
 	$(call color_header, "Launching QEMU")
-	@$(QEMU_BINARY) -M raspi3b -kernel $(KERNEL_BIN)
+	@$(QEMU_BINARY) -M raspi3b $(GEMU_RELEASE_ARGS) -kernel $(KERNEL_BIN)
 
 qemuasm: $(KERNEL_BIN)
 	$(call color_header, "Launching QEMU with ASM output")
