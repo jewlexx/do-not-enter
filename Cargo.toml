@@ -13,7 +13,7 @@ bsp_rpi4 = []
 
 [lib]
 name = "libkernel"
-test = true
+test = false
 
 [[bin]]
 name = "kernel"
