@@ -53,7 +53,7 @@ unsafe impl GlobalAlloc for HeapAllocator {
 
 #[alloc_error_handler]
 fn alloc_error(layout: core::alloc::Layout) -> ! {
-    panic!("allocation error: {:?}", layout);
+    panic!("memory allocation of {} bytes failed", layout.size())
 }
 
 /// Query the BSP for the heap region and initialize the kernel's heap allocator with it.
