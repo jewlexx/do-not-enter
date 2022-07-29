@@ -56,24 +56,20 @@ impl FrameBuffer {
     pub fn draw_demo(&self) {
         for x in 100..200 {
             for y in 100..200 {
-                unsafe {
-                    core::ptr::write_volatile(self.fb.offset(x + y * self.pitch / 16), 0xff);
-                }
+                self.draw_pixel(x, y, 16);
             }
         }
     }
 
     /// Draw a pixel to the framebuffer
-    pub fn draw_pixel(&self, x: isize, y: isize, attr: char) {
+    pub fn draw_pixel(&self, x: isize, y: isize, attr: usize) {
         let offs = (y * self.pitch) + x;
 
-        unsafe {
-            core::ptr::write_volatile(self.fb.offset(offs), VGAPAL[attr as usize * 0x0F_usize])
-        };
+        unsafe { core::ptr::write_volatile(self.fb.offset(offs), VGAPAL[attr]) };
     }
 
     /// Draw a rectangle to the framebuffer
-    pub fn draw_rect(&self, x1: isize, y1: isize, x2: isize, y2: isize, attr: char, fill: bool) {
+    pub fn draw_rect(&self, x1: isize, y1: isize, x2: isize, y2: isize, attr: usize, fill: bool) {
         debug!("Drawing");
         let mut y = y1;
 
@@ -84,7 +80,7 @@ impl FrameBuffer {
                 if (x == x1 || x == x2) || (y == y1 || y == y2) {
                     self.draw_pixel(x, y, attr);
                 } else if fill {
-                    self.draw_pixel(x, y, ((attr as usize & 0xf0) >> 4) as u8 as char)
+                    self.draw_pixel(x, y, (attr & 0xf0) >> 4)
                 }
                 x += 1;
             }
