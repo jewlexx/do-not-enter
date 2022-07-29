@@ -13,7 +13,6 @@ bsp_rpi4 = []
 
 [lib]
 name = "libkernel"
-path = "src/libkernel.rs"
 test = true
 
 [[bin]]
