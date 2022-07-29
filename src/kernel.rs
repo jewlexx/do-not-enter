@@ -1,14 +1,4 @@
-#![warn(missing_docs)]
-#![allow(clippy::upper_case_acronyms)]
-#![allow(incomplete_features)]
-#![feature(asm_const)]
 #![feature(format_args_nl)]
-#![feature(panic_info_message)]
-#![feature(trait_alias)]
-#![feature(alloc_error_handler)]
-#![feature(stmt_expr_attributes)]
-#![feature(core_intrinsics)]
-#![feature(default_alloc_error_handler)]
 #![no_main]
 #![no_std]
 
@@ -16,21 +6,9 @@
 
 extern crate alloc;
 
-use console::enter_echo;
-use spin::Mutex;
+use libkernel::*;
 
-mod bsp;
-mod colorize;
-mod console;
-mod cpu;
-mod driver;
-mod exception;
-mod framebuffer;
-mod mail;
-mod memory;
-mod panic_wait;
-mod print;
-mod time;
+use spin::Mutex;
 
 cfg_if::cfg_if! {
     // Panic if not building for aarch64
@@ -135,5 +113,5 @@ fn kernel_main() -> ! {
 
     fb.draw_rect(150, 150, 400, 400, 0x03 as char, false);
 
-    enter_echo();
+    console::enter_echo();
 }

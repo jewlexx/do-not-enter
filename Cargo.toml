@@ -11,9 +11,15 @@ default = []
 bsp_rpi3 = []
 bsp_rpi4 = []
 
+[lib]
+name = "libkernel"
+path = "src/libkernel.rs"
+test = true
+
 [[bin]]
 name = "kernel"
 path = "src/kernel.rs"
+test = false
 
 [dependencies]
 aligned = "0.4.1"
