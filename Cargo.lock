@@ -67,6 +67,7 @@ dependencies = [
  "cortex-a",
  "dne-macros",
  "linked_list_allocator",
+ "ruspiro-error",
  "ruspiro-mailbox",
  "spin",
  "tock-registers",
