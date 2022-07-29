@@ -12,22 +12,22 @@ static VGAPAL: [u32; 16] = [
 /// The structure for interaction with the framebuffer
 pub struct FrameBuffer {
     /// Display width
-    pub width: usize,
+    pub width: u32,
     /// Display height
-    pub height: usize,
+    pub height: u32,
     pitch: isize,
     fb: *mut u16,
 }
 
 impl FrameBuffer {
     /// Initialize a new framebuffer
-    pub fn new(width: usize, height: usize) -> Result<Self, Box<dyn ruspiro_error::Error + Send>> {
+    pub fn new(width: u32, height: u32) -> Result<Self, Box<dyn ruspiro_error::Error + Send>> {
         debug!("Initializing framebuffer");
         use ruspiro_mailbox::*;
 
         let batch = MailboxBatch::empty()
-            .with_tag(PhysicalSizeSet::new(128, 64))
-            .with_tag(VirtualSizeSet::new(128, 64))
+            .with_tag(PhysicalSizeSet::new(width, height))
+            .with_tag(VirtualSizeSet::new(width, height))
             .with_tag(DepthSet::new(16))
             .with_tag(PixelOrderSet::new(1))
             .with_tag(VirtualOffsetSet::new(0, 0))

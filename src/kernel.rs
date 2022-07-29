@@ -6,7 +6,7 @@
 
 extern crate alloc;
 
-use libkernel::*;
+use libkernel::{framebuffer::FrameBuffer, *};
 
 use spin::Mutex;
 
@@ -108,43 +108,9 @@ fn kernel_main() -> ! {
 
     info!("Initializing framebuffer");
 
-    {
-        use ruspiro_mailbox::*;
+    let fb = FrameBuffer::new(128, 64).expect("failed to initialize framebuffer");
 
-        let batch = MailboxBatch::empty()
-            .with_tag(PhysicalSizeSet::new(128, 64))
-            .with_tag(VirtualSizeSet::new(128, 64))
-            .with_tag(DepthSet::new(16))
-            .with_tag(PixelOrderSet::new(1))
-            .with_tag(VirtualOffsetSet::new(0, 0))
-            .with_tag(PitchGet::new())
-            .with_tag(FramebufferAllocate::new(4));
-
-        let mut mb = Mailbox::new();
-        match mb.send_batch(batch) {
-            Ok(batch_result) => {
-                let fb_base_address = batch_result
-                    .get_tag::<FramebufferAllocate, _>()
-                    .response()
-                    .base_address;
-                let fb_pitch = batch_result.get_tag::<PitchGet, _>().response().pitch as isize;
-
-                info!("Drawing to framebuffer");
-
-                for x in 100..200 {
-                    for y in 100..200 {
-                        let ptr = fb_base_address as *mut u16;
-                        unsafe {
-                            core::ptr::write_volatile(ptr.offset(x + y * fb_pitch / 16), 0xff);
-                        }
-                    }
-                }
-            }
-            Err(e) => {
-                panic!("Error sending batch: {:?}", e);
-            }
-        }
-    }
+    fb.draw_demo();
 
     console::enter_echo();
 }
