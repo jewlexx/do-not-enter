@@ -1,3 +1,5 @@
+//! Interaction with the framebuffer
+
 use crate::{
     debug,
     mail::{
@@ -12,15 +14,20 @@ static VGAPAL: [u32; 16] = [
     0x5555FF, 0x55FF55, 0x55FFFF, 0xFF5555, 0xFF55FF, 0xFFFF55, 0xFFFFFF,
 ];
 
+/// The structure for interaction with the framebuffer
 pub struct FrameBuffer {
+    /// Display width
     pub width: usize,
+    /// Display height
     pub height: usize,
+    /// Is the display RGB
     pub is_rgb: bool,
     pitch: usize,
     fb: usize,
 }
 
 impl FrameBuffer {
+    /// Initialize a new framebuffer
     pub fn new(width: usize, height: usize) -> Option<Self> {
         debug!("Initializing framebuffer");
         {
@@ -92,6 +99,7 @@ impl FrameBuffer {
         }
     }
 
+    /// Draw a pixel to the framebuffer
     pub fn draw_pixel(&self, x: usize, y: usize, attr: char) {
         let offs = (y * self.pitch) + (x * 4);
 
@@ -100,6 +108,7 @@ impl FrameBuffer {
         unsafe { *offs_ptr = VGAPAL[attr as usize * 0x0F_usize] }
     }
 
+    /// Draw a rectangle to the framebuffer
     pub fn draw_rect(&self, x1: usize, y1: usize, x2: usize, y2: usize, attr: char, fill: bool) {
         debug!("Drawing");
         let mut y = y1;

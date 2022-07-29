@@ -1,3 +1,5 @@
+//! Library for interacting with the kernel
+
 #![allow(clippy::upper_case_acronyms)]
 #![allow(incomplete_features)]
 #![warn(missing_docs)]

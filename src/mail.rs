@@ -1,11 +1,17 @@
+//! Mailbox definitions
+
 use aligned::{Aligned, A16};
 use spin::Mutex;
 
 use crate::{bsp::memory::map::mmio::*, debug};
 
 // All const definitions so unused is fine
-#[allow(dead_code)]
+#[allow(dead_code, missing_docs)]
+/// Memory mapped I/O
+///
+/// The locations of the memory mapped I/O registers.
 pub mod mmio {
+    /// Required tags for interacting with the kernel.
     pub mod tags {
         pub const MBOX_TAG_SETPOWER: usize = 0x28001;
         pub const MBOX_TAG_SETCLKRATE: usize = 0x38002;
@@ -19,6 +25,7 @@ pub mod mmio {
         pub const MBOX_TAG_LAST: usize = 0;
     }
 
+    /// The base address of the mailbox registers.
     pub mod ch {
         pub const MBOX_CH_POWER: usize = 0x0;
         pub const MBOX_CH_FB: usize = 0x1;
@@ -34,6 +41,7 @@ pub mod mmio {
     pub const MBOX_REQUEST: usize = 0x0;
 }
 
+/// The mailbox address
 pub static MBOX: Mutex<Aligned<A16, [usize; 36]>> = Mutex::new(Aligned([0usize; 36]));
 
 unsafe fn mmio_read(src: *const usize) -> usize {

@@ -1,3 +1,7 @@
+//! Colorization module for Strings
+
+#![allow(missing_docs)]
+
 use core::{fmt::Display, str::FromStr};
 
 use alloc::{borrow::Cow, format, string::String};
@@ -6,6 +10,7 @@ use dne_macros::ImplColorus;
 
 #[derive(ImplColorus)]
 #[allow(dead_code)]
+/// Color enum
 pub enum Color {
     Black,
     Red,
@@ -123,7 +128,9 @@ impl Display for Color {
     }
 }
 
+/// Colorize a string
 pub trait Colorize {
+    /// Colorize a string
     fn colorize(self, color: Color) -> String
     where
         Self: Sized + Display,

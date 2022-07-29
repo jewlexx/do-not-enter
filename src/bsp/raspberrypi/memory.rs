@@ -1,5 +1,7 @@
+//! BSP Memory definitions
+
 // All const definitions so unused is fine
-#[allow(dead_code)]
+#[allow(dead_code, missing_docs)]
 /// The board's physical memory map.
 pub mod map {
     pub const GPIO_OFFSET: usize = 0x0020_0000;
