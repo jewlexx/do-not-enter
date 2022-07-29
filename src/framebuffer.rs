@@ -65,8 +65,6 @@ impl FrameBuffer {
     pub fn draw_pixel(&self, x: isize, y: isize, attr: usize) {
         let offs = (y * self.pitch / 16) + x;
 
-        let col = VGAPAL[attr];
-        debug!("Color is {:x}", col);
         unsafe { core::ptr::write_volatile(self.fb.offset(offs), col) };
     }
 
