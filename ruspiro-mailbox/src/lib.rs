@@ -6,6 +6,7 @@
  **********************************************************************************************************************/
 #![doc(html_root_url = "https://docs.rs/ruspiro-mailbox/||VERSION||")]
 #![cfg_attr(not(any(test, doctest)), no_std)]
+#![allow(missing_docs)]
 
 //! # Mailbox property tag interface API
 //!
