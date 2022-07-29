@@ -1,14 +1,4 @@
-#![warn(missing_docs)]
-#![allow(clippy::upper_case_acronyms)]
-#![allow(incomplete_features)]
-#![feature(asm_const)]
 #![feature(format_args_nl)]
-#![feature(panic_info_message)]
-#![feature(trait_alias)]
-#![feature(alloc_error_handler)]
-#![feature(stmt_expr_attributes)]
-#![feature(core_intrinsics)]
-#![feature(default_alloc_error_handler)]
 #![no_main]
 #![no_std]
 
@@ -16,21 +6,9 @@
 
 extern crate alloc;
 
-use console::enter_echo;
-use sync::NullLock;
+use libkernel::*;
 
-mod bsp;
-mod colorize;
-mod console;
-mod cpu;
-mod driver;
-mod exception;
-mod mail;
-mod memory;
-mod panic_wait;
-mod print;
-mod sync;
-mod time;
+use spin::Mutex;
 
 cfg_if::cfg_if! {
     // Panic if not building for aarch64
@@ -44,18 +22,20 @@ cfg_if::cfg_if! {
 }
 
 /// States whether or not we can allocate memory
-pub static CAN_ALLOC: NullLock<bool> = NullLock::new(false);
+pub static CAN_ALLOC: Mutex<bool> = Mutex::new(false);
 
 /// Early init code.
 ///
 /// # Safety
 ///
 /// - Only a single core must be active and running this function.
-/// - The init calls in this function must appear in the correct order.
+/// - The init calls in this function must appear in the correct order
+#[no_mangle]
 unsafe fn kernel_init() -> ! {
     use driver::interface::DriverManager;
     use memory::mmu::interface::MMU;
-    use sync::interface::Mutex;
+
+    exception::handling_init();
 
     if let Err(string) = memory::mmu::mmu().enable_mmu_and_caching() {
         panic!("MMU: {}", string);
@@ -71,7 +51,7 @@ unsafe fn kernel_init() -> ! {
 
     // Can now use String, Vec, Box, etc.
     memory::alloc::kernel_init_heap_allocator();
-    CAN_ALLOC.lock(|inner| *inner = true);
+    *CAN_ALLOC.lock() = true;
 
     // Transition from unsafe to safe.
     kernel_main()
@@ -90,7 +70,6 @@ const TITLE_TEXT: &str = r#"
 
 /// The main function running after the early init.
 fn kernel_main() -> ! {
-    use console::interface::Write;
     use driver::interface::DriverManager;
     use time::interface::TimeManager;
 
@@ -127,13 +106,6 @@ fn kernel_main() -> ! {
     {
         info!("      {}. {}", i + 1, driver.compatible());
     }
-
-    let remapped_uart = unsafe { bsp::device_driver::PL011Uart::new(0x1FFF_1000) };
-    writeln!(
-        remapped_uart,
-        "[     !!!    ] Writing through the remapped UART at 0x1FFF_1000"
-    )
-    .unwrap();
 
     info!("Spinning for 5 seconds before initializing framebuffer");
     spin_for_secs!(5);
@@ -178,5 +150,5 @@ fn kernel_main() -> ! {
         }
     }
 
-    enter_echo();
+    console::enter_echo();
 }

@@ -4,6 +4,6 @@
 
 //! Conditional reexporting of Board Support Packages.
 
-pub mod device_driver;
+mod device_driver;
 mod raspberrypi;
 pub use raspberrypi::*;

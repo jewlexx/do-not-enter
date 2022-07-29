@@ -53,6 +53,7 @@ pub fn console() -> &'static dyn interface::All {
     bsp::console::console()
 }
 
+/// Enter echo mode
 pub fn enter_echo() -> ! {
     // Discard any spurious received characters before going into echo mode.
     console().clear_rx();

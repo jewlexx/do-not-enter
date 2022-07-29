@@ -5,10 +5,9 @@
 //! - <https://github.com/raspberrypi/documentation/files/1888662/BCM2837-ARM-Peripherals.-.Revised.-.V2-1.pdf>
 //! - <https://developer.arm.com/documentation/ddi0183/latest>
 
-use crate::{
-    bsp::device_driver::common::MMIODerefWrapper, console, cpu, driver, sync, sync::NullLock,
-};
-use core::fmt;
+use crate::{bsp::device_driver::common::MMIODerefWrapper, console, cpu, driver};
+use core::fmt::{self, Write};
+use spin::Mutex;
 use tock_registers::{
     interfaces::{Readable, Writeable},
     register_bitfields, register_structs,
@@ -174,7 +173,7 @@ struct PL011UartInner {
 
 /// Representation of the UART.
 pub struct PL011Uart {
-    inner: NullLock<PL011UartInner>,
+    inner: Mutex<PL011UartInner>,
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -332,7 +331,7 @@ impl PL011Uart {
     /// - The user must ensure to provide a correct MMIO start address.
     pub const unsafe fn new(mmio_start_addr: usize) -> Self {
         Self {
-            inner: NullLock::new(PL011UartInner::new(mmio_start_addr)),
+            inner: Mutex::new(PL011UartInner::new(mmio_start_addr)),
         }
     }
 }
@@ -340,7 +339,6 @@ impl PL011Uart {
 //------------------------------------------------------------------------------
 // OS Interface Code
 //------------------------------------------------------------------------------
-use sync::interface::Mutex;
 
 impl driver::interface::DeviceDriver for PL011Uart {
     fn compatible(&self) -> &'static str {
@@ -348,7 +346,7 @@ impl driver::interface::DeviceDriver for PL011Uart {
     }
 
     unsafe fn init(&self) -> Result<(), &'static str> {
-        self.inner.lock(|inner| inner.init());
+        self.inner.lock().init();
 
         Ok(())
     }
@@ -358,32 +356,35 @@ impl console::interface::Write for PL011Uart {
     /// Passthrough of `args` to the `core::fmt::Write` implementation, but guarded by a Mutex to
     /// serialize access.
     fn write_char(&self, c: char) {
-        self.inner.lock(|inner| inner.write_char(c));
+        self.inner.lock().write_char(c);
     }
 
     fn write_fmt(&self, args: core::fmt::Arguments) -> fmt::Result {
         // Fully qualified syntax for the call to `core::fmt::Write::write_fmt()` to increase
         // readability.
-        self.inner.lock(|inner| fmt::Write::write_fmt(inner, args))
+        self.inner.lock().write_fmt(args)
     }
 
     fn flush(&self) {
         // Spin until TX FIFO empty is set.
-        self.inner.lock(|inner| inner.flush());
+        self.inner.lock().flush();
     }
 }
 
 impl console::interface::Read for PL011Uart {
     fn read_char(&self) -> char {
         self.inner
-            .lock(|inner| inner.read_char_converting(BlockingMode::Blocking).unwrap())
+            .lock()
+            .read_char_converting(BlockingMode::Blocking)
+            .unwrap()
     }
 
     fn clear_rx(&self) {
         // Read from the RX FIFO until it is indicating empty.
         while self
             .inner
-            .lock(|inner| inner.read_char_converting(BlockingMode::NonBlocking))
+            .lock()
+            .read_char_converting(BlockingMode::NonBlocking)
             .is_some()
         {}
     }
@@ -391,11 +392,11 @@ impl console::interface::Read for PL011Uart {
 
 impl console::interface::Statistics for PL011Uart {
     fn chars_written(&self) -> usize {
-        self.inner.lock(|inner| inner.chars_written)
+        self.inner.lock().chars_written
     }
 
     fn chars_read(&self) -> usize {
-        self.inner.lock(|inner| inner.chars_read)
+        self.inner.lock().chars_read
     }
 }
 

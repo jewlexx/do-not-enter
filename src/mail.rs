@@ -1,123 +1,89 @@
-use crate::memory::mmio;
+//! Mailbox definitions
 
-const MBOX_BASE_OFFSET: usize = 0x0000b880;
+use aligned::{Aligned, A16};
+use spin::Mutex;
 
-pub fn init() -> Result<FBInfo, ()> {
-    let fb_info = FBInfo {
-        width: 1920,
-        height: 1080,
-        v_width: 1920,
-        v_height: 1080,
-        pitch: 0,
-        bit_depth: 16,
-        x_offset: 0,
-        y_offset: 0,
-        ptr: 0,
-        size: 0,
-    };
+use crate::{bsp::memory::map::mmio::*, debug};
 
-    let gpu_channel = Channel::new(0).unwrap();
-
-    let fbi_ptr = &fb_info as *const FBInfo;
-    gpu_channel.write(fbi_ptr as u32 + 0x40000000);
-
-    if gpu_channel.read() == 0 {
-        Ok(fb_info)
-    } else {
-        Err(())
+// All const definitions so unused is fine
+#[allow(dead_code, missing_docs)]
+/// Memory mapped I/O
+///
+/// The locations of the memory mapped I/O registers.
+pub mod mmio {
+    /// Required tags for interacting with the kernel.
+    pub mod tags {
+        pub const MBOX_TAG_SETPOWER: usize = 0x28001;
+        pub const MBOX_TAG_SETCLKRATE: usize = 0x38002;
+        pub const MBOX_TAG_SETPHYWH: usize = 0x48003;
+        pub const MBOX_TAG_SETVIRTWH: usize = 0x48004;
+        pub const MBOX_TAG_SETVIRTOFF: usize = 0x48009;
+        pub const MBOX_TAG_SETDEPTH: usize = 0x48005;
+        pub const MBOX_TAG_SETPXLORDR: usize = 0x48006;
+        pub const MBOX_TAG_GETFB: usize = 0x40001;
+        pub const MBOX_TAG_GETPITCH: usize = 0x40008;
+        pub const MBOX_TAG_LAST: usize = 0;
     }
+
+    /// The base address of the mailbox registers.
+    pub mod ch {
+        pub const MBOX_CH_POWER: usize = 0x0;
+        pub const MBOX_CH_FB: usize = 0x1;
+        pub const MBOX_CH_VUART: usize = 0x2;
+        pub const MBOX_CH_VCHIQ: usize = 0x3;
+        pub const MBOX_CH_LEDS: usize = 0x4;
+        pub const MBOX_CH_BTNS: usize = 0x5;
+        pub const MBOX_CH_TOUCH: usize = 0x6;
+        pub const MBOX_CH_COUNT: usize = 0x7;
+        pub const MBOX_CH_PROP: usize = 0x8; // Request from ARM for response by VideoCore
+    }
+
+    pub const MBOX_REQUEST: usize = 0x0;
 }
 
-fn wait_util_ready() {
+/// The mailbox address
+pub static MBOX: Mutex<Aligned<A16, [usize; 36]>> = Mutex::new(Aligned([0usize; 36]));
+
+unsafe fn mmio_read(src: *const usize) -> usize {
+    core::ptr::read_volatile(src)
+}
+
+unsafe fn mmio_write<T: core::fmt::Debug>(src: T, dest: *mut T) {
+    debug!("Setting {:?} to {:?}", dest, src);
+    core::ptr::write_volatile(dest, src);
+}
+
+type MboxPtr = *const Aligned<A16, [usize; 36]>;
+
+/// # Safety
+///
+/// - This function must have a valid value
+/// - This function must be called with read/write memory permissions
+pub unsafe fn mbox_call(val: usize) -> bool {
+    // 28-bit address (MSB) and 4-bit value (LSB)
+    let mbox_ref = ((&*MBOX.lock()) as MboxPtr as usize) & !0xF | val & 0xF;
+
+    // Wait until we can write
+    while mmio_read(MBOX_STATUS as *const usize) & MBOX_FULL != 0 {
+        debug!("Unable to write");
+    }
+    debug!("About to write");
+
+    // Write the address of our buffer to the mailbox with the channel appended
+    mmio_write(mbox_ref, MBOX_WRITE as *mut usize);
+
+    debug!("Wrote");
+
     loop {
-        //wait until mailbox is ready
-        let status = MailboxRegister::Status.read();
-        if status & 0x80000000 == 0 {
-            break;
+        // Is there a reply?
+        while (mmio_read(MBOX_STATUS as *const usize) & MBOX_EMPTY) != 0 {
+            debug!("No reply");
         }
-    }
-}
 
-pub struct Channel {
-    number: u32,
-}
-
-impl Channel {
-    const CHANNELS: u32 = 7;
-
-    pub fn new(number: u32) -> Result<Self, ()> {
-        if number < Channel::CHANNELS {
-            Ok(Channel { number })
-        } else {
-            Err(())
-        }
-    }
-
-    pub fn read(&self) -> u32 {
-        loop {
-            wait_util_ready();
-
-            let value = mmio::read_at_offset(MBOX_BASE_OFFSET + MailboxRegister::Read as usize);
-
-            if value & 0b1111 == self.number {
-                return value;
-            }
-        }
-    }
-
-    pub fn write(&self, value: u32) {
-        wait_util_ready();
-
-        mmio::write_at_offset(
-            value + self.number,
-            MBOX_BASE_OFFSET + MailboxRegister::Write as usize,
-        )
-    }
-}
-
-pub enum MailboxRegister {
-    Read = 0,
-    Poll = 16,
-    Sender = 20,
-    Status = 24,
-    Configuration = 28,
-    Write = 32,
-}
-
-impl MailboxRegister {
-    pub fn read(self) -> u32 {
-        mmio::read_at_offset(MBOX_BASE_OFFSET + self as usize)
-    }
-}
-
-#[repr(C)]
-#[repr(align(4))]
-pub struct FBInfo {
-    width: u32,
-    height: u32,
-    v_width: u32,
-    v_height: u32,
-    pitch: u32,
-    bit_depth: u32,
-    x_offset: u32,
-    y_offset: u32,
-    ptr: u32,
-    size: u32,
-}
-
-impl FBInfo {
-    pub fn draw(&self) {
-        let color: u16 = 0xff;
-        loop {
-            let mut current_pxl = self.ptr | 0xC0000000;
-            for y in 0..self.v_height {
-                for x in 0..self.v_width {
-                    unsafe {
-                        core::ptr::write_volatile((current_pxl as *mut u16), color);
-                    }
-                    current_pxl += 2
-                }
-            }
+        // Is it a reply to our message?
+        if mbox_ref == mmio_read(MBOX_READ as *const usize) {
+            debug!("Got reply");
+            return MBOX.lock()[1] == MBOX_RESPONSE;
         }
     }
 }
