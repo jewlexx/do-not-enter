@@ -67,12 +67,8 @@ dependencies = [
  "cortex-a",
  "dne-macros",
  "linked_list_allocator",
-<<<<<<< HEAD
  "ruspiro-mailbox",
-||||||| 6530690
-=======
  "spin",
->>>>>>> trunk
  "tock-registers",
 ]
 
@@ -102,11 +98,28 @@ dependencies = [
 ]
 
 [[package]]
-<<<<<<< HEAD
 name = "paste"
 version = "1.0.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0c520e05135d6e763148b6426a837e239041653ba7becd2e538c076c738025fc"
+
+[[package]]
+name = "proc-macro2"
+version = "1.0.42"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c278e965f1d8cf32d6e0e96de3d3e79712178ae67986d9cf9151f51e95aac89b"
+dependencies = [
+ "unicode-ident",
+]
+
+[[package]]
+name = "quote"
+version = "1.0.20"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3bcdf212e9776fbcb2d23ab029360416bb1706b1aea2d1a5ba002727cbcab804"
+dependencies = [
+ "proc-macro2",
+]
 
 [[package]]
 name = "ruspiro-arch-aarch64"
@@ -154,27 +167,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6c398a7ffbb98aa0c91a4118eeb28fed510e58b02014e9020e269808e870fcf6"
 
 [[package]]
-||||||| 6530690
-=======
-name = "proc-macro2"
-version = "1.0.42"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c278e965f1d8cf32d6e0e96de3d3e79712178ae67986d9cf9151f51e95aac89b"
-dependencies = [
- "unicode-ident",
-]
-
-[[package]]
-name = "quote"
-version = "1.0.20"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3bcdf212e9776fbcb2d23ab029360416bb1706b1aea2d1a5ba002727cbcab804"
-dependencies = [
- "proc-macro2",
-]
-
-[[package]]
->>>>>>> trunk
 name = "scopeguard"
 version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
