@@ -2,8 +2,6 @@
 #![allow(incomplete_features)]
 #![feature(core_intrinsics)]
 #![feature(format_args_nl)]
-#![feature(const_fn_fn_ptr_basics)]
-#![feature(global_asm)]
 #![feature(asm_const)]
 #![feature(linkage)]
 #![feature(panic_info_message)]

@@ -47,6 +47,10 @@ unsafe fn mmio_write<T: core::fmt::Debug>(src: T, dest: *mut T) {
 
 type MboxPtr = *const Aligned<A16, [usize; 36]>;
 
+/// # Safety
+///
+/// - This function must have a valid value
+/// - This function must be called with read/write memory permissions
 pub unsafe fn mbox_call(val: usize) -> bool {
     // 28-bit address (MSB) and 4-bit value (LSB)
     let mbox_ref = ((&*MBOX.lock()) as MboxPtr as usize) & !0xF | val & 0xF;

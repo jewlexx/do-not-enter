@@ -52,6 +52,11 @@ unsafe impl GlobalAlloc for HeapAllocator {
 }
 
 /// Query the BSP for the heap region and initialize the kernel's heap allocator with it.
+///
+/// # Safety
+///
+/// - This function must be called exactly once.
+/// - This function resolves the heap region from the BSP.
 pub unsafe fn kernel_init_heap_allocator() {
     let heap_start = __heap_start.get();
     let heap_end = __heap_end_exclusive.get() as usize;
