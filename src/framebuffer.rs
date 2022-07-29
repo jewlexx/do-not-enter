@@ -16,7 +16,7 @@ pub struct FrameBuffer {
     /// Display height
     pub height: u32,
     pitch: isize,
-    fb: *mut u16,
+    fb: *mut u32,
 }
 
 impl FrameBuffer {
@@ -48,7 +48,7 @@ impl FrameBuffer {
             width,
             height,
             pitch: fb_pitch,
-            fb: fb_base_address as *mut u16,
+            fb: fb_base_address as *mut u32,
         })
     }
 
@@ -65,11 +65,11 @@ impl FrameBuffer {
 
     /// Draw a pixel to the framebuffer
     pub fn draw_pixel(&self, x: isize, y: isize, attr: char) {
-        let offs = (y * self.pitch) + (x * 4);
+        let offs = (y * self.pitch) + x;
 
-        let offs_ptr = (self.fb as isize + offs) as *mut u32;
-
-        unsafe { *offs_ptr = VGAPAL[attr as usize * 0x0F_usize] }
+        unsafe {
+            core::ptr::write_volatile(self.fb.offset(offs), VGAPAL[attr as usize * 0x0F_usize])
+        };
     }
 
     /// Draw a rectangle to the framebuffer
