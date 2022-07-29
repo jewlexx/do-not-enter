@@ -112,8 +112,8 @@ fn kernel_main() -> ! {
         use ruspiro_mailbox::*;
 
         let batch = MailboxBatch::empty()
-            .with_tag(PhysicalSizeSet::new(1920, 1080))
-            .with_tag(VirtualSizeSet::new(1920, 1080))
+            .with_tag(PhysicalSizeSet::new(128, 64))
+            .with_tag(VirtualSizeSet::new(128, 64))
             .with_tag(DepthSet::new(16))
             .with_tag(PixelOrderSet::new(1))
             .with_tag(VirtualOffsetSet::new(0, 0))
