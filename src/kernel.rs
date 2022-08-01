@@ -106,12 +106,12 @@ fn kernel_main() -> ! {
         debug!("      {}. {}", i + 1, driver.compatible());
     }
 
-    let fb = FrameBuffer::new(128, 64).expect("failed to initialize framebuffer");
+    let fb = FrameBuffer::new(1280, 720).expect("failed to initialize framebuffer");
 
-    fb.draw_demo();
+    // fb.draw_demo();
 
     // fb.draw_char('a', 0, 0, 0);
-    fb.draw_char('!', 0, 0, 0);
+    fb.draw_char('!', 100, 100, 0xF0);
 
     console::enter_echo();
 }

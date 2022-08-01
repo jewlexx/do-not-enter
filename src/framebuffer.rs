@@ -62,8 +62,11 @@ impl FrameBuffer {
     }
 
     /// Draw a character to the framebuffer
-    pub fn draw_char(&self, character: char, _x: isize, _y: isize, _attr: usize) {
-        use crate::font::FONTS;
+    pub fn draw_char(&self, character: char, x: isize, y: isize, attr: usize) {
+        use crate::font::{
+            font_info::{FONT_HEIGHT, FONT_WIDTH},
+            FONTS,
+        };
         let char_usize = character as usize;
 
         if char_usize > FONTS.len() {
@@ -71,6 +74,20 @@ impl FrameBuffer {
         }
 
         let glyph = FONTS[char_usize];
+
+        for hi in 0..FONT_HEIGHT {
+            for (wi, pixel) in glyph.iter().enumerate().take(FONT_WIDTH) {
+                let pixel = *pixel as usize;
+                let mask: usize = hi << wi;
+                let col: usize = if pixel & mask == 0 {
+                    (attr & 0xF0) >> 4
+                } else {
+                    attr & 0x0F
+                };
+
+                self.draw_pixel(x + wi as isize, y + hi as isize, col);
+            }
+        }
 
         debug!("{:?}", glyph);
     }
