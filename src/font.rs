@@ -1,16 +1,22 @@
 //! Font declarations
 
-mod font_info {
+pub mod font_info {
     //! Declarations for font info
 
+    /// The memory width of a font character
     pub const FONT_WIDTH: usize = 8;
+    /// The memory height of a font character
     pub const FONT_HEIGHT: usize = 8;
-    pub const FONT_BPG: usize = 8; // Bytes per glyph
-    pub const FONT_BPL: usize = 1; // Bytes per line
+    /// Bytes per glyph
+    pub const FONT_BPG: usize = 8;
+    /// Bytes per line
+    pub const FONT_BPL: usize = 1;
+    /// Total number of glyphs in font
     pub const FONT_NUMGLYPHS: usize = 224;
 }
 
-const FONTS: [[u8; font_info::FONT_BPG]; font_info::FONT_NUMGLYPHS] = [
+/// Font declarations
+pub static FONTS: [[u8; font_info::FONT_BPG]; font_info::FONT_NUMGLYPHS] = [
     [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00], // U+0000 (nul)
     [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00], // U+0001
     [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00], // U+0002

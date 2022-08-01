@@ -61,6 +61,20 @@ impl FrameBuffer {
         }
     }
 
+    /// Draw a character to the framebuffer
+    pub fn draw_char(&self, character: char, _x: isize, _y: isize, _attr: usize) {
+        use crate::font::FONTS;
+        let char_usize = character as usize;
+
+        if char_usize > FONTS.len() {
+            panic!("Invalid character {}. Not available in fonts", character);
+        }
+
+        let glyph = FONTS[char_usize];
+
+        debug!("{:?}", glyph);
+    }
+
     /// Draw a pixel to the framebuffer
     pub fn draw_pixel(&self, x: isize, y: isize, attr: usize) {
         let offs = (y * self.pitch / 16) + x;
