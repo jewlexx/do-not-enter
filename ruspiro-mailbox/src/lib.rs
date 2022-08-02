@@ -132,7 +132,7 @@ pub use message::*;
 
 /// Definition of the different clock id's used in the mailbox interface
 #[repr(u32)]
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, Debug)]
 pub enum ClockId {
     Emmc = 0x1,
     Uart = 0x2,

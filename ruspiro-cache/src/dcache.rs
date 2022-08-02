@@ -33,6 +33,9 @@ enum CacheLevel {
   L3 = 2,
 }
 
+/// # Safety
+///
+/// - Interaction with dcache
 pub unsafe fn invalidate_dcache() {
   dsb();
 
@@ -49,6 +52,9 @@ pub unsafe fn invalidate_dcache() {
   isb();
 }
 
+/// # Safety
+///
+/// - Interaction with dcache
 pub unsafe fn clean_dcache() {
   dsb();
 
@@ -65,6 +71,9 @@ pub unsafe fn clean_dcache() {
   isb();
 }
 
+/// # Safety
+///
+/// - Interaction with dcache
 pub unsafe fn flush_dcache() {
   dsb();
 
@@ -81,6 +90,9 @@ pub unsafe fn flush_dcache() {
   isb();
 }
 
+/// # Safety
+///
+/// - Interaction with dcache
 unsafe fn maintain_dcache(operation: CacheOperation, level: CacheLevel) {
   // get the cache type for the requested cache level
   let cache_type = match level {
@@ -123,6 +135,9 @@ unsafe fn maintain_dcache(operation: CacheOperation, level: CacheLevel) {
   }
 }
 
+/// # Safety
+///
+/// - Interaction with dcache
 pub unsafe fn flush_dcache_range(from: usize, size: usize) {
   dsb();
   let dcls = dcache_line_size();
