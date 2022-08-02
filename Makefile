@@ -143,6 +143,9 @@ $(KERNEL_ELF): $(KERNEL_ELF_DEPS)
 	$(call color_header, "Compiling kernel ELF - $(BSP)")
 	@RUSTFLAGS="$(RUSTFLAGS_PEDANTIC)" $(RUSTC_CMD)
 
+bloat: $(KERNEL_ELF_DEPS)
+	@RUSTFLAGS="$(RUSTFLAGS_PEDANTIC)" cargo bloat $(COMPILER_ARGS)
+
 ##------------------------------------------------------------------------------
 ## Generate the stripped kernel binary
 ##------------------------------------------------------------------------------
