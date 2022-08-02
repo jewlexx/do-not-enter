@@ -117,7 +117,7 @@ endif
 ##--------------------------------------------------------------------------------------------------
 .PHONY: build doc qemu chainboot clippy clean readelf objdump nm check
 
-build: $(KERNEL_BIN)
+build: clean $(KERNEL_BIN)
 
 check:
 	$(call color_header, "Checking for cargo-clippy warnings")
@@ -221,7 +221,7 @@ clippy:
 ## Clean
 ##------------------------------------------------------------------------------
 clean:
-	rm -rf target $(KERNEL_BIN)
+	rm -rf $(KERNEL_BIN)
 
 ##------------------------------------------------------------------------------
 ## Run readelf
