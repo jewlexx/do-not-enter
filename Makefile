@@ -197,7 +197,7 @@ qemu: $(KERNEL_BIN)
 
 qemu-prod: $(KERNEL_BIN)-prod
 	$(call color_header, "Launching QEMU production mode")
-	@$(DOCKER_QEMU) $(EXEC_QEMU) $(QEMU_RELEASE_ARGS) -kernel $(KERNEL_BIN)-prod
+	@$(DOCKER_QEMU) $(EXEC_QEMU) $(QEMU_RELEASE_ARGS) -kernel $(KERNEL_BIN)
 
 gqemu: $(KERNEL_BIN)
 	$(call color_header, "Launching QEMU")
