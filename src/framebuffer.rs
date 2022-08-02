@@ -94,7 +94,7 @@ impl FrameBuffer {
 
     /// Draw a pixel to the framebuffer
     pub fn draw_pixel(&self, x: isize, y: isize, attr: usize) {
-        let offs = (y * self.pitch / 16) + x;
+        let offs = (y * self.pitch) + x;
 
         unsafe { core::ptr::write_volatile(self.fb.offset(offs), VGAPAL[attr]) };
     }

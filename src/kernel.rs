@@ -111,7 +111,7 @@ fn kernel_main() -> ! {
     // fb.draw_demo();
 
     // fb.draw_char('a', 0, 0, 0);
-    fb.draw_char('!', 100, 100, 0xF0);
+    fb.draw_char('b', 100, 100, 0xF0);
 
     console::enter_echo();
 }
