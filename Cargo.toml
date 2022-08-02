@@ -6,11 +6,19 @@ edition = "2021"
 [workspace]
 members = ["ruspiro-mailbox", "ruspiro-cache"]
 
+[profile.dev]
+opt-level = 3
+debug = false
+debug-assertions = false
+overflow-checks = false
+lto = true
+panic = 'unwind'
+incremental = true
+codegen-units = 16
+rpath = false
+
 [profile.release]
 lto = true
-
-[profile.production]
-inherits = "release"
 
 [features]
 default = []

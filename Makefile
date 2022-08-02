@@ -54,7 +54,8 @@ KERNEL_MANIFEST      = Cargo.toml
 KERNEL_LINKER_SCRIPT = kernel.ld
 LAST_BUILD_CONFIG    = target/$(BSP).build_config
 
-KERNEL_ELF      = target/$(TARGET)/release/kernel
+KERNEL_ELF      = target/$(TARGET)/debug/kernel
+KERNEL_ELF_PROD      = target/$(TARGET)/release/kernel
 # This parses cargo's dep-info file.
 # https://doc.rust-lang.org/cargo/guide/build-cache.html#dep-info-files
 KERNEL_ELF_DEPS = $(filter-out %: ,$(file < $(KERNEL_ELF).d)) $(KERNEL_MANIFEST) $(LAST_BUILD_CONFIG)
@@ -75,12 +76,7 @@ RUSTFLAGS_PEDANTIC = $(RUSTFLAGS) \
 
 FEATURES      = --features bsp_$(BSP)
 COMPILER_ARGS = --target=$(TARGET) \
-    $(FEATURES)                    \
-    --release
-
-COMPILER_ARGS_PROD = --target=$(TARGET) \
-    $(FEATURES)                    \
-    --profile=production
+    $(FEATURES)
 
 RUSTC_CMD   = cargo rustc $(COMPILER_ARGS)
 CHECK_CMD 	= cargo check $(COMPILER_ARGS)
@@ -121,7 +117,7 @@ endif
 ##--------------------------------------------------------------------------------------------------
 .PHONY: build doc qemu chainboot clippy clean readelf objdump nm check
 
-build: clean $(KERNEL_BIN)
+build: $(KERNEL_BIN)
 
 check:
 	$(call color_header, "Checking for cargo-clippy warnings")
@@ -147,9 +143,9 @@ $(KERNEL_ELF): $(KERNEL_ELF_DEPS)
 	$(call color_header, "Compiling kernel ELF - $(BSP)")
 	@RUSTFLAGS="$(RUSTFLAGS_PEDANTIC)" $(RUSTC_CMD)
 
-$(KERNEL_ELF)-prod: $(KERNEL_ELF_DEPS)
+$(KERNEL_ELF_PROD): $(KERNEL_ELF_DEPS)
 	$(call color_header, "Compiling kernel ELF for production - $(BSP)")
-	@RUSTFLAGS="$(RUSTFLAGS)" cargo rustc $(COMPILER_ARGS_PROD)
+	@RUSTFLAGS="$(RUSTFLAGS)" $(RUSTC_CMD) --release
 
 bloat: $(KERNEL_ELF_DEPS)
 	$(call color_header, "Checking kernel ELF for float - $(BSP)")
@@ -166,7 +162,7 @@ $(KERNEL_BIN): $(KERNEL_ELF)
 	$(call color_progress_prefix, "Size")
 	@printf '%s KiB\n' `du -k $(KERNEL_BIN) | cut -f1`
 
-$(KERNEL_BIN)-prod: $(KERNEL_ELF)-prod
+$(KERNEL_BIN)-prod: $(KERNEL_ELF_PROD)
 	$(call color_header, "Generating stripped binary")
 	@$(OBJCOPY_CMD) $(KERNEL_ELF) $(KERNEL_BIN)
 	$(call color_progress_prefix, "Name")
