@@ -78,6 +78,10 @@ COMPILER_ARGS = --target=$(TARGET) \
     $(FEATURES)                    \
     --release
 
+COMPILER_ARGS_PROD = --target=$(TARGET) \
+    $(FEATURES)                    \
+    --profile=production
+
 RUSTC_CMD   = cargo rustc $(COMPILER_ARGS)
 CHECK_CMD 	= cargo check $(COMPILER_ARGS)
 DOC_CMD     = cargo doc $(COMPILER_ARGS)
@@ -145,16 +149,24 @@ $(KERNEL_ELF): $(KERNEL_ELF_DEPS)
 
 $(KERNEL_ELF)-prod: $(KERNEL_ELF_DEPS)
 	$(call color_header, "Compiling kernel ELF for production - $(BSP)")
-	@RUSTFLAGS="$(RUSTFLAGS)" $(RUSTC_CMD) --profile production
+	@RUSTFLAGS="$(RUSTFLAGS)" cargo rustc $(COMPILER_ARGS_PROD)
 
 bloat: $(KERNEL_ELF_DEPS)
 	$(call color_header, "Checking kernel ELF for float - $(BSP)")
-	@RUSTFLAGS="$(RUSTFLAGS_PEDANTIC)" cargo bloat $(COMPILER_ARGS)
+	@RUSTFLAGS="$(RUSTFLAGS_PEDANTIC)" cargo bloat $(COMPILER_ARGS_PROD)
 
 ##------------------------------------------------------------------------------
 ## Generate the stripped kernel binary
 ##------------------------------------------------------------------------------
 $(KERNEL_BIN): $(KERNEL_ELF)
+	$(call color_header, "Generating stripped binary")
+	@$(OBJCOPY_CMD) $(KERNEL_ELF) $(KERNEL_BIN)
+	$(call color_progress_prefix, "Name")
+	@echo $(KERNEL_BIN)
+	$(call color_progress_prefix, "Size")
+	@printf '%s KiB\n' `du -k $(KERNEL_BIN) | cut -f1`
+
+$(KERNEL_BIN)-prod: $(KERNEL_ELF)-prod
 	$(call color_header, "Generating stripped binary")
 	@$(OBJCOPY_CMD) $(KERNEL_ELF) $(KERNEL_BIN)
 	$(call color_progress_prefix, "Name")
@@ -182,6 +194,10 @@ else # QEMU is supported.
 qemu: $(KERNEL_BIN)
 	$(call color_header, "Launching QEMU")
 	@$(DOCKER_QEMU) $(EXEC_QEMU) $(QEMU_RELEASE_ARGS) -kernel $(KERNEL_BIN)
+
+qemu-prod: $(KERNEL_BIN)-prod
+	$(call color_header, "Launching QEMU production mode")
+	@$(DOCKER_QEMU) $(EXEC_QEMU) $(QEMU_RELEASE_ARGS) -kernel $(KERNEL_BIN)-prod
 
 gqemu: $(KERNEL_BIN)
 	$(call color_header, "Launching QEMU")
