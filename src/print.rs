@@ -69,7 +69,7 @@ macro_rules! warn {
 
 /// Prints a debug message, with a newline
 #[macro_export]
-#[cfg(not(debug))]
+#[cfg(not(profile = "production"))]
 macro_rules! debug {
     ($string:expr) => ($crate::print_extra!("D", $crate::colorize::Color::TrueColor { r: 128, g: 128, b: 128 }, $string));
 
@@ -78,7 +78,7 @@ macro_rules! debug {
 
 /// Prints to stdout with a newline, debug prefix, but will not print on release
 #[macro_export]
-#[cfg(release)]
+#[cfg(profile = "production")]
 macro_rules! debug {
     ($($arg:tt)*) => {};
 }
