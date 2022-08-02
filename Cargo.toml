@@ -9,6 +9,9 @@ members = ["ruspiro-mailbox", "ruspiro-cache"]
 [profile.release]
 lto = true
 
+[profile.production]
+inherits = "release"
+
 [features]
 default = []
 bsp_rpi3 = ["ruspiro-mailbox/ruspiro_pi3"]

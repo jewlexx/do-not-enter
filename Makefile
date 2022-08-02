@@ -143,7 +143,12 @@ $(KERNEL_ELF): $(KERNEL_ELF_DEPS)
 	$(call color_header, "Compiling kernel ELF - $(BSP)")
 	@RUSTFLAGS="$(RUSTFLAGS_PEDANTIC)" $(RUSTC_CMD)
 
+$(KERNEL_ELF)-prod: $(KERNEL_ELF_DEPS)
+	$(call color_header, "Compiling kernel ELF for production - $(BSP)")
+	@RUSTFLAGS="$(RUSTFLAGS)" $(RUSTC_CMD) --profile production
+
 bloat: $(KERNEL_ELF_DEPS)
+	$(call color_header, "Checking kernel ELF for float - $(BSP)")
 	@RUSTFLAGS="$(RUSTFLAGS_PEDANTIC)" cargo bloat $(COMPILER_ARGS)
 
 ##------------------------------------------------------------------------------
