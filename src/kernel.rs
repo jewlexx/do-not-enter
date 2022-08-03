@@ -4,8 +4,6 @@
 
 //! Basic Kernel for Raspberry Pi 3/4
 
-extern crate alloc;
-
 use libkernel::{framebuffer::FrameBuffer, *};
 
 use spin::Mutex;
