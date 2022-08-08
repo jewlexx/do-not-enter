@@ -19,7 +19,7 @@
 
 extern crate alloc;
 
-mod panic_wait;
+mod panic;
 
 pub mod bsp;
 pub mod colorize;
