@@ -1,11 +1,17 @@
 //! A panic handler that infinitely waits.
 
+use alloc::boxed::Box;
+use spin::Mutex;
+
 use crate::{cpu, println};
 use core::panic::PanicInfo;
 
 //--------------------------------------------------------------------------------------------------
 // Private Code
 //--------------------------------------------------------------------------------------------------
+
+static PANIC_HOOK: Mutex<Box<dyn Fn(&PanicInfo<'_>) + Sync + Send + 'static>> =
+    Mutex::new(Box::new(|_| {}));
 
 /// Stop immediately if called a second time.
 ///
