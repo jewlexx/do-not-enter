@@ -10,8 +10,9 @@ use core::panic::PanicInfo;
 // Private Code
 //--------------------------------------------------------------------------------------------------
 
-static PANIC_HOOK: Mutex<Box<dyn Fn(&PanicInfo<'_>) + Sync + Send + 'static>> =
-    Mutex::new(Box::new(|_| {}));
+type PanicHook = Box<dyn Fn(&PanicInfo<'_>) + Sync + Send + 'static>;
+
+static PANIC_HOOK: Mutex<Option<PanicHook>> = Mutex::new(None);
 
 /// Stop immediately if called a second time.
 ///
