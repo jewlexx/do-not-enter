@@ -1,18 +1,12 @@
 //! A panic handler that infinitely waits.
 
-use alloc::boxed::Box;
-use spin::Mutex;
+use core::panic::PanicInfo;
 
 use crate::{cpu, println};
-use core::panic::PanicInfo;
 
 //--------------------------------------------------------------------------------------------------
 // Private Code
 //--------------------------------------------------------------------------------------------------
-
-type PanicHook = Box<dyn Fn(&PanicInfo<'_>) + Sync + Send + 'static>;
-
-static PANIC_HOOK: Mutex<Option<PanicHook>> = Mutex::new(None);
 
 /// Stop immediately if called a second time.
 ///
@@ -66,4 +60,42 @@ fn panic(info: &PanicInfo) -> ! {
     );
 
     cpu::wait_forever()
+}
+
+#[allow(unused)]
+pub mod hook {
+    //! Interact with panic hooks
+
+    use alloc::boxed::Box;
+    use core::panic::PanicInfo;
+
+    use spin::Mutex;
+
+    pub type PanicHook = Box<dyn Fn(&PanicInfo<'_>) + Sync + Send + 'static>;
+
+    static PANIC_HOOK: Mutex<Option<PanicHook>> = Mutex::new(None);
+
+    #[macro_export]
+    /// Set the panic hook from a raw function
+    macro_rules! set_panic_hook {
+        ($hook:expr) => {
+            set_panic_hook(alloc::boxed::Box::new($hook));
+        };
+    }
+
+    /// Set the panic hook from a boxed function
+    pub fn set_panic_hook(hook: PanicHook) {
+        *PANIC_HOOK.lock() = Some(hook)
+    }
+
+    /// Take the current panic hook and remove it
+    pub fn take_panic_hook() -> Option<PanicHook> {
+        let mut lock = PANIC_HOOK.lock();
+
+        let old_hook = lock.take();
+
+        *lock = None;
+
+        old_hook
+    }
 }
