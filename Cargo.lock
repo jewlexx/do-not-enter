@@ -48,24 +48,12 @@ dependencies = [
 ]
 
 [[package]]
-name = "dne-macros"
-version = "0.1.0"
-source = "git+https://github.com/jewlexx/dne-macros.git#44eba7ccc5fa8a37a3265f527948e68b9cfc2c08"
-dependencies = [
- "heck",
- "proc-macro2",
- "quote",
- "syn",
-]
-
-[[package]]
 name = "do-not-enter"
 version = "0.1.0"
 dependencies = [
  "aligned",
  "cfg-if",
  "cortex-a",
- "dne-macros",
  "linked_list_allocator",
  "ruspiro-error",
  "ruspiro-mailbox",
@@ -111,6 +99,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0a2ca2c61bc9f3d74d2886294ab7b9853abd9c1ad903a3ac7815c58989bb7bab"
 dependencies = [
  "unicode-ident",
+]
+
+[[package]]
+name = "proc_macros"
+version = "0.1.0"
+dependencies = [
+ "heck",
+ "proc-macro2",
+ "quote",
+ "syn",
 ]
 
 [[package]]
