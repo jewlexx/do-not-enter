@@ -51,3 +51,20 @@ pub fn version() -> &'static str {
 extern "Rust" {
     fn kernel_init() -> !;
 }
+
+/// The default runner for unit tests.
+#[cfg(test)]
+pub fn test_runner(tests: &[&test_types::UnitTest]) {
+    // This line will be printed as the test header.
+    println!("Running {} tests", tests.len());
+
+    for (i, test) in tests.iter().enumerate() {
+        print!("{:>3}. {:.<58}", i + 1, test.name);
+
+        // Run the actual test.
+        (test.test_func)();
+
+        // Failed tests call panic!(). Execution reaches here only if the test has passed.
+        println!("[ok]")
+    }
+}
