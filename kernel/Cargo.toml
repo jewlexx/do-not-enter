@@ -5,6 +5,7 @@ edition = "2021"
 
 [features]
 default = []
+test_build = []
 bsp_rpi3 = ["ruspiro-mailbox/ruspiro_pi3"]
 bsp_rpi4 = ["ruspiro-mailbox/ruspiro_pi4"]
 

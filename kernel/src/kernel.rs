@@ -22,6 +22,20 @@ cfg_if::cfg_if! {
 /// States whether or not we can allocate memory
 pub static CAN_ALLOC: Mutex<bool> = Mutex::new(false);
 
+/// The `kernel_init()` for unit tests.
+#[cfg(test)]
+#[no_mangle]
+unsafe fn kernel_init() -> ! {
+    use driver::interface::DriverManager;
+
+    exception::handling_init();
+    bsp::driver::driver_manager().qemu_bring_up_console();
+
+    test_main();
+
+    cpu::qemu_exit_success()
+}
+
 /// Early init code.
 ///
 /// # Safety
