@@ -33,7 +33,7 @@ GEMU_RELEASE_ARGS = -serial stdio
 OBJDUMP_BINARY    = aarch64-none-elf-objdump
 NM_BINARY         = aarch64-none-elf-nm
 READELF_BINARY    = aarch64-none-elf-readelf
-LD_SCRIPT_PATH    = $(shell pwd)/src/bsp/raspberrypi
+LD_SCRIPT_PATH    = $(shell pwd)/kernel/src/bsp/raspberrypi
 RUSTC_MISC_ARGS   = -C target-cpu=cortex-a53
 
 ifeq ($(BSP),rpi3)
