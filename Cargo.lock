@@ -208,6 +208,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "test-macros"
+version = "0.1.0"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+ "test-types",
+]
+
+[[package]]
+name = "test-types"
+version = "0.1.0"
+
+[[package]]
 name = "tock-registers"
 version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
