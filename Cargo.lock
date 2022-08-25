@@ -55,6 +55,7 @@ dependencies = [
  "cfg-if",
  "cortex-a",
  "linked_list_allocator",
+ "proc_macros",
  "ruspiro-error",
  "ruspiro-mailbox",
  "spin",

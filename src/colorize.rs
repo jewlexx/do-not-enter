@@ -6,7 +6,7 @@ use core::{fmt::Display, str::FromStr};
 
 use alloc::{borrow::Cow, format, string::String};
 
-use dne_macros::ImplColorus;
+use proc_macros::ImplColorus;
 
 #[derive(ImplColorus)]
 #[allow(dead_code)]
