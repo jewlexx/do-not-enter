@@ -14,3 +14,9 @@ rpath = false
 
 [profile.release]
 lto = true
+
+[patch.crates-io]
+ruspiro-mmio-register = { git = "https://github.com/RusPiRo/ruspiro-mmio-register.git", branch = "development" }
+ruspiro-arch-aarch64 = { git = "https://github.com/RusPiRo/ruspiro-arch-aarch64.git", branch = "development" }
+ruspiro-error = { git = "https://github.com/RusPiRo/ruspiro-error.git", branch = "development" }
+ruspiro-cache = { path = "libraries/ruspiro-cache" }
