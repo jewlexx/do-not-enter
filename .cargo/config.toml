@@ -2,4 +2,4 @@
 target = "aarch64-unknown-none-softfloat"
 
 [unstable]
-build-std = ["core", "std", "compiler_builtins", "alloc"]
+build-std = ["core", "std", "proc_macro", "compiler_builtins", "alloc"]
