@@ -115,9 +115,9 @@ endif
 ##--------------------------------------------------------------------------------------------------
 ## Targets
 ##--------------------------------------------------------------------------------------------------
-.PHONY: build doc qemu chainboot clippy clean readelf objdump nm check
+.PHONY: build doc qemu chainboot clippy del-$(KERNEL_BIN) readelf objdump nm check
 
-build: clean $(KERNEL_BIN)
+build: del-$(KERNEL_BIN) $(KERNEL_BIN)
 
 check:
 	$(call color_header, "Checking for cargo-clippy warnings")
@@ -220,10 +220,10 @@ clippy:
 ##------------------------------------------------------------------------------
 ## Clean
 ##------------------------------------------------------------------------------
-clean:
+del-$(KERNEL_BIN):
 	rm -rf $(KERNEL_BIN)
 
-full-clean: clean
+clean: del-$(KERNEL_BIN)
 	cargo clean
 
 ##------------------------------------------------------------------------------
