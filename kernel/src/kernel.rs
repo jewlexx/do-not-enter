@@ -1,9 +1,6 @@
 #![feature(format_args_nl)]
-#![feature(custom_test_frameworks)]
 #![no_main]
 #![no_std]
-#![reexport_test_harness_main = "test_main"]
-#![test_runner(libkernel::test_runner)]
 
 //! Basic Kernel for Raspberry Pi 3/4
 
@@ -24,20 +21,6 @@ cfg_if::cfg_if! {
 
 /// States whether or not we can allocate memory
 pub static CAN_ALLOC: Mutex<bool> = Mutex::new(false);
-
-/// The `kernel_init()` for unit tests.
-#[cfg(test)]
-#[no_mangle]
-unsafe fn kernel_init() -> ! {
-    use driver::interface::DriverManager;
-
-    exception::handling_init();
-    bsp::driver::driver_manager().qemu_bring_up_console();
-
-    test_main();
-
-    cpu::qemu_exit_success()
-}
 
 /// Early init code.
 ///
