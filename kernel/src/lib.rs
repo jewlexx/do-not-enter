@@ -86,15 +86,14 @@ unsafe fn kernel_init() -> ! {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::exception::{current_privilege_level, PrivilegeLevel};
 
     #[test_case]
     const TEST1: test_types::UnitTest = test_types::UnitTest {
         name: "test_runner_executes_in_kernel_mode",
         test_func: || {
-            let (level, _) = current_privilege_level();
+            let (level, _) = exception::current_privilege_level();
 
-            assert!(level == PrivilegeLevel::Kernel)
+            assert!(level == exception::PrivilegeLevel::Kernel)
         },
     };
 }
