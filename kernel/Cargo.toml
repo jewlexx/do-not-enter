@@ -24,6 +24,7 @@ cfg-if = "1.0.0"
 cortex-a = "7.4.0"
 linked_list_allocator = "0.10.1"
 proc_macros = { version = "0.1.0", path = "../libraries/proc_macros" }
+qemu-exit = "3.0.1"
 ruspiro-error = "0.1.1"
 ruspiro-mailbox = { version = "0.4.1", path = "../libraries/ruspiro-mailbox" }
 spin = "0.9.4"
