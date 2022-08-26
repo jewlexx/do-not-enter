@@ -68,3 +68,18 @@ pub fn test_runner(tests: &[&test_types::UnitTest]) {
         println!("[ok]")
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test_case]
+    const TEST1: test_types::UnitTest = test_types::UnitTest {
+        name: "test_runner_executes_in_kernel_mode",
+        test_func: || {
+            let (level, _) = current_privilege_level();
+
+            assert!(level == PrivilegeLevel::Kernel)
+        },
+    };
+}
