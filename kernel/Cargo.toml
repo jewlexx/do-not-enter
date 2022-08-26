@@ -27,4 +27,8 @@ proc_macros = { version = "0.1.0", path = "../libraries/proc_macros" }
 ruspiro-error = "0.1.1"
 ruspiro-mailbox = { version = "0.4.1", path = "../libraries/ruspiro-mailbox" }
 spin = "0.9.4"
+test-types = { version = "0.1.0", path = "../libraries/test-types" }
 tock-registers = { version = "0.7.0", default-features = false, features = ["register_types"] }
+
+[dev-dependencies]
+test-macros = { path = "../libraries/test-macros" }

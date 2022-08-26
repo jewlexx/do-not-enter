@@ -65,6 +65,8 @@ dependencies = [
  "ruspiro-error",
  "ruspiro-mailbox",
  "spin",
+ "test-macros",
+ "test-types",
  "tock-registers",
 ]
 
