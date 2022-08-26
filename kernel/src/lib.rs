@@ -86,7 +86,7 @@ unsafe fn kernel_init() -> ! {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::exception::current_privilege_level;
+    use crate::exception::{current_privilege_level, PrivilegeLevel};
 
     #[test_case]
     const TEST1: test_types::UnitTest = test_types::UnitTest {
