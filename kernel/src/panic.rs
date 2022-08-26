@@ -59,7 +59,24 @@ fn panic(info: &PanicInfo) -> ! {
         info.message().unwrap_or(&format_args!("")),
     );
 
-    cpu::wait_forever()
+    _panic_exit()
+}
+
+/// The point of exit for `libkernel`.
+///
+/// It is linked weakly, so that the integration tests can overload its standard behavior.
+#[linkage = "weak"]
+#[no_mangle]
+fn _panic_exit() -> ! {
+    #[cfg(not(feature = "test_build"))]
+    {
+        cpu::wait_forever()
+    }
+
+    #[cfg(feature = "test_build")]
+    {
+        cpu::qemu_exit_failure()
+    }
 }
 
 #[allow(unused)]
