@@ -82,7 +82,7 @@ OBJCOPY_CMD = rust-objcopy \
     -O binary
 
 EXEC_QEMU          = $(QEMU_BINARY) -M $(QEMU_MACHINE_TYPE)
-EXEC_TEST_DISPATCH = ruby ../extas/chainboot/tests/dispatch.rb
+EXEC_TEST_DISPATCH = ruby ../extas/testing/dispatch.rb
 EXEC_MINIPUSH      = ruby ../extas/chainboot/serial/minipush.rb
 
 ##------------------------------------------------------------------------------
