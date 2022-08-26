@@ -52,4 +52,7 @@ impl driver::interface::DriverManager for BSPDriverManager {
         // Configure PL011Uart's output pins.
         GPIO.map_pl011_uart();
     }
+
+    #[cfg(feature = "test_build")]
+    fn qemu_bring_up_console(&self) {}
 }
