@@ -2,10 +2,10 @@
 
 #![allow(clippy::upper_case_acronyms)]
 #![allow(incomplete_features)]
-#![warn(missing_docs)]
+#![feature(asm_const)]
 #![feature(core_intrinsics)]
 #![feature(format_args_nl)]
-#![feature(asm_const)]
+#![feature(int_roundings)]
 #![feature(linkage)]
 #![feature(alloc_error_handler)]
 #![feature(panic_info_message)]
@@ -67,6 +67,20 @@ pub fn test_runner(tests: &[&test_types::UnitTest]) {
         // Failed tests call panic!(). Execution reaches here only if the test has passed.
         println!("[ok]")
     }
+}
+
+/// The `kernel_init()` for unit tests.
+#[cfg(test)]
+#[no_mangle]
+unsafe fn kernel_init() -> ! {
+    use driver::interface::DriverManager;
+
+    exception::handling_init();
+    bsp::driver::driver_manager().qemu_bring_up_console();
+
+    test_main();
+
+    cpu::qemu_exit_success()
 }
 
 #[cfg(test)]
