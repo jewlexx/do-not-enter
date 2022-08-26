@@ -18,6 +18,11 @@ name = "kernel"
 path = "src/kernel.rs"
 test = false
 
+# List of tests without harness.
+[[test]]
+name = "00_console_sanity"
+harness = false
+
 [dependencies]
 aligned = "0.4.1"
 cfg-if = "1.0.0"
