@@ -1,6 +1,9 @@
 #![feature(format_args_nl)]
+#![feature(custom_test_frameworks)]
 #![no_main]
 #![no_std]
+#![reexport_test_harness_main = "test_main"]
+#![test_runner(libkernel::test_runner)]
 
 //! Basic Kernel for Raspberry Pi 3/4
 
