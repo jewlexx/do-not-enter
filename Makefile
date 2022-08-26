@@ -327,6 +327,6 @@ endef
 test_unit:
 	$(call color_header, "Compiling unit test(s) - $(BSP)")
 	$(call test_prepare)
-	@RUSTFLAGS="$(RUSTFLAGS_PEDANTIC)" $(TEST_CMD) --lib
+	@RUSTFLAGS="$(RUSTFLAGS_PEDANTIC)" $(TEST_CMD) --lib --features test_build
 
 endif
