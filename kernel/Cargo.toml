@@ -5,7 +5,7 @@ edition = "2021"
 
 [features]
 default = []
-test_build = []
+test_build = ["qemu-exit"]
 bsp_rpi3 = ["ruspiro-mailbox/ruspiro_pi3"]
 bsp_rpi4 = ["ruspiro-mailbox/ruspiro_pi4"]
 
@@ -29,7 +29,7 @@ cfg-if = "1.0.0"
 cortex-a = "7.4.0"
 linked_list_allocator = "0.10.1"
 proc_macros = { version = "0.1.0", path = "../libraries/proc_macros" }
-qemu-exit = "3.0.1"
+qemu-exit = { version = "3.0.1", optional = true }
 ruspiro-error = "0.1.1"
 ruspiro-mailbox = { version = "0.4.1", path = "../libraries/ruspiro-mailbox" }
 spin = "0.9.4"

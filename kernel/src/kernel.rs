@@ -104,5 +104,7 @@ fn kernel_main() -> ! {
         debug!("      {}. {}", i + 1, driver.compatible());
     }
 
+    println!("Booted successfully!");
+
     console::enter_echo();
 }

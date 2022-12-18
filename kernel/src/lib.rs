@@ -69,6 +69,27 @@ pub fn test_runner(tests: &[&test_types::UnitTest]) {
     }
 }
 
+//--------------------------------------------------------------------------------------------------
+// Testing
+//--------------------------------------------------------------------------------------------------
+#[cfg(feature = "test_build")]
+use qemu_exit::QEMUExit;
+
+#[cfg(feature = "test_build")]
+const QEMU_EXIT_HANDLE: qemu_exit::AArch64 = qemu_exit::AArch64::new();
+
+/// Make the host QEMU binary execute `exit(1)`.
+#[cfg(feature = "test_build")]
+pub fn qemu_exit_failure() -> ! {
+    QEMU_EXIT_HANDLE.exit_failure()
+}
+
+/// Make the host QEMU binary execute `exit(0)`.
+#[cfg(feature = "test_build")]
+pub fn qemu_exit_success() -> ! {
+    QEMU_EXIT_HANDLE.exit_success()
+}
+
 /// The `kernel_init()` for unit tests.
 #[cfg(test)]
 #[no_mangle]
