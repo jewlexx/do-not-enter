@@ -1,10 +1,6 @@
 use std::{env, fs, process};
 
 fn main() {
-    cc::Build::new()
-        .file("include/bindings.h")
-        .compile("c_bindings");
-
     let ld_script_path = match env::var("LD_SCRIPT_PATH") {
         Ok(var) => var,
         _ => process::exit(0),
