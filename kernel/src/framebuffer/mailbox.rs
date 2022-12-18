@@ -41,6 +41,30 @@ pub mod mmio {
     pub const MBOX_REQUEST: usize = 0x0;
 }
 
+pub struct MailMessage {
+    pub channel: u8,
+    pub data: u32,
+}
+
+pub struct MailStatus {
+    pub reserved: u32,
+    pub empty: u8,
+    pub full: u8,
+}
+
+pub enum PropertyTag {
+    NullTag = 0,
+    FbAllocateBuffer = 0x00040001,
+    FbReleseBuffer = 0x00048001,
+    FbGetPhysicalDimensions = 0x00040003,
+    FbSetPhysicalDimensions = 0x00048003,
+    FbGetVirtualDimensions = 0x00040004,
+    FbSetVirtualDimensions = 0x00048004,
+    FbGetBitsPerPixel = 0x00040005,
+    FbSetBitsPerPixel = 0x00048005,
+    FbGetBytesPerRow = 0x00040008,
+}
+
 /// The mailbox address
 pub static MBOX: Mutex<Aligned<A16, [usize; 36]>> = Mutex::new(Aligned([0usize; 36]));
 

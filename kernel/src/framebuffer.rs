@@ -2,6 +2,8 @@
 
 use alloc::boxed::Box;
 
+mod mailbox;
+
 use crate::debug;
 
 static VGAPAL: [u32; 16] = [
@@ -32,33 +34,45 @@ impl FrameBuffer {
         assert_eq!(core::mem::align_of::<FrameBuffer>(), 16);
 
         debug!("Initializing framebuffer");
-        use ruspiro_mailbox::*;
 
-        let batch = MailboxBatch::empty()
-            .with_tag(PhysicalSizeSet::new(width, height))
-            .with_tag(VirtualSizeSet::new(width, height))
-            .with_tag(DepthSet::new(16))
-            .with_tag(PixelOrderSet::new(1))
-            .with_tag(VirtualOffsetSet::new(0, 0))
-            .with_tag(PitchGet::new())
-            .with_tag(FramebufferAllocate::new(4));
-
-        let mut mb = Mailbox::new();
-
-        let batch_result = mb.send_batch(batch)?;
-
-        let fb_base_address = batch_result
-            .get_tag::<FramebufferAllocate, _>()
-            .response()
-            .base_address;
-        let fb_pitch = batch_result.get_tag::<PitchGet, _>().response().pitch as isize;
-
-        Ok(Self {
+        let fb = Self {
             width,
             height,
-            pitch: fb_pitch,
-            fb: fb_base_address as *mut u32,
-        })
+            vwidth: width,
+            vheight: height,
+            depth: 24,
+            bytes: 0,
+            ignorex: 0,
+            ignorey: 0,
+            size: 0,
+        };
+
+        // let batch = MailboxBatch::empty()
+        //     .with_tag(PhysicalSizeSet::new(width, height))
+        //     .with_tag(VirtualSizeSet::new(width, height))
+        //     .with_tag(DepthSet::new(16))
+        //     .with_tag(PixelOrderSet::new(1))
+        //     .with_tag(VirtualOffsetSet::new(0, 0))
+        //     .with_tag(PitchGet::new())
+        //     .with_tag(FramebufferAllocate::new(4));
+
+        // let mut mb = Mailbox::new();
+
+        // let batch_result = mb.send_batch(batch)?;
+
+        // let fb_base_address = batch_result
+        //     .get_tag::<FramebufferAllocate, _>()
+        //     .response()
+        //     .base_address;
+        // let fb_pitch = batch_result.get_tag::<PitchGet, _>().response().pitch as isize;
+
+        // Ok(Self {
+        //     width,
+        //     height,
+        //     pitch: fb_pitch,
+        //     fb: fb_base_address as *mut u32,
+        // })
+        todo!()
     }
 
     /// Test that it works
