@@ -1,0 +1,40 @@
+[package]
+name = "kernel"
+version = "0.1.0"
+edition = "2021"
+
+[features]
+default = []
+test_build = ["qemu-exit"]
+bsp_rpi3 = ["ruspiro-mailbox/ruspiro_pi3"]
+bsp_rpi4 = ["ruspiro-mailbox/ruspiro_pi4"]
+
+[lib]
+name = "libkernel"
+test = false
+
+[[bin]]
+name = "kernel"
+path = "src/kernel.rs"
+test = false
+
+# List of tests without harness.
+[[test]]
+name = "00_console_sanity"
+harness = false
+
+[dependencies]
+aligned = "0.4.1"
+cfg-if = "1.0.0"
+cortex-a = "7.4.0"
+linked_list_allocator = "0.10.1"
+proc_macros = { version = "0.1.0", path = "../libraries/proc_macros" }
+qemu-exit = { version = "3.0.1", optional = true }
+ruspiro-error = "0.1.1"
+ruspiro-mailbox = { version = "0.4.1", path = "../libraries/ruspiro-mailbox" }
+spin = "0.9.4"
+test-types = { version = "0.1.0", path = "../libraries/test-types" }
+tock-registers = { version = "0.7.0", default-features = false, features = ["register_types"] }
+
+[dev-dependencies]
+test-macros = { path = "../libraries/test-macros" }

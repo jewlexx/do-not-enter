@@ -29,11 +29,13 @@ TARGET            = aarch64-unknown-none-softfloat
 KERNEL_BIN        = kernel8.img
 QEMU_BINARY       = qemu-system-aarch64
 QEMU_RELEASE_ARGS = -serial stdio -display none
+QEMU_TEST_ARGS    = $(QEMU_RELEASE_ARGS) -semihosting
 GEMU_RELEASE_ARGS = -serial stdio
+GEMU_TEST_ARGS    = -serial stdio -semihosting
 OBJDUMP_BINARY    = aarch64-none-elf-objdump
 NM_BINARY         = aarch64-none-elf-nm
 READELF_BINARY    = aarch64-none-elf-readelf
-LD_SCRIPT_PATH    = $(shell pwd)/src/bsp/raspberrypi
+LD_SCRIPT_PATH    = $(shell pwd)/kernel/src/bsp/raspberrypi
 RUSTC_MISC_ARGS   = -C target-cpu=cortex-a53
 
 ifeq ($(BSP),rpi3)
@@ -45,22 +47,17 @@ endif
 # Export for build.rs.
 export LD_SCRIPT_PATH
 
-
-
 ##--------------------------------------------------------------------------------------------------
 ## Targets and Prerequisites
 ##--------------------------------------------------------------------------------------------------
-KERNEL_MANIFEST      = Cargo.toml
+KERNEL_MANIFEST      = kernel/Cargo.toml
 KERNEL_LINKER_SCRIPT = kernel.ld
 LAST_BUILD_CONFIG    = target/$(BSP).build_config
 
-KERNEL_ELF      = target/$(TARGET)/debug/kernel
-KERNEL_ELF_PROD      = target/$(TARGET)/release/kernel
+KERNEL_ELF      = target/$(TARGET)/release/kernel
 # This parses cargo's dep-info file.
 # https://doc.rust-lang.org/cargo/guide/build-cache.html#dep-info-files
 KERNEL_ELF_DEPS = $(filter-out %: ,$(file < $(KERNEL_ELF).d)) $(KERNEL_MANIFEST) $(LAST_BUILD_CONFIG)
-
-
 
 ##--------------------------------------------------------------------------------------------------
 ## Command building blocks
@@ -69,33 +66,60 @@ RUSTFLAGS = $(RUSTC_MISC_ARGS)                   \
     -C link-arg=--library-path=$(LD_SCRIPT_PATH) \
     -C link-arg=--script=$(KERNEL_LINKER_SCRIPT)
 
-# Disabled
 RUSTFLAGS_PEDANTIC = $(RUSTFLAGS) \
     -D warnings                   \
     -D missing_docs
 
 FEATURES      = --features bsp_$(BSP)
 COMPILER_ARGS = --target=$(TARGET) \
-    $(FEATURES)
+    $(FEATURES) 					\
+	--release
 
-RUSTC_CMD   = cargo rustc $(COMPILER_ARGS)
-CHECK_CMD 	= cargo check $(COMPILER_ARGS)
+RUSTC_CMD   = cargo rustc $(COMPILER_ARGS) --manifest-path $(KERNEL_MANIFEST)
 DOC_CMD     = cargo doc $(COMPILER_ARGS)
 CLIPPY_CMD  = cargo clippy $(COMPILER_ARGS)
+TEST_CMD    = cargo test $(COMPILER_ARGS) --manifest-path $(KERNEL_MANIFEST)
 OBJCOPY_CMD = rust-objcopy \
     --strip-all            \
     -O binary
 
 EXEC_QEMU          = $(QEMU_BINARY) -M $(QEMU_MACHINE_TYPE)
-EXEC_TEST_MINIPUSH = ruby tests/chainboot_test.rb
-EXEC_MINIPUSH      = ruby chainboot/minipush.rb
+EXEC_TEST_DISPATCH = ruby extras/testing/dispatch.rb
+EXEC_MINIPUSH      = ruby extras/chainboot/minipush.rb
 
 ##------------------------------------------------------------------------------
 ## Dockerization
 ##------------------------------------------------------------------------------
 DOCKER_CMD            = docker run -t --rm -v $(shell pwd):/work/tutorial -w /work/tutorial
 DOCKER_CMD_INTERACT   = $(DOCKER_CMD) -i
-DOCKER_ARG_DIR_COMMON = -v $(shell pwd)/../common:/work/common
+DOCKER_ARG_DIR_COMMON = -v $(shell pwd)/extas:/work/extas
+DOCKER_ARG_DIR_JTAG   = -v $(shell pwd)/../X1_JTAG_boot:/work/X1_JTAG_boot
+DOCKER_ARG_DEV        = --privileged -v /dev:/dev
+DOCKER_ARG_NET        = --network host
+
+# DOCKER_IMAGE defined in include file (see top of this file).
+DOCKER_QEMU  = $(DOCKER_CMD_INTERACT) $(DOCKER_IMAGE)
+DOCKER_TOOLS = $(DOCKER_CMD) $(DOCKER_IMAGE)
+DOCKER_TEST  = $(DOCKER_CMD) $(DOCKER_ARG_DIR_COMMON) $(DOCKER_IMAGE)
+DOCKER_GDB   = $(DOCKER_CMD_INTERACT) $(DOCKER_ARG_NET) $(DOCKER_IMAGE)
+
+# Dockerize commands, which require USB device passthrough, only on Linux.
+ifeq ($(shell uname -s),Linux)
+    DOCKER_CMD_DEV = $(DOCKER_CMD_INTERACT) $(DOCKER_ARG_DEV)
+
+    DOCKER_CHAINBOOT = $(DOCKER_CMD_DEV) $(DOCKER_ARG_DIR_COMMON) $(DOCKER_IMAGE)
+    DOCKER_JTAGBOOT  = $(DOCKER_CMD_DEV) $(DOCKER_ARG_DIR_COMMON) $(DOCKER_ARG_DIR_JTAG) $(DOCKER_IMAGE)
+    DOCKER_OPENOCD   = $(DOCKER_CMD_DEV) $(DOCKER_ARG_NET) $(DOCKER_IMAGE)
+else
+    DOCKER_OPENOCD   = echo "Not yet supported on non-Linux systems."; \#
+endif
+
+##------------------------------------------------------------------------------
+## Dockerization
+##------------------------------------------------------------------------------
+DOCKER_CMD            = docker run -t --rm -v $(shell pwd):/work/tutorial -w /work/tutorial
+DOCKER_CMD_INTERACT   = $(DOCKER_CMD) -i
+DOCKER_ARG_DIR_COMMON = -v $(shell pwd)/../extras:/work/common
 DOCKER_ARG_DEV        = --privileged -v /dev:/dev
 
 # DOCKER_IMAGE defined in include file (see top of this file).
@@ -110,14 +134,12 @@ ifeq ($(shell uname -s),Linux)
     DOCKER_CHAINBOOT = $(DOCKER_CMD_DEV) $(DOCKER_ARG_DIR_COMMON) $(DOCKER_IMAGE)
 endif
 
-
-
 ##--------------------------------------------------------------------------------------------------
 ## Targets
 ##--------------------------------------------------------------------------------------------------
-.PHONY: build doc qemu chainboot clippy clean readelf objdump nm check
+.PHONY: build doc qemu chainboot clippy del-$(KERNEL_BIN) readelf objdump nm check
 
-build: clean $(KERNEL_BIN)
+build: del-$(KERNEL_BIN) $(KERNEL_BIN)
 
 check:
 	$(call color_header, "Checking for cargo-clippy warnings")
@@ -220,8 +242,11 @@ clippy:
 ##------------------------------------------------------------------------------
 ## Clean
 ##------------------------------------------------------------------------------
-clean:
+del-$(KERNEL_BIN):
 	rm -rf $(KERNEL_BIN)
+
+clean: del-$(KERNEL_BIN)
+	cargo clean
 
 ##------------------------------------------------------------------------------
 ## Run readelf
@@ -252,11 +277,13 @@ nm: $(KERNEL_ELF)
 ##--------------------------------------------------------------------------------------------------
 ## Testing targets
 ##--------------------------------------------------------------------------------------------------
-.PHONY: test test_boot
+.PHONY: test test_boot test_unit test_integration
+
+test_unit test_integration: FEATURES += --features test_build
 
 ifeq ($(QEMU_MACHINE_TYPE),) # QEMU is not supported for the board.
 
-test_boot test:
+test_boot test_unit test_integration test:
 	$(call color_header, "$(QEMU_MISSING_STRING)")
 
 else # QEMU is supported.
@@ -266,9 +293,49 @@ else # QEMU is supported.
 ##------------------------------------------------------------------------------
 test_boot: $(KERNEL_BIN)
 	$(call color_header, "Boot test - $(BSP)")
-	@$(DOCKER_TEST) $(EXEC_TEST_MINIPUSH) $(EXEC_QEMU) $(QEMU_RELEASE_ARGS) \
-		-kernel $(KERNEL_BIN) $(CHAINBOOT_DEMO_PAYLOAD)
+	@$(DOCKER_TEST) $(EXEC_TEST_DISPATCH) $(EXEC_QEMU) $(QEMU_RELEASE_ARGS) -kernel $(KERNEL_BIN)
 
-test: test_boot
+##------------------------------------------------------------------------------
+## Helpers for unit and integration test targets
+##------------------------------------------------------------------------------
+define KERNEL_TEST_RUNNER
+#!/usr/bin/env bash
+
+    # The cargo test runner seems to change into the crate under test's directory. Therefore, ensure
+    # this script executes from the root.
+    cd $(shell pwd)
+
+    TEST_ELF=$$(echo $$1 | sed -e 's/.*target/target/g')
+    TEST_BINARY=$$(echo $$1.img | sed -e 's/.*target/target/g')
+
+    $(OBJCOPY_CMD) $$TEST_ELF $$TEST_BINARY
+    $(DOCKER_TEST) $(EXEC_TEST_DISPATCH) $(EXEC_QEMU) $(QEMU_TEST_ARGS) -kernel $$TEST_BINARY
+endef
+
+export KERNEL_TEST_RUNNER
+
+define test_prepare
+    @mkdir -p target
+    @echo "$$KERNEL_TEST_RUNNER" > target/kernel_test_runner.sh
+    @chmod +x target/kernel_test_runner.sh
+endef
+
+##------------------------------------------------------------------------------
+## Run unit test(s)
+##------------------------------------------------------------------------------
+test_unit:
+	$(call color_header, "Compiling unit test(s) - $(BSP)")
+	$(call test_prepare)
+	@RUSTFLAGS="$(RUSTFLAGS_PEDANTIC)" $(TEST_CMD) --lib
+
+##------------------------------------------------------------------------------
+## Run integration test(s)
+##------------------------------------------------------------------------------
+test_integration:
+	$(call color_header, "Compiling integration test(s) - $(BSP)")
+	$(call test_prepare)
+	@RUSTFLAGS="$(RUSTFLAGS_PEDANTIC)" $(TEST_CMD) $(TEST_ARG)
+
+test: test_boot test_unit test_integration
 
 endif

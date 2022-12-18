@@ -1,5 +1,5 @@
 [build]
 target = "aarch64-unknown-none-softfloat"
 
-[unstable]
-build-std = ["core", "compiler_builtins", "alloc"]
+[target.'cfg(target_os = "none")']
+runner = "target/kernel_test_runner.sh"
