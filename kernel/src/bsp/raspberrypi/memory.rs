@@ -26,7 +26,7 @@ pub mod map {
         pub const GPIO_START: usize = START + GPIO_OFFSET;
         pub const PL011_UART_START: usize = START + UART_OFFSET;
 
-        pub const VIDEOCORE_MBOX: usize = START + 0x0000B880;
+        pub const VIDEOCORE_MBOX: usize = START + 0x0000_B880;
         pub const MBOX_READ: usize = VIDEOCORE_MBOX;
         pub const MBOX_POLL: usize = VIDEOCORE_MBOX + 0x10;
         pub const MBOX_SENDER: usize = VIDEOCORE_MBOX + 0x14;
