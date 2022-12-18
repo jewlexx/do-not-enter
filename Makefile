@@ -336,4 +336,6 @@ test_integration:
 	$(call test_prepare)
 	@RUSTFLAGS="$(RUSTFLAGS_PEDANTIC)" $(TEST_CMD) $(TEST_ARG)
 
+test: test_boot test_unit test_integration
+
 endif
