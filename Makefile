@@ -85,7 +85,7 @@ OBJCOPY_CMD = rust-objcopy \
 
 EXEC_QEMU          = $(QEMU_BINARY) -M $(QEMU_MACHINE_TYPE)
 EXEC_TEST_DISPATCH = ruby extras/testing/dispatch.rb
-EXEC_MINIPUSH      = ruby extras/chainboot/serial/minipush.rb
+EXEC_MINIPUSH      = ruby extras/chainboot/minipush.rb
 
 ##------------------------------------------------------------------------------
 ## Dockerization
