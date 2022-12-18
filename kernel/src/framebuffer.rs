@@ -9,19 +9,28 @@ static VGAPAL: [u32; 16] = [
     0x5555FF, 0x55FF55, 0x55FFFF, 0xFF5555, 0xFF55FF, 0xFFFF55, 0xFFFFFF,
 ];
 
+#[repr(align(16))]
 /// The structure for interaction with the framebuffer
 pub struct FrameBuffer {
     /// Display width
     pub width: u32,
     /// Display height
     pub height: u32,
-    pitch: isize,
-    fb: *mut u32,
+    pub vwidth: u32,
+    pub vheight: u32,
+    pub bytes: u32,
+    pub depth: u32,
+    pub ignorex: u32,
+    pub ignorey: u32,
+    pub size: u32,
 }
 
 impl FrameBuffer {
     /// Initialize a new framebuffer
     pub fn new(width: u32, height: u32) -> Result<Self, Box<dyn ruspiro_error::Error + Send>> {
+        // Ensure that framebuffer is aligned to 16 bytes
+        assert_eq!(core::mem::align_of::<FrameBuffer>(), 16);
+
         debug!("Initializing framebuffer");
         use ruspiro_mailbox::*;
 
