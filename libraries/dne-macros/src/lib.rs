@@ -4,8 +4,6 @@ use proc_macro2::TokenStream;
 use quote::{format_ident, quote};
 use syn::{parse_macro_input, Data, DeriveInput, Fields};
 
-mod getset;
-
 fn macro_error(msg: &str) -> TokenStream {
     quote::quote! {
        compile_error!(#msg)
@@ -16,11 +14,6 @@ enum FieldType {
     Unit,
     Named,
     Unnamed,
-}
-
-#[proc_macro_derive(GetSet)]
-pub fn derive_get_set(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
-    getset::derive_get_set(parse_macro_input!(input as DeriveInput)).into()
 }
 
 #[proc_macro_derive(ImplColorus)]
