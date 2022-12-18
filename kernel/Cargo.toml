@@ -36,6 +36,7 @@ spin = "0.9.4"
 test-types = { version = "0.1.0", path = "../libraries/test-types" }
 tock-registers = { version = "0.7.0", default-features = false, features = ["register_types"] }
 embedded-hal = "0.2.7"
+cty = "0.2.2"
 
 [dev-dependencies]
 test-macros = { path = "../libraries/test-macros" }

@@ -51,6 +51,19 @@ unsafe fn kernel_init() -> ! {
     memory::alloc::kernel_init_heap_allocator();
     *CAN_ALLOC.lock() = true;
 
+    assert_eq!(returns_zero(), 0);
+    assert_eq!(returns_one(), 1);
+
+    assert_eq!(
+        returns_complex(),
+        complex_return {
+            a: 1,
+            b: 1,
+            c: 1,
+            d: 1,
+        }
+    );
+
     // Transition from unsafe to safe.
     kernel_main()
 }
@@ -65,6 +78,82 @@ const TITLE_TEXT: &str = r#"
 
 
 "#;
+
+extern "C" {
+    fn returns_zero() -> cty::c_int;
+    fn returns_one() -> cty::c_int;
+
+    fn returns_complex() -> complex_return;
+}
+
+#[repr(C)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+/// p
+pub struct complex_return {
+    /// p
+    pub a: cty::c_int,
+    /// p
+    pub b: cty::c_int,
+    /// p
+    pub c: cty::c_int,
+    /// p
+    pub d: cty::c_int,
+}
+#[test]
+fn bindgen_test_layout_complex_return() {
+    const UNINIT: ::core::mem::MaybeUninit<complex_return> = ::core::mem::MaybeUninit::uninit();
+    let ptr = UNINIT.as_ptr();
+    assert_eq!(
+        ::core::mem::size_of::<complex_return>(),
+        16usize,
+        concat!("Size of: ", stringify!(complex_return))
+    );
+    assert_eq!(
+        ::core::mem::align_of::<complex_return>(),
+        4usize,
+        concat!("Alignment of ", stringify!(complex_return))
+    );
+    assert_eq!(
+        unsafe { ::core::ptr::addr_of!((*ptr).a) as usize - ptr as usize },
+        0usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(complex_return),
+            "::",
+            stringify!(a)
+        )
+    );
+    assert_eq!(
+        unsafe { ::core::ptr::addr_of!((*ptr).b) as usize - ptr as usize },
+        4usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(complex_return),
+            "::",
+            stringify!(b)
+        )
+    );
+    assert_eq!(
+        unsafe { ::core::ptr::addr_of!((*ptr).c) as usize - ptr as usize },
+        8usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(complex_return),
+            "::",
+            stringify!(c)
+        )
+    );
+    assert_eq!(
+        unsafe { ::core::ptr::addr_of!((*ptr).d) as usize - ptr as usize },
+        12usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(complex_return),
+            "::",
+            stringify!(d)
+        )
+    );
+}
 
 /// The main function running after the early init.
 fn kernel_main() -> ! {
