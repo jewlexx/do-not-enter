@@ -277,11 +277,13 @@ nm: $(KERNEL_ELF)
 ##--------------------------------------------------------------------------------------------------
 ## Testing targets
 ##--------------------------------------------------------------------------------------------------
-.PHONY: test test_boot
+.PHONY: test test_boot test_unit test_integration
+
+test_unit test_integration: FEATURES += --features test_build
 
 ifeq ($(QEMU_MACHINE_TYPE),) # QEMU is not supported for the board.
 
-test_boot test:
+test_boot test_unit test_integration test:
 	$(call color_header, "$(QEMU_MISSING_STRING)")
 
 else # QEMU is supported.
@@ -291,16 +293,13 @@ else # QEMU is supported.
 ##------------------------------------------------------------------------------
 test_boot: $(KERNEL_BIN)
 	$(call color_header, "Boot test - $(BSP)")
-	@$(DOCKER_TEST) $(EXEC_TEST_MINIPUSH) $(EXEC_QEMU) $(QEMU_RELEASE_ARGS) \
-		-kernel $(KERNEL_BIN) $(CHAINBOOT_DEMO_PAYLOAD)
-
-test: test_boot
+	@$(DOCKER_TEST) $(EXEC_TEST_DISPATCH) $(EXEC_QEMU) $(QEMU_RELEASE_ARGS) -kernel $(KERNEL_BIN)
 
 ##------------------------------------------------------------------------------
 ## Helpers for unit and integration test targets
 ##------------------------------------------------------------------------------
 define KERNEL_TEST_RUNNER
-    #!/usr/bin/env bash
+#!/usr/bin/env bash
 
     # The cargo test runner seems to change into the crate under test's directory. Therefore, ensure
     # this script executes from the root.
@@ -327,6 +326,14 @@ endef
 test_unit:
 	$(call color_header, "Compiling unit test(s) - $(BSP)")
 	$(call test_prepare)
-	@RUSTFLAGS="$(RUSTFLAGS_PEDANTIC)" $(TEST_CMD) --lib --features test_build
+	@RUSTFLAGS="$(RUSTFLAGS_PEDANTIC)" $(TEST_CMD) --lib
+
+##------------------------------------------------------------------------------
+## Run integration test(s)
+##------------------------------------------------------------------------------
+test_integration:
+	$(call color_header, "Compiling integration test(s) - $(BSP)")
+	$(call test_prepare)
+	@RUSTFLAGS="$(RUSTFLAGS_PEDANTIC)" $(TEST_CMD) $(TEST_ARG)
 
 endif
