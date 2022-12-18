@@ -120,7 +120,7 @@ impl fmt::Display for MMUEnableError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             MMUEnableError::AlreadyEnabled => write!(f, "MMU is already enabled"),
-            MMUEnableError::Other(x) => write!(f, "{}", x),
+            MMUEnableError::Other(x) => write!(f, "{x}"),
         }
     }
 }

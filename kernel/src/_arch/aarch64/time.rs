@@ -36,12 +36,12 @@ pub fn time_manager() -> &'static impl time::interface::TimeManager {
 
 impl time::interface::TimeManager for GenericTimer {
     fn resolution(&self) -> Duration {
-        Duration::from_nanos(NS_PER_S / (CNTFRQ_EL0.get() as u64))
+        Duration::from_nanos(NS_PER_S / (CNTFRQ_EL0.get()))
     }
 
     fn uptime(&self) -> Duration {
         let current_count: u64 = self.read_cntpct() * NS_PER_S;
-        let frq: u64 = CNTFRQ_EL0.get() as u64;
+        let frq: u64 = CNTFRQ_EL0.get();
 
         Duration::from_nanos(current_count / frq)
     }

@@ -79,14 +79,7 @@ pub fn derive_impl_colours(input: proc_macro::TokenStream) -> proc_macro::TokenS
 
             let decl_args = quote!(#(#decl),*).to_string();
 
-            let function_body = format!(
-                "{}::{}{l}{}{r}.to_fg_str()",
-                name,
-                var_name,
-                decl_args,
-                l = f_l,
-                r = f_r
-            );
+            let function_body = format!("{name}::{var_name}{f_l}{decl_args}{f_r}.to_fg_str()");
             let fun_bod = TokenStream::from_str(function_body.as_str()).unwrap();
 
             let arm = quote! {

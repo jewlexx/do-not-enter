@@ -205,7 +205,7 @@ impl fmt::Display for EsrEL1 {
             Some(ESR_EL1::EC::Value::DataAbortCurrentEL) => "Data Abort, current EL",
             _ => "N/A",
         };
-        writeln!(f, " - {}", ec_translation)?;
+        writeln!(f, " - {ec_translation}")?;
 
         // Raw print of instruction specific syndrome.
         write!(f, "      Instr Specific Syndrome (ISS): {:#x}", self.0.read(ESR_EL1::ISS))

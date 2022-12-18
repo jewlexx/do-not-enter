@@ -52,7 +52,7 @@ impl Color {
             Color::BrightMagenta => "95".into(),
             Color::BrightCyan => "96".into(),
             Color::BrightWhite => "97".into(),
-            Color::TrueColor { r, g, b } => format!("38;2;{};{};{}", r, g, b).into(),
+            Color::TrueColor { r, g, b } => format!("38;2;{r};{g};{b}").into(),
             Color::Reset => "0".into(),
         }
     }
@@ -75,7 +75,7 @@ impl Color {
             Color::BrightMagenta => "105".into(),
             Color::BrightCyan => "106".into(),
             Color::BrightWhite => "107".into(),
-            Color::TrueColor { r, g, b } => format!("48;2;{};{};{}", r, g, b).into(),
+            Color::TrueColor { r, g, b } => format!("48;2;{r};{g};{b}").into(),
             Color::Reset => "0".into(),
         }
     }
