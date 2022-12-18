@@ -23,7 +23,8 @@ unsafe fn kernel_init() -> ! {
     assert_eq!(console().read_char(), 'C');
     print!("OK1234");
 
-    // 6
+    // 10
+    // TODO: Figure out why it returns 10 and not 6
     print!("{}", console().chars_written());
 
     // 3

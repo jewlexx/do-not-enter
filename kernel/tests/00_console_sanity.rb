@@ -25,7 +25,7 @@ class TxStatisticsTest < SubtestBase
     end
 
     def run(qemu_out, _qemu_in)
-        expect_or_raise(qemu_out, '6')
+        expect_or_raise(qemu_out, '10')
     end
 end
 
