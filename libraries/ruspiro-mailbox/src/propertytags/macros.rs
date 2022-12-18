@@ -220,7 +220,8 @@ macro_rules! property_tag {
         paste::item! {
             $(#[doc = $doc])*
             #[allow(dead_code)]
-            #[repr(C, packed)]
+            // TODO: Removed repr(packed). Ensure this works in all circumstances
+            #[repr(C)]
             #[derive(Copy, Clone)]
             pub struct $name {
                 /// Property Tag Id. See [PropertyTagId]
