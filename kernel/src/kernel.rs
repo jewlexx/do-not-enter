@@ -51,19 +51,6 @@ unsafe fn kernel_init() -> ! {
     memory::alloc::kernel_init_heap_allocator();
     *CAN_ALLOC.lock() = true;
 
-    assert_eq!(returns_zero(), 0);
-    assert_eq!(returns_one(), 1);
-
-    assert_eq!(
-        returns_complex(),
-        complex_return {
-            a: 1,
-            b: 1,
-            c: 1,
-            d: 1,
-        }
-    );
-
     // Transition from unsafe to safe.
     kernel_main()
 }
