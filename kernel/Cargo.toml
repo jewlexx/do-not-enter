@@ -26,7 +26,6 @@ harness = false
 [dependencies]
 aligned = "0.4.1"
 cfg-if = "1.0.0"
-display = { path = "../libraries/display" }
 cortex-a = "7.4.0"
 linked_list_allocator = "0.10.1"
 dne-macros = { version = "0.1.0", path = "../libraries/dne-macros" }
