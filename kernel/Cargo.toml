@@ -35,6 +35,10 @@ ruspiro-mailbox = { version = "0.4.1", path = "../libraries/ruspiro-mailbox" }
 spin = "0.9.4"
 test-types = { version = "0.1.0", path = "../libraries/test-types" }
 tock-registers = { version = "0.7.0", default-features = false, features = ["register_types"] }
+embedded-hal = "0.2.7"
 
 [dev-dependencies]
 test-macros = { path = "../libraries/test-macros" }
+
+[build-dependencies]
+cc = "1.0.78"
