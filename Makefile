@@ -171,7 +171,7 @@ $(KERNEL_ELF_PROD): $(KERNEL_ELF_DEPS)
 
 bloat: $(KERNEL_ELF_DEPS)
 	$(call color_header, "Checking kernel ELF for float - $(BSP)")
-	@RUSTFLAGS="$(RUSTFLAGS_PEDANTIC)" cargo bloat $(COMPILER_ARGS_PROD)
+	@RUSTFLAGS="$(RUSTFLAGS)" cargo bloat $(COMPILER_ARGS) --release
 
 ##------------------------------------------------------------------------------
 ## Generate the stripped kernel binary
