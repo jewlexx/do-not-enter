@@ -36,7 +36,6 @@ spin = "0.9.4"
 test-types = { version = "0.1.0", path = "../libraries/test-types" }
 tock-registers = { version = "0.7.0", default-features = false, features = ["register_types"] }
 embedded-hal = { version = "0.2.7", features = ["unproven"] }
-rppal = { version = "0.14.1", features = ["hal", "hal-unproven", "spin_sleep", "void"] }
 
 [dev-dependencies]
 test-macros = { path = "../libraries/test-macros" }
