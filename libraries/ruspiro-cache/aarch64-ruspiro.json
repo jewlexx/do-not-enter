@@ -9,7 +9,10 @@
   "max-atomic-width": 128,
   "os": "none",
   "pre-link-args": {
-    "gcc": ["-Wl,--as-needed", "-Wl,-z,noexecstack"]
+    "gcc": [
+      "-Wl,--as-needed",
+      "-Wl,-z,noexecstack"
+    ]
   },
   "target-c-int-width": "32",
   "target-endian": "little",
