@@ -24,7 +24,7 @@ impl GenericTimer {
     #[inline(always)]
     fn read_cntpct(&self) -> u64 {
         // Prevent that the counter is read ahead of time due to out-of-order execution.
-        unsafe { barrier::isb(barrier::SY) };
+        barrier::isb(barrier::SY);
         CNTPCT_EL0.get()
     }
 }
