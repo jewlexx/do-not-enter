@@ -19,7 +19,7 @@ maintenance = { status = "actively-developed" }
 
 [dependencies]
 paste = "1.0.7"
-ruspiro-mmio-register = "0.1.3"
+ruspiro-mmio-register = "0.1.4"
 ruspiro-cache = "0.4.1"
 ruspiro-error = "0.1.1"
 
