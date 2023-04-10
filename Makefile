@@ -143,6 +143,7 @@ gen-clibs:
 	cmake -B clibs-build -S . -G Ninja
 
 clibs: gen-clibs
+	cmake --build clibs-build
 
 build: del-$(KERNEL_BIN) $(KERNEL_BIN)
 
