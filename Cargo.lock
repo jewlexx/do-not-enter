@@ -101,6 +101,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "mailbox"
+version = "0.1.0"
+dependencies = [
+ "cc",
+]
+
+[[package]]
 name = "paste"
 version = "1.0.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
