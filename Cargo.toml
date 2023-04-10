@@ -1,5 +1,5 @@
 [workspace]
-members = ["libraries/*", "kernel"]
+members = ["lib/*", "kernel"]
 
 [profile.dev]
 opt-level = 3
@@ -19,4 +19,5 @@ lto = true
 ruspiro-mmio-register = { git = "https://github.com/RusPiRo/ruspiro-mmio-register.git", branch = "development" }
 ruspiro-arch-aarch64 = { git = "https://github.com/RusPiRo/ruspiro-arch-aarch64.git", branch = "development" }
 ruspiro-error = { git = "https://github.com/RusPiRo/ruspiro-error.git", branch = "development" }
-ruspiro-cache = { path = "libraries/ruspiro-cache" }
+ruspiro-cache = { path = "lib/ruspiro-cache" }
+ruspiro-mailbox = { path = "lib/ruspiro-mailbox" }
