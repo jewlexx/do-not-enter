@@ -4,5 +4,5 @@ project(dnelibs C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_subdirectory(lib/framebuffer/sys)
+add_subdirectory(clib/framebuffer)
 add_subdirectory(clib/stdlib)
