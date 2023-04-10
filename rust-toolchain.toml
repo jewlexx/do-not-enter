@@ -2,7 +2,7 @@
 # Must use old version. Issue tracked here: https://github.com/rust-lang/rust/issues/98378
 # Updated version broke `build-std` on Cortex-M targets with https://github.com/rust-lang/rust/pull/97791
 # May be fixed by https://github.com/rust-lang/rust/pull/98457
-channel = "nightly-2022-12-16"
+channel = "nightly-2023-03-10"
 components = ["cargo", "clippy", "llvm-tools-preview", "rustfmt", "rust-src"]
 targets = [ "wasm32-unknown-unknown", "aarch64-unknown-none-softfloat" ]
 profile = "default"
