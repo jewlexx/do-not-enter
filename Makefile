@@ -139,6 +139,11 @@ endif
 ##--------------------------------------------------------------------------------------------------
 .PHONY: build doc qemu chainboot clippy del-$(KERNEL_BIN) readelf objdump nm check
 
+gen-clibs:
+	cmake -B clibs-build -S . -G Ninja
+
+clibs: gen-clibs
+
 build: del-$(KERNEL_BIN) $(KERNEL_BIN)
 
 check:

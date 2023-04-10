@@ -1,2 +1,4 @@
 kernel8.img
 /target
+
+clibs-build/
