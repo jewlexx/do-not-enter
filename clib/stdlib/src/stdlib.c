@@ -60,14 +60,14 @@ void memcpy(void *dest, const void *src, int bytes) {
   }
 }
 
-void bzero(void *dest, int bytes) { memset(dest, 0, bytes); }
-
 void memset(void *dest, uint8_t c, int bytes) {
   uint8_t *d = dest;
   while (bytes--) {
     *d++ = c;
   }
 }
+
+void bzero(void *dest, int bytes) { memset(dest, 0, bytes); }
 
 char *itoa(int num, int base) {
   static char intbuf[33];
