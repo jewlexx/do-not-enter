@@ -7,4 +7,5 @@
   "rust-analyzer.cargo.features": [
     "bsp_rpi3"
   ],
+  "cmake.sourceDirectory": "${workspaceFolder}/lib/framebuffer/sys",
 }
