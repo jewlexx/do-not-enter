@@ -1,4 +1,4 @@
-FROM alpine:3.15.5
+FROM alpine:3.18.2
 
 ARG VCS_REF
 
