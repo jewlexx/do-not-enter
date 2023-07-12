@@ -29,7 +29,7 @@ cfg-if = "1.0.0"
 cortex-a = "8.1.1"
 linked_list_allocator = "0.10.5"
 dne-macros = { version = "0.1.0", path = "../lib/dne-macros" }
-qemu-exit = { version = "3.0.1", optional = true }
+qemu-exit = { version = "3.0.2", optional = true }
 ruspiro-error = "0.1.1"
 ruspiro-mailbox = "0.4.1"
 spin = "0.9.8"
