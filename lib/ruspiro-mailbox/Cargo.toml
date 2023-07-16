@@ -18,7 +18,7 @@ maintenance = { status = "actively-developed" }
 [lib]
 
 [dependencies]
-paste = "1.0.12"
+paste = "1.0.14"
 ruspiro-mmio-register = "0.1.4"
 ruspiro-cache = "0.4.1"
 ruspiro-error = "0.1.1"
