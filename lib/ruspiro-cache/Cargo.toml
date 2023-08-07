@@ -18,7 +18,7 @@ maintenance = { status = "actively-developed" }
 [lib]
 
 [build-dependencies]
-cc = "1.0.79"
+cc = "1.0.82"
 
 [dependencies]
 ruspiro-arch-aarch64 = "0.1.7"
