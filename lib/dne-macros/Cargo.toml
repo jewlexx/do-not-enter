@@ -13,4 +13,4 @@ doc = false
 heck = "0.4.1"
 proc-macro2 = "1.0.56"
 quote = "1.0.26"
-syn = "2.0.13"
+syn = "2.0.29"
