@@ -12,5 +12,5 @@ doc = false
 [dependencies]
 heck = "0.4.1"
 proc-macro2 = "1.0.56"
-quote = "1.0.26"
+quote = "1.0.33"
 syn = "2.0.13"
