@@ -38,3 +38,6 @@ tock-registers = { version = "0.8.1", default-features = false, features = ["reg
 
 [dev-dependencies]
 test-macros = { path = "../lib/test-macros" }
+
+[lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(profile, values("production"))'] }

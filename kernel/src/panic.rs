@@ -56,7 +56,7 @@ fn panic(info: &PanicInfo) -> ! {
         {}",
         timestamp.as_secs(),
         timestamp.subsec_micros(),
-        info.message().unwrap_or(&format_args!("")),
+        info.message(),
     );
 
     _panic_exit()

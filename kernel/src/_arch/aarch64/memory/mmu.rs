@@ -9,6 +9,8 @@
 //!
 //! crate::memory::mmu::arch_mmu
 
+#![allow(static_mut_refs)]
+
 use crate::{
     bsp, memory,
     memory::mmu::{translation_table::KernelTranslationTable, TranslationGranule},

@@ -1,14 +1,11 @@
 //! Library for interacting with the kernel
 
-#![allow(clippy::upper_case_acronyms)]
-#![allow(incomplete_features)]
-#![feature(asm_const)]
+#![allow(clippy::upper_case_acronyms, incomplete_features, internal_features)]
 #![feature(core_intrinsics)]
 #![feature(format_args_nl)]
 #![feature(int_roundings)]
 #![feature(linkage)]
 #![feature(alloc_error_handler)]
-#![feature(panic_info_message)]
 #![feature(trait_alias)]
 #![no_std]
 // Testing
