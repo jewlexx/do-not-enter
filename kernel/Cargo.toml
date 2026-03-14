@@ -34,7 +34,7 @@ ruspiro-error = "0.1.1"
 ruspiro-mailbox = "0.4.1"
 spin = "0.9.8"
 test-types = { version = "0.1.0", path = "../lib/test-types" }
-tock-registers = { version = "0.8.1", default-features = false, features = ["register_types"] }
+tock-registers = { version = "0.10.0", default-features = false, features = ["register_types"] }
 
 [dev-dependencies]
 test-macros = { path = "../lib/test-macros" }
