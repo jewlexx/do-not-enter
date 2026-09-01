@@ -32,7 +32,7 @@ dne-macros = { version = "0.1.0", path = "../lib/dne-macros" }
 qemu-exit = { version = "3.0.1", optional = true }
 ruspiro-error = "0.1.1"
 ruspiro-mailbox = "0.4.1"
-spin = "0.9.8"
+spin = "0.12.0"
 test-types = { version = "0.1.0", path = "../lib/test-types" }
 tock-registers = { version = "0.8.1", default-features = false, features = ["register_types"] }
 
