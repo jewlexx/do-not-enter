@@ -42,7 +42,7 @@ version = "8.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8256fd5103e10027467cc7a97c9ff27fcc4547ea24864da0aff2e7aef6e18e28"
 dependencies = [
- "tock-registers",
+ "tock-registers 0.8.1",
 ]
 
 [[package]]
@@ -82,7 +82,7 @@ dependencies = [
  "spin",
  "test-macros",
  "test-types",
- "tock-registers",
+ "tock-registers 0.12.0",
 ]
 
 [[package]]
@@ -244,6 +244,12 @@ name = "tock-registers"
 version = "0.8.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "696941a0aee7e276a165a978b37918fd5d22c55c3d6bda197813070ca9c0f21c"
+
+[[package]]
+name = "tock-registers"
+version = "0.12.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fc2477fb5e50cca83e3c38fd91757ffd87382baf2a3e032f10e9b29a9a50474b"
 
 [[package]]
 name = "unicode-ident"
